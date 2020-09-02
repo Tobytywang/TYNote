@@ -1,0 +1,92 @@
+## 类和对象
+### 类的定义
+```
+class Actor
+{
+public:
+  string name;
+  bool gender;
+}
+```
+### 对象的定义
+```
+Actor tang; // 对象
+Actor *sun = new Actor();
+Actor *pt = &tang;  // 指针
+Actor &rt = tang; // 引用
+```
+### 数据成员的访问
+```
+tang.name = "唐三藏";
+ap->name = "唐三藏";
+tang.Actor::name = "唐三藏";
+```
+## 成员函数的定义
+```
+class Actor
+{
+private:
+  string _name;
+  bool _gender;
+public:
+  void setName(string name, bool gender);
+  void say();
+};
+
+void Actor::setName(string name, bool gender)
+{
+  _name = name;
+  _gender = gender;
+}
+
+void Actor::say()
+{
+  cout << _name << ":我乃" << _name << "是也..." << endl;
+}
+```
+### 内联成员函数
+```
+inline void Actor::setName(string name, bool gender)
+{
+  _name = name;
+  _gender = gender;
+}
+```
+```
+class Actor
+{
+private:
+  string _name;
+  bool _gender;
+public:
+  void setName(string name, bool gender)
+  {
+    _name = name;
+    _gender = gender;
+  }
+};
+```
+### 成员函数的重载
+### this指针
+```
+void Actor::say()
+{
+  cout << _name << ":我乃" << _name << "是也..." << endl;
+  cout << "this:" << this << endl;
+}
+
+Actor tang;
+tang.setName("唐三藏", true);
+tang.say();
+cout << "&tang:" << &tang << endl;
+```
+**注意：**
+Actor的this指针的类型为Actor const*;
+不能在类作用域以外使用this;
+### 内存中的类
+## 类的讨论
+### 类与结构
+### 抽象性
+### 封装性
+## 类的组合
+### 类的声明

@@ -1,0 +1,170 @@
+## CSS学习笔记（w3cschool.cn）
+### 零：导读
+http://www.w3cschool.cn/css/css-tutorial.html
+编程闯关：http://www.w3cschool.cn/codecamp/list?ccid=2
+参考手册：
+1. CSS属性：
+2. CSS选择器：
+3. CSS声音参考手册：
+4. CSS单位：
+5. CSS颜色参考手册：
+
+### 一：CSS教程
+#### 1.1 选择器
+1. Id选择器
+2. Class选择器
+
+#### 1.2 创建CSS
+1. 外部样式表：<link rel="stylesheet" type="text/css"href="mystyle.css">
+2. 内部样式表：<style> hr {color:sienna;} </style>
+3. 内联样式：
+
+#### 1.3 背景
+- background-color:
+- background-image:url("")
+- background-repeat:repeat,repeat-x,repeat-y,no-repeat,inherit
+- background-attachment（是否固定还是随页面滚动）:
+- background-position（背景的起始位置）:
+
+背景简写:background:#ffffff url('img_tree.png') no-repeat right top
+#### 1.4 文本
+- color（颜色）:
+- text-align（对齐）:center,right,left,justify
+- text-decoration（修饰）:overline,line-through,underline
+- text-transform（转换）:uppercase,lowercase,capitalize
+- text-indent（缩进）:
+- letter-spacing（字间距）:
+- line-height（行间距）:
+- direction（方向）:rtl
+- word-spacing（词间距）:
+- white-space（禁用文字环绕？段落中文本不换行）:nowrap
+- vertical-align（垂直对其图形）:text-top,text-bottom
+- text-shadow（文字阴影）:px px #
+
+#### 1.5 字体
+CSS字形：
+Serif：衬线字体
+Sans-serif：无衬线字体
+Monospace：等宽字体
+字体：
+font-family:xx,xx,serif
+Web安全字体组合：http://www.w3cschool.cn/cssref/css-websafe-fonts.html
+字体样式：
+font-style:normal,italic,oblique
+字体大小：
+`<h1></h1>`
+字体像素大小：
+font-size:20px;
+使用em设置字体大小：
+font-size:100%;
+使用百分比和em结合：
+字体加粗：
+font-weight:normal,lighter,bold,900
+字体转变？以小型大写字体或者正常字体显示：
+font-variant:normal,small-caps
+声明所有的字体属性：
+font:italic bold 12px/30px Georgia, serif;
+font:15px arial, sans-serif;
+
+#### 1.6 链接
+链接的样式：
+- a:link:正常
+- a:visited:已访问
+- a:hover:鼠标滑过
+- a:active:点击
+
+*a:hover必须跟在a:link和a:visited后面*
+*a:active必须跟在a:hover后面*
+常用的链接样式：
+文本修饰text-decoration用于删除下划线
+背景颜色background-color指定链接背景色
+
+#### 1.7 列表样式
+不同的列表项标记：
+list-style-type:circle,square,upper-roman,lower-alpha
+作为列表项标记的图像：
+list-style-image:url()
+浏览器兼容性解决方案：
+```
+ul
+{
+list-style-type: none;
+padding: 0px;
+margin: 0px;
+}
+ul li
+{
+background-image: url(sqpurple.gif);
+background-repeat: no-repeat;
+background-position: 0px 5px;
+padding-left: 14px;
+}
+```
+列表缩写属性：
+```
+ul
+{
+list-style: square url("sqpurple.gif");
+}
+```
+使用缩写属性的顺序是：
+list-style-type/position/image
+#### 1.8 表格
+表格边框：
+```
+table, th, td
+{
+border: 1px solid black;
+}
+```
+折叠边框：
+```
+table
+{
+border-collapse:collapse;
+}
+table,th, td
+{
+border: 1px solid black;
+}
+```
+表格的高度和宽度：
+```
+table
+{
+width:100%;
+}
+th
+{
+height:50px;
+}
+```
+表格文字对齐：
+```
+td
+{
+text-align:right;
+}
+```
+表格填充：
+```
+td
+{
+padding:15px;
+}
+```
+表格颜色：
+```
+table, td, th
+{
+border:1px solid green;
+}
+th
+{
+background-color:green;
+color:white;
+}
+```
+
+### 二：CSS响应式教程
+### 三：CSS实例

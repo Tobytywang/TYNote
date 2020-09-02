@@ -1,0 +1,141 @@
+## 构造函数
+### 构造函数
+```
+class Actor
+{
+private:
+  string _name;
+  bool _gender;
+  Weapon _weapon;
+public:
+  Actor();
+  void say();
+};
+
+Actor::Actor()
+{
+  _name = "无名氏";
+  _gender = true;
+  cout << _name << "出现..." << endl;
+}
+
+Actor * sun = new Actor();
+sun->setName("孙悟空");
+sun->say();
+delete sun;
+```
+### 带参数的构造函数
+```
+class Actor
+{
+private:
+  string _name;
+  bool _gender;
+  Weapon _weapon;
+public:
+  Actor();
+  Actor(string name, bool gender);
+  void say();
+}
+
+Actor::Actor()
+{
+  _name = "无名氏";
+  _gender = true;
+  cout << _name << "出现..." << endl;
+}
+
+Actor::Actor(string name, bool gender)
+{
+  _name = name;
+  _gender = gender;
+  cout << _name << "出现..." << endl;
+}
+
+Actor tang("唐三藏", true);
+tang.say();
+Actor *sun = new Actor("孙悟空", true);
+sun->say();
+
+// 调用不带参数的构造函数
+Actor tang;
+// Actor tang();
+```
+### 初始值列表
+```
+Point p1 = {100, 200};
+Actor tang = {"唐三藏", true}; //错误
+```
+**注意**
+不能使用初始值列表来初始化“非聚合”对象。
+“聚合对象”是指：
+1. 数组
+2. 不包含任何构造函数和私有/保护成员，基类，虚函数的类，结构和联合。
+
+要想使用上述方式进行初始化，需要按照下面的方式进行定义
+```
+class LazyActor
+{
+public:
+  char _name[20];
+  bool _gender;
+};
+int main()
+{
+  LazyActor tang = {"唐三藏", true};
+  cout << tang._name << endl;
+  return 0;
+}
+```
+LazyActor对Actor做了几处修改：
+1. 去掉了所有成员函数
+2. 将所有的数据成员定义成public
+3. 将string对象_name改成类char[]
+
+唯一的办法，就是使用类的构造函数:`Actor tang("唐三藏", true);`
+初始化对象数组:`Actor team[] = {Actor("唐三藏", true), Actor("孙悟空", true), Actor("猪八戒", true), Actor("沙和尚", true)};`
+### 成员初始值列表
+```
+Actor::Actor(string name, bool gender)
+  :_name(name), _gender(gender)
+{
+  cout << _name << "出现..." << endl;
+}
+```
+```
+////////////兵器///////////////
+class Weapon
+{
+private:
+  string _name;
+  int _power;
+public:
+  Weapon();
+  Weapon(string name, int power);
+  void show();
+};
+
+// 兵器类的构造函数
+Weapon::Weapon()
+  :_name("赤手空拳"), _power(1)
+{
+}
+Weapon::Weapon(string name, int power)
+  :_name(name), _power(power)
+{
+}
+void Weapon::show()
+{
+  cout << _name << ",威力:" << _power << endl;
+}
+```
+### 对象成员初始化
+```
+Actor::Actor(string name, bool gender, string weaponName, int power)
+  :_name(name), _gender(gender), _weapon(weaponName, power)
+{
+  cout << _name << "带着" << weaponName << "出现..." << endl;
+}
+```
+## 析构函数
+### 
