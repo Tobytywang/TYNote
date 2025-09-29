@@ -1,2 +1,3 @@
-# note
-个人笔记
+# TYNote
+
+Tobyty's Personal Blog
