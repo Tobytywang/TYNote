@@ -1,7 +1,9 @@
-PATH
-  remote: /Users/tobyty/Projects/GitHub/jekyll-theme-mammut
+GIT
+  remote: https://github.com/Tobytywang/jekyll-theme-mammut.git
+  revision: 6bc3e08af3a3d82a9fc794650639e40917019774
+  branch: release
   specs:
-    jekyll-theme-mammut (7.3.2)
+    jekyll-theme-mammut (7.3.1)
       jekyll (~> 4.3)
       jekyll-archives (~> 2.2)
       jekyll-include-cache (~> 0.2)
