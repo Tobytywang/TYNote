@@ -1,0 +1,1781 @@
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- `site.alt_lang` can specify a language different from the UI -->
+<html lang="zh-CN" data-mode="dark">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta
+    name="viewport"
+    content="width=device-width, user-scalable=no initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
+  ><!-- Setup Open Graph image -->
+
+  
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Nginxrewrite" />
+<meta property="og:locale" content="zh_CN" />
+<meta name="description" content="Nginx配置 一：Rewrite功能 1.1 Nginx后端服务器组的5个指令 upstream指令 该指令用于给后端服务器命名。 默认情况下，服务器组收到请求后，按照“轮叫调度（RR）”策略调用服务器。 server指令 server address [parameters] 该指令用于定义组内的服务器。 parameters： weight=number：权重 max_fails=number：设置一个请求失败的次数 fail_timeout=time：一是设置max_fails指令尝试请求服务器的时间，二是服务器无效状态持续时间 backup：设置某台服务器为备用服务器 down：设置某台服务器为宕机状态 示例： 1 2 3 4 5 6 upstream backup { server backend1.example.com weight=5; server 127.0.0.1:8000 max_fails=3 fail_timeout=30s; server unix:/tmp/backend3; } 这里有三个服务器，分别是基于域名，基于IP，基于进程间通信的Unix Domain Socket ip_hash指令 对话保持功能 不能和server中的weight一起使用 根据用户IP来分配，Nginx必须是最前端服务器 客户端必须是C类地址 示例： 1 2 3 4 5 6 upstream backend { ip_hash; server myback1.proxy.com; server myback2.proxy.com; } keepalive指令? 控制网络连接保持功能 keepalive connections; least_conn指令 使用负载均衡策略 1.2 Rewrite功能 依赖于PCRE 地址重写与地址转发 概念： 地址重写：将google.cn重写为google.com 地址转发：将一个域名指到另一个已有站点的过程 区别： 地址转发后浏览器地址栏中显示的地址不改变，地址重写后浏览器地址栏显示的地址为重写后的地址 在一次地址转发过程中，只产生一次网络请求，地址重写会产生两次请求 地址转发发生在同一个站点里，地址重写没有该限制 地址转发到的页面可以不用全路径名表示，地址重写到的页面必须用完整的路径名表示 地址转发过程中，可以将客户端请求的request范围内属性传递给新的页面，地址重写不可以 地址转发的速度较地址重定向快 1.3 Rewrite规则 借助于ngx_http_rewrite_module模块 1.4 if指令 if ( condition ) {} 1.变量名或者使用“=，!=”判断变量与字符串是否相等 使用正则表达式进行匹配，成功时视为true 变量与正则表达式之间用“~，~，!~，!~”链接 ~表示对大小敏感 ~*表示对大小写不敏感 !表示对结果取反 在正则表达式中，可以使用小括号对变量进行截取，在花括号中使用$引用截取的量 1 2 3 4 5 6 if ($http_user_agent ~ MSIE) { } if ($http_user_agent ~* &quot;id=([^;])(?:;|$)&quot;) { # 可以使用$1和$2获得截取到的值 # set $id $1; 将截取的id赋给$1以备后用 } 2.判断请求的文件是否存在 -f或者!-f 3.判断请求的目录是否存在 -d或者!-d 4.判断请求的目录或文件是否存在 -e或者!-e 5. 判断请求的文件是否可执行 -x或者!-x 1.5 break指令 用于中断当前作用域中的其他Nginx配置 可以在server块，location块，if块中使用 location / { if ($slow) { set $id $1 break; limit_rate 10k; } } 1.6 return 指令 ** 直接向客户端返回响应状态代码 return [ text ] return code URI; return URL; code：返回给客户端的HTTP状态吗 text：为返回给客户端的响应体内容 1.7 rewrite指令 URI:主机名[传输协议+主机+资源路径]+片段标志符+相对URI Scheme:[//][][用户名[:密码]@]主机名[:端口号]][/资源路径] URL：是URI的子集：传输协议+主机+资源具体地址 Scheme://主机名[:端口号][/资源路径] 该指令可在server块或者location块中配置 rewrite regex replacement [flag]; 注意： rewrite接受到的URI不包含host地址 rewrite myweb.com http://newweb.com/permanent; 我们希望重写http://myweb.com/source是办不到的，因为rewrite指令接收到的URI是/source，不包含myweb.com 另外，请求URL中的请求指令也是不包含在rewrite指令接收到的URI内容中的 http://myweb.com/source?agr1=value1&amp;agr2=value2 rewrite接收到的URI为/source，不包含“?agr1=value1&amp;agr2=value2” replacement用于替换URI中被截取的内容，如果该字符串是由http://或者https://开头，则不会继续向下进行其他 处理，而直接将重写后的URI返回给客户端 提示： rewrite myweb.com http://example.com$request_un?permanent; replcacement中支持全局变量的使用，常用的还有$uri和$args等 flag用来设置rewrite对URI的处理行为 last: break: redirect: permanent: 1.8 rewrite_log指令 1.9 set指令 1.10 uninitialized_variable_warm指令 1.11 全局变量 $args: $content_length: $content_type: $document_root:针对当前请求的根路径 $document_uri:请求中的当前uri，并且不包括请求指令 $host:请求url中的主机字段部分 $uri:与变量$document_uri含义相同 1.12 rewrite的使用 一：域名跳转 域名跳转 1 2 3 4 5 6 server { listen 80; server_name jump.myweb.name; rewrite ^/ http://www.myweb.info/; } 多域名跳转 1 2 3 4 5 6 7 8 9 server { listen 80; server_name jump.myweb.name jump.myweb.info; if ($host ~ myweb\.info) { rewrite ^(.*) http://jump.myweb.name$1 permanent; } } 三级域名跳转 1 2 3 4 5 6 7 8 9 10 server { listen 80; server_name jump1.myweb.com jump2.myweb.com; if ($http_host ~* ^(.*)\.myweb\.name$) { rewrite ^(.*) http://jump.myweb.name$1; break; } } 二：域名镜像 1 2 3 4 5 6 7 8 9 10 11 12 server { listen 80; server_name mirror1.myweb.com; rewrite ^(.*) http://jump1.myweb.name$1 last; } server { listen 81; server_name mirror2.myweb.name; rewrite ^(.*) http://jump2.myweb.name$1 last; } 1 2 3 4 5 6 7 8 9 10 11 12 13 14 server { listen 80; server_name jump.myweb.name; location ^~ /source1 { rewrite ^/source1(.*) http://jump.myweb.name/websrc2$1 last; break; } location ^~ /source2 { rewrite ^/source2(.*) http://jump.myweb.name/websrc2$1 last; } } 三：独立域名 四：目录自动添加”/” 五：目录合并 六：防盗链" />
+<meta property="og:description" content="Nginx配置 一：Rewrite功能 1.1 Nginx后端服务器组的5个指令 upstream指令 该指令用于给后端服务器命名。 默认情况下，服务器组收到请求后，按照“轮叫调度（RR）”策略调用服务器。 server指令 server address [parameters] 该指令用于定义组内的服务器。 parameters： weight=number：权重 max_fails=number：设置一个请求失败的次数 fail_timeout=time：一是设置max_fails指令尝试请求服务器的时间，二是服务器无效状态持续时间 backup：设置某台服务器为备用服务器 down：设置某台服务器为宕机状态 示例： 1 2 3 4 5 6 upstream backup { server backend1.example.com weight=5; server 127.0.0.1:8000 max_fails=3 fail_timeout=30s; server unix:/tmp/backend3; } 这里有三个服务器，分别是基于域名，基于IP，基于进程间通信的Unix Domain Socket ip_hash指令 对话保持功能 不能和server中的weight一起使用 根据用户IP来分配，Nginx必须是最前端服务器 客户端必须是C类地址 示例： 1 2 3 4 5 6 upstream backend { ip_hash; server myback1.proxy.com; server myback2.proxy.com; } keepalive指令? 控制网络连接保持功能 keepalive connections; least_conn指令 使用负载均衡策略 1.2 Rewrite功能 依赖于PCRE 地址重写与地址转发 概念： 地址重写：将google.cn重写为google.com 地址转发：将一个域名指到另一个已有站点的过程 区别： 地址转发后浏览器地址栏中显示的地址不改变，地址重写后浏览器地址栏显示的地址为重写后的地址 在一次地址转发过程中，只产生一次网络请求，地址重写会产生两次请求 地址转发发生在同一个站点里，地址重写没有该限制 地址转发到的页面可以不用全路径名表示，地址重写到的页面必须用完整的路径名表示 地址转发过程中，可以将客户端请求的request范围内属性传递给新的页面，地址重写不可以 地址转发的速度较地址重定向快 1.3 Rewrite规则 借助于ngx_http_rewrite_module模块 1.4 if指令 if ( condition ) {} 1.变量名或者使用“=，!=”判断变量与字符串是否相等 使用正则表达式进行匹配，成功时视为true 变量与正则表达式之间用“~，~，!~，!~”链接 ~表示对大小敏感 ~*表示对大小写不敏感 !表示对结果取反 在正则表达式中，可以使用小括号对变量进行截取，在花括号中使用$引用截取的量 1 2 3 4 5 6 if ($http_user_agent ~ MSIE) { } if ($http_user_agent ~* &quot;id=([^;])(?:;|$)&quot;) { # 可以使用$1和$2获得截取到的值 # set $id $1; 将截取的id赋给$1以备后用 } 2.判断请求的文件是否存在 -f或者!-f 3.判断请求的目录是否存在 -d或者!-d 4.判断请求的目录或文件是否存在 -e或者!-e 5. 判断请求的文件是否可执行 -x或者!-x 1.5 break指令 用于中断当前作用域中的其他Nginx配置 可以在server块，location块，if块中使用 location / { if ($slow) { set $id $1 break; limit_rate 10k; } } 1.6 return 指令 ** 直接向客户端返回响应状态代码 return [ text ] return code URI; return URL; code：返回给客户端的HTTP状态吗 text：为返回给客户端的响应体内容 1.7 rewrite指令 URI:主机名[传输协议+主机+资源路径]+片段标志符+相对URI Scheme:[//][][用户名[:密码]@]主机名[:端口号]][/资源路径] URL：是URI的子集：传输协议+主机+资源具体地址 Scheme://主机名[:端口号][/资源路径] 该指令可在server块或者location块中配置 rewrite regex replacement [flag]; 注意： rewrite接受到的URI不包含host地址 rewrite myweb.com http://newweb.com/permanent; 我们希望重写http://myweb.com/source是办不到的，因为rewrite指令接收到的URI是/source，不包含myweb.com 另外，请求URL中的请求指令也是不包含在rewrite指令接收到的URI内容中的 http://myweb.com/source?agr1=value1&amp;agr2=value2 rewrite接收到的URI为/source，不包含“?agr1=value1&amp;agr2=value2” replacement用于替换URI中被截取的内容，如果该字符串是由http://或者https://开头，则不会继续向下进行其他 处理，而直接将重写后的URI返回给客户端 提示： rewrite myweb.com http://example.com$request_un?permanent; replcacement中支持全局变量的使用，常用的还有$uri和$args等 flag用来设置rewrite对URI的处理行为 last: break: redirect: permanent: 1.8 rewrite_log指令 1.9 set指令 1.10 uninitialized_variable_warm指令 1.11 全局变量 $args: $content_length: $content_type: $document_root:针对当前请求的根路径 $document_uri:请求中的当前uri，并且不包括请求指令 $host:请求url中的主机字段部分 $uri:与变量$document_uri含义相同 1.12 rewrite的使用 一：域名跳转 域名跳转 1 2 3 4 5 6 server { listen 80; server_name jump.myweb.name; rewrite ^/ http://www.myweb.info/; } 多域名跳转 1 2 3 4 5 6 7 8 9 server { listen 80; server_name jump.myweb.name jump.myweb.info; if ($host ~ myweb\.info) { rewrite ^(.*) http://jump.myweb.name$1 permanent; } } 三级域名跳转 1 2 3 4 5 6 7 8 9 10 server { listen 80; server_name jump1.myweb.com jump2.myweb.com; if ($http_host ~* ^(.*)\.myweb\.name$) { rewrite ^(.*) http://jump.myweb.name$1; break; } } 二：域名镜像 1 2 3 4 5 6 7 8 9 10 11 12 server { listen 80; server_name mirror1.myweb.com; rewrite ^(.*) http://jump1.myweb.name$1 last; } server { listen 81; server_name mirror2.myweb.name; rewrite ^(.*) http://jump2.myweb.name$1 last; } 1 2 3 4 5 6 7 8 9 10 11 12 13 14 server { listen 80; server_name jump.myweb.name; location ^~ /source1 { rewrite ^/source1(.*) http://jump.myweb.name/websrc2$1 last; break; } location ^~ /source2 { rewrite ^/source2(.*) http://jump.myweb.name/websrc2$1 last; } } 三：独立域名 四：目录自动添加”/” 五：目录合并 六：防盗链" />
+<link rel="canonical" href="http://localhost:4000/posts/NginxRewrite/" />
+<meta property="og:url" content="http://localhost:4000/posts/NginxRewrite/" />
+<meta property="og:site_name" content="吴弓小站" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-01-25T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Nginxrewrite" />
+<meta name="twitter:site" content="@tobytywang" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2017-01-25T00:00:00+08:00","datePublished":"2017-01-25T00:00:00+08:00","description":"Nginx配置 一：Rewrite功能 1.1 Nginx后端服务器组的5个指令 upstream指令 该指令用于给后端服务器命名。 默认情况下，服务器组收到请求后，按照“轮叫调度（RR）”策略调用服务器。 server指令 server address [parameters] 该指令用于定义组内的服务器。 parameters： weight=number：权重 max_fails=number：设置一个请求失败的次数 fail_timeout=time：一是设置max_fails指令尝试请求服务器的时间，二是服务器无效状态持续时间 backup：设置某台服务器为备用服务器 down：设置某台服务器为宕机状态 示例： 1 2 3 4 5 6 upstream backup { server backend1.example.com weight=5; server 127.0.0.1:8000 max_fails=3 fail_timeout=30s; server unix:/tmp/backend3; } 这里有三个服务器，分别是基于域名，基于IP，基于进程间通信的Unix Domain Socket ip_hash指令 对话保持功能 不能和server中的weight一起使用 根据用户IP来分配，Nginx必须是最前端服务器 客户端必须是C类地址 示例： 1 2 3 4 5 6 upstream backend { ip_hash; server myback1.proxy.com; server myback2.proxy.com; } keepalive指令? 控制网络连接保持功能 keepalive connections; least_conn指令 使用负载均衡策略 1.2 Rewrite功能 依赖于PCRE 地址重写与地址转发 概念： 地址重写：将google.cn重写为google.com 地址转发：将一个域名指到另一个已有站点的过程 区别： 地址转发后浏览器地址栏中显示的地址不改变，地址重写后浏览器地址栏显示的地址为重写后的地址 在一次地址转发过程中，只产生一次网络请求，地址重写会产生两次请求 地址转发发生在同一个站点里，地址重写没有该限制 地址转发到的页面可以不用全路径名表示，地址重写到的页面必须用完整的路径名表示 地址转发过程中，可以将客户端请求的request范围内属性传递给新的页面，地址重写不可以 地址转发的速度较地址重定向快 1.3 Rewrite规则 借助于ngx_http_rewrite_module模块 1.4 if指令 if ( condition ) {} 1.变量名或者使用“=，!=”判断变量与字符串是否相等 使用正则表达式进行匹配，成功时视为true 变量与正则表达式之间用“~，~，!~，!~”链接 ~表示对大小敏感 ~*表示对大小写不敏感 !表示对结果取反 在正则表达式中，可以使用小括号对变量进行截取，在花括号中使用$引用截取的量 1 2 3 4 5 6 if ($http_user_agent ~ MSIE) { } if ($http_user_agent ~* &quot;id=([^;])(?:;|$)&quot;) { # 可以使用$1和$2获得截取到的值 # set $id $1; 将截取的id赋给$1以备后用 } 2.判断请求的文件是否存在 -f或者!-f 3.判断请求的目录是否存在 -d或者!-d 4.判断请求的目录或文件是否存在 -e或者!-e 5. 判断请求的文件是否可执行 -x或者!-x 1.5 break指令 用于中断当前作用域中的其他Nginx配置 可以在server块，location块，if块中使用 location / { if ($slow) { set $id $1 break; limit_rate 10k; } } 1.6 return 指令 ** 直接向客户端返回响应状态代码 return [ text ] return code URI; return URL; code：返回给客户端的HTTP状态吗 text：为返回给客户端的响应体内容 1.7 rewrite指令 URI:主机名[传输协议+主机+资源路径]+片段标志符+相对URI Scheme:[//][][用户名[:密码]@]主机名[:端口号]][/资源路径] URL：是URI的子集：传输协议+主机+资源具体地址 Scheme://主机名[:端口号][/资源路径] 该指令可在server块或者location块中配置 rewrite regex replacement [flag]; 注意： rewrite接受到的URI不包含host地址 rewrite myweb.com http://newweb.com/permanent; 我们希望重写http://myweb.com/source是办不到的，因为rewrite指令接收到的URI是/source，不包含myweb.com 另外，请求URL中的请求指令也是不包含在rewrite指令接收到的URI内容中的 http://myweb.com/source?agr1=value1&amp;agr2=value2 rewrite接收到的URI为/source，不包含“?agr1=value1&amp;agr2=value2” replacement用于替换URI中被截取的内容，如果该字符串是由http://或者https://开头，则不会继续向下进行其他 处理，而直接将重写后的URI返回给客户端 提示： rewrite myweb.com http://example.com$request_un?permanent; replcacement中支持全局变量的使用，常用的还有$uri和$args等 flag用来设置rewrite对URI的处理行为 last: break: redirect: permanent: 1.8 rewrite_log指令 1.9 set指令 1.10 uninitialized_variable_warm指令 1.11 全局变量 $args: $content_length: $content_type: $document_root:针对当前请求的根路径 $document_uri:请求中的当前uri，并且不包括请求指令 $host:请求url中的主机字段部分 $uri:与变量$document_uri含义相同 1.12 rewrite的使用 一：域名跳转 域名跳转 1 2 3 4 5 6 server { listen 80; server_name jump.myweb.name; rewrite ^/ http://www.myweb.info/; } 多域名跳转 1 2 3 4 5 6 7 8 9 server { listen 80; server_name jump.myweb.name jump.myweb.info; if ($host ~ myweb\\.info) { rewrite ^(.*) http://jump.myweb.name$1 permanent; } } 三级域名跳转 1 2 3 4 5 6 7 8 9 10 server { listen 80; server_name jump1.myweb.com jump2.myweb.com; if ($http_host ~* ^(.*)\\.myweb\\.name$) { rewrite ^(.*) http://jump.myweb.name$1; break; } } 二：域名镜像 1 2 3 4 5 6 7 8 9 10 11 12 server { listen 80; server_name mirror1.myweb.com; rewrite ^(.*) http://jump1.myweb.name$1 last; } server { listen 81; server_name mirror2.myweb.name; rewrite ^(.*) http://jump2.myweb.name$1 last; } 1 2 3 4 5 6 7 8 9 10 11 12 13 14 server { listen 80; server_name jump.myweb.name; location ^~ /source1 { rewrite ^/source1(.*) http://jump.myweb.name/websrc2$1 last; break; } location ^~ /source2 { rewrite ^/source2(.*) http://jump.myweb.name/websrc2$1 last; } } 三：独立域名 四：目录自动添加”/” 五：目录合并 六：防盗链","headline":"Nginxrewrite","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/NginxRewrite/"},"url":"http://localhost:4000/posts/NginxRewrite/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <title>Nginxrewrite | 吴弓小站
+  </title>
+
+  <!--
+  The Favicons for Web, Android, Microsoft, and iOS (iPhone and iPad) Apps
+  Generated by: https://realfavicongenerator.net/
+-->
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png">
+
+  <link rel="manifest" href="/assets/img/favicons/site.webmanifest">
+
+<link rel="shortcut icon" href="/assets/img/favicons/favicon.ico">
+<meta name="apple-mobile-web-app-title" content="吴弓小站">
+<meta name="application-name" content="吴弓小站">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
+
+  <!-- Resource Hints -->
+  
+    
+      
+        <link rel="preconnect" href="https://fonts.googleapis.com" >
+      
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" >
+      
+    
+      
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" >
+      
+    
+      
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" >
+      
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" >
+      
+    
+  
+
+  <!-- Bootstrap -->
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
+  
+
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
+
+  <!-- Web Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
+
+  <!-- 3rd-party Dependencies -->
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.32.2/dist/tocbot.min.css">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/loading-attribute-polyfill@2.1.1/dist/loading-attribute-polyfill.min.css">
+  
+
+  
+    <!-- Image Popup -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css">
+  
+
+  <!-- Scripts -->
+
+  <script src="/assets/js/dist/theme.min.js"></script>
+
+  <!-- JS selector for site. -->
+
+<!-- commons -->
+
+
+
+<!-- layout specified -->
+
+
+  
+
+  
+    <!-- image lazy-loading & popup & clipboard -->
+    
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/combine/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js,npm/loading-attribute-polyfill@2.1.1/dist/loading-attribute-polyfill.umd.min.js,npm/glightbox@3.3.0/dist/js/glightbox.min.js,npm/clipboard@2.0.11/dist/clipboard.min.js,npm/dayjs@1.11.13/dayjs.min.js,npm/dayjs@1.11.13/locale/zh.js,npm/dayjs@1.11.13/plugin/relativeTime.js,npm/dayjs@1.11.13/plugin/localizedFormat.js,npm/tocbot@4.32.2/dist/tocbot.min.js"></script>
+
+
+
+
+
+
+
+<script defer src="/assets/js/dist/post.min.js"></script>
+
+
+
+<!-- Pageviews -->
+
+  
+
+  
+    
+        
+    
+  
+
+
+
+  
+
+  <!-- A placeholder to allow defining custom metadata -->
+
+</head>
+
+
+  <body>
+    <!-- The Side Bar -->
+
+<aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
+  <header class="profile-wrapper">
+    <a href="/" id="avatar" class="rounded-circle"></a>
+
+    <a class="site-title d-block" href="/">吴弓小站</a>
+    <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
+  </header>
+  <!-- .profile-wrapper -->
+
+  <nav class="flex-column flex-grow-1 w-100 ps-0">
+    <ul class="nav">
+      <!-- home -->
+      <li class="nav-item">
+        <a href="/" class="nav-link">
+          <i class="fa-fw fas fa-home"></i>
+          <span>首页</span>
+        </a>
+      </li>
+      <!-- the real tabs -->
+      
+        <li class="nav-item">
+          <a href="/categories/" class="nav-link">
+            <i class="fa-fw fas fa-stream"></i>
+            
+
+            <span>分类</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+      
+        <li class="nav-item">
+          <a href="/tags/" class="nav-link">
+            <i class="fa-fw fas fa-tags"></i>
+            
+
+            <span>标签</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+      
+        <li class="nav-item">
+          <a href="/archives/" class="nav-link">
+            <i class="fa-fw fas fa-archive"></i>
+            
+
+            <span>归档</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+      
+        <li class="nav-item">
+          <a href="/about/" class="nav-link">
+            <i class="fa-fw fas fa-info-circle"></i>
+            
+
+            <span>关于</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+      
+    </ul>
+  </nav>
+
+  <div class="sidebar-bottom d-flex flex-wrap  align-items-center w-100">
+    
+
+    
+
+      
+        <a
+          href="https://github.com/Tobytywang"
+          aria-label="github"
+          
+
+          
+            target="_blank"
+            
+          
+
+          
+
+          
+            rel="noopener noreferrer"
+          
+        >
+          <i class="fab fa-github"></i>
+        </a>
+      
+    
+
+      
+        <a
+          href="https://twitter.com/tobytywang"
+          aria-label="twitter"
+          
+
+          
+            target="_blank"
+            
+          
+
+          
+
+          
+            rel="noopener noreferrer"
+          
+        >
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+      
+    
+
+      
+        <a
+          href="javascript:location.href = 'mailto:' + ['tobytywang','163.com'].join('@')"
+          aria-label="email"
+          
+
+          
+
+          
+
+          
+        >
+          <i class="fas fa-envelope"></i>
+        </a>
+      
+    
+          
+        
+
+      
+        <a
+          href="/feed.xml"
+          aria-label="rss"
+          
+
+          
+
+          
+
+          
+        >
+          <i class="fas fa-rss"></i>
+        </a>
+      
+    
+  </div>
+  <!-- .sidebar-bottom -->
+</aside>
+<!-- #sidebar -->
+
+
+    <div id="main-wrapper" class="d-flex justify-content-center">
+      <div class="container d-flex flex-column px-xxl-5">
+        <!-- The Top Bar -->
+
+<header id="topbar-wrapper" class="flex-shrink-0" aria-label="Top Bar">
+  <div
+    id="topbar"
+    class="d-flex align-items-center justify-content-between px-lg-3 h-100"
+  >
+    <nav id="breadcrumb" aria-label="Breadcrumb">
+      
+
+      
+        
+          
+            <span>
+              <a href="/">首页</a>
+            </span>
+
+          
+        
+          
+        
+          
+            
+              <span>Nginxrewrite</span>
+            
+
+          
+        
+      
+    </nav>
+    <!-- endof #breadcrumb -->
+
+    <button type="button" id="sidebar-trigger" class="btn btn-link" aria-label="Sidebar">
+      <i class="fas fa-bars fa-fw"></i>
+    </button>
+
+    <div id="topbar-title">
+      文章
+    </div>
+
+    <button type="button" id="search-trigger" class="btn btn-link" aria-label="Search">
+      <i class="fas fa-search fa-fw"></i>
+    </button>
+
+    <search id="search" class="align-items-center ms-3 ms-lg-0">
+      <i class="fas fa-search fa-fw"></i>
+      <input
+        class="form-control"
+        id="search-input"
+        type="search"
+        aria-label="search"
+        autocomplete="off"
+        placeholder="搜索..."
+      >
+    </search>
+    <button type="button" class="btn btn-link text-decoration-none" id="search-cancel">取消</button>
+  </div>
+</header>
+
+
+        <div class="row flex-grow-1">
+          <main aria-label="Main Content" class="col-12 col-lg-11 col-xl-9 px-md-4">
+            
+              <!-- Refactor the HTML structure -->
+
+
+
+<!--
+  In order to allow a wide table to scroll horizontally,
+  we suround the markdown table with `<div class="table-wrapper">` and `</div>`
+-->
+
+
+
+<!--
+  Fixed kramdown code highlight rendering:
+  https://github.com/penibelst/jekyll-compress-html/issues/101
+  https://github.com/penibelst/jekyll-compress-html/issues/71#issuecomment-188144901
+-->
+
+
+
+<!-- Change the icon of checkbox -->
+
+
+
+<!-- Handle images -->
+
+
+
+
+
+<!-- Add header for code snippets -->
+
+
+
+<!-- Create heading anchors -->
+
+
+
+
+
+  
+  
+
+  
+    
+    
+
+    
+      
+        
+        
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+
+    
+  
+
+  
+  
+
+  
+    
+    
+
+    
+      
+        
+        
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+
+    
+  
+
+  
+  
+
+  
+    
+    
+
+    
+      
+        
+        
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+
+    
+  
+
+  
+  
+
+  
+    
+    
+
+    
+      
+        
+        
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+
+    
+  
+
+
+
+
+<!-- return -->
+
+
+
+
+
+
+
+
+
+
+<article class="px-1" data-toc="true">
+  <header>
+    <h1 data-toc-skip>Nginxrewrite</h1>
+    
+
+    <div class="post-meta text-muted">
+      <!-- published date -->
+      <span>
+        发表于
+        <!--
+  Date format snippet
+  See: ${JS_ROOT}/utils/locale-dateime.js
+-->
+
+
+
+
+<time
+  
+  data-ts="1485273600"
+  data-df="YYYY/MM/DD"
+  
+    data-bs-toggle="tooltip" data-bs-placement="bottom"
+  
+>
+  2017/01/25
+</time>
+
+      </span>
+
+      <!-- lastmod date -->
+      
+
+      
+
+      <div class="d-flex justify-content-between">
+        <!-- author(s) -->
+        <span>
+          
+
+          作者
+
+          <em>
+            
+              <a href="">Tobytywang</a>
+            
+          </em>
+        </span>
+
+        <div>
+          <!-- pageviews -->
+          
+
+          <!-- read time -->
+          <!-- Calculate the post's reading time, and display the word count in tooltip -->
+
+
+
+<!-- words per minute -->
+
+
+
+
+
+
+
+
+
+
+<!-- return element -->
+<span
+  class="readtime"
+  data-bs-toggle="tooltip"
+  data-bs-placement="bottom"
+  title="1476 字"
+>
+  <em>8 分钟</em>阅读</span>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+    <div id="toc-bar" class="d-flex align-items-center justify-content-between invisible">
+      <span class="label text-truncate">Nginxrewrite</span>
+      <button type="button" class="toc-trigger btn me-1">
+        <i class="fa-solid fa-list-ul fa-fw"></i>
+      </button>
+    </div>
+
+    <button id="toc-solo-trigger" type="button" class="toc-trigger btn btn-outline-secondary btn-sm">
+      <span class="label ps-2 pe-1">文章内容</span>
+      <i class="fa-solid fa-angle-right fa-fw"></i>
+    </button>
+
+    <dialog id="toc-popup" class="p-0">
+      <div class="header d-flex flex-row align-items-center justify-content-between">
+        <div class="label text-truncate py-2 ms-4">Nginxrewrite</div>
+        <button id="toc-popup-close" type="button" class="btn mx-1 my-1 opacity-75">
+          <i class="fas fa-close"></i>
+        </button>
+      </div>
+      <div id="toc-popup-content" class="px-4 py-3 pb-4"></div>
+    </dialog>
+  
+
+  <div class="content">
+    <h2 id="nginx配置"><span class="me-2">Nginx配置</span><a href="#nginx配置" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+<h3 id="一rewrite功能"><span class="me-2">一：Rewrite功能</span><a href="#一rewrite功能" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
+<h4 id="11-nginx后端服务器组的5个指令"><span class="me-2">1.1 Nginx后端服务器组的5个指令</span><a href="#11-nginx后端服务器组的5个指令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<h5 id="upstream指令"><span class="me-2">upstream指令</span><a href="#upstream指令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+<p>该指令用于给后端服务器命名。
+默认情况下，服务器组收到请求后，按照“轮叫调度（RR）”策略调用服务器。</p>
+<h5 id="server指令"><span class="me-2">server指令</span><a href="#server指令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+<p>server address [parameters]
+该指令用于定义组内的服务器。
+parameters：
+weight=number：权重
+max_fails=number：设置一个请求失败的次数
+fail_timeout=time：一是设置max_fails指令尝试请求服务器的时间，二是服务器无效状态持续时间
+backup：设置某台服务器为备用服务器
+down：设置某台服务器为宕机状态
+示例：</p>
+<div class="language-plaintext highlighter-rouge"><div class="code-header">
+        <span data-label-text="Plaintext"><i class="fas fa-code fa-fw small"></i></span>
+      <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>upstream backup
+{
+ server backend1.example.com weight=5;
+ server 127.0.0.1:8000 max_fails=3 fail_timeout=30s;
+ server unix:/tmp/backend3;
+}
+</pre></td></tr></tbody></table></code></div></div>
+<p>这里有三个服务器，分别是基于域名，基于IP，基于进程间通信的Unix Domain Socket</p>
+<h5 id="ip_hash指令"><span class="me-2">ip_hash指令</span><a href="#ip_hash指令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+<p>对话保持功能
+不能和server中的weight一起使用
+根据用户IP来分配，Nginx必须是最前端服务器
+客户端必须是C类地址
+示例：</p>
+<div class="language-plaintext highlighter-rouge"><div class="code-header">
+        <span data-label-text="Plaintext"><i class="fas fa-code fa-fw small"></i></span>
+      <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>upstream backend
+{
+ ip_hash;
+ server myback1.proxy.com;
+ server myback2.proxy.com;
+}
+</pre></td></tr></tbody></table></code></div></div>
+<h5 id="keepalive指令"><span class="me-2">keepalive指令?</span><a href="#keepalive指令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+<p>控制网络连接保持功能
+keepalive connections;</p>
+<h5 id="least_conn指令"><span class="me-2">least_conn指令</span><a href="#least_conn指令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+<p>使用负载均衡策略</p>
+<h4 id="12-rewrite功能"><span class="me-2">1.2 Rewrite功能</span><a href="#12-rewrite功能" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p>依赖于PCRE</p>
+<h5 id="地址重写与地址转发"><span class="me-2">地址重写与地址转发</span><a href="#地址重写与地址转发" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+<p>概念：
+地址重写：将google.cn重写为google.com
+地址转发：将一个域名指到另一个已有站点的过程
+区别：
+地址转发后浏览器地址栏中显示的地址不改变，地址重写后浏览器地址栏显示的地址为重写后的地址
+在一次地址转发过程中，只产生一次网络请求，地址重写会产生两次请求
+地址转发发生在同一个站点里，地址重写没有该限制
+地址转发到的页面可以不用全路径名表示，地址重写到的页面必须用完整的路径名表示
+地址转发过程中，可以将客户端请求的request范围内属性传递给新的页面，地址重写不可以
+地址转发的速度较地址重定向快</p>
+<h4 id="13-rewrite规则"><span class="me-2">1.3 Rewrite规则</span><a href="#13-rewrite规则" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p>借助于ngx_http_rewrite_module模块</p>
+<h4 id="14-if指令"><span class="me-2">1.4 if指令</span><a href="#14-if指令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p>if ( condition ) {}</p>
+<h5 id="1变量名或者使用判断变量与字符串是否相等"><span class="me-2">1.变量名或者使用“=，!=”判断变量与字符串是否相等</span><a href="#1变量名或者使用判断变量与字符串是否相等" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+<p>使用正则表达式进行匹配，成功时视为true
+变量与正则表达式之间用“~，~<em>，!~，!~</em>”链接
+~表示对大小敏感
+~*表示对大小写不敏感
+!表示对结果取反
+在正则表达式中，可以使用小括号对变量进行截取，在花括号中使用$引用截取的量</p>
+<div class="language-plaintext highlighter-rouge"><div class="code-header">
+        <span data-label-text="Plaintext"><i class="fas fa-code fa-fw small"></i></span>
+      <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>if ($http_user_agent ~ MSIE) {
+}
+if ($http_user_agent ~* "id=([^;])(?:;|$)") {
+  # 可以使用$1和$2获得截取到的值
+  # set $id $1; 将截取的id赋给$1以备后用
+}
+</pre></td></tr></tbody></table></code></div></div>
+<h5 id="2判断请求的文件是否存在"><span class="me-2">2.判断请求的文件是否存在</span><a href="#2判断请求的文件是否存在" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+<p>-f或者!-f</p>
+<h5 id="3判断请求的目录是否存在"><span class="me-2">3.判断请求的目录是否存在</span><a href="#3判断请求的目录是否存在" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+<p>-d或者!-d</p>
+<h5 id="4判断请求的目录或文件是否存在"><span class="me-2">4.判断请求的目录或文件是否存在</span><a href="#4判断请求的目录或文件是否存在" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+<p>-e或者!-e</p>
+<h5 id="5-判断请求的文件是否可执行"><span class="me-2">5. 判断请求的文件是否可执行</span><a href="#5-判断请求的文件是否可执行" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+<p>-x或者!-x</p>
+<h4 id="15-break指令"><span class="me-2">1.5 break指令</span><a href="#15-break指令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p>用于中断当前作用域中的其他Nginx配置
+可以在server块，location块，if块中使用
+location / {
+  if ($slow) {
+    set $id $1
+    break;
+    limit_rate 10k;
+  }
+}</p>
+<h4 id="16-return-指令-"><span class="me-2">1.6 return 指令 **</span><a href="#16-return-指令-" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p>直接向客户端返回响应状态代码
+return [ text ]
+return code URI;
+return URL;
+code：返回给客户端的HTTP状态吗
+text：为返回给客户端的响应体内容</p>
+<h4 id="17-rewrite指令"><span class="me-2">1.7 rewrite指令</span><a href="#17-rewrite指令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p>URI:主机名[传输协议+主机+资源路径]+片段标志符+相对URI
+Scheme:[//][][用户名[:密码]@]主机名[:端口号]][/资源路径]
+URL：是URI的子集：传输协议+主机+资源具体地址
+Scheme://主机名[:端口号][/资源路径]
+该指令可在server块或者location块中配置
+rewrite regex replacement [flag];
+<strong>注意：</strong>
+rewrite接受到的URI不包含host地址
+rewrite myweb.com http://newweb.com/permanent;
+我们希望重写http://myweb.com/source是办不到的，因为rewrite指令接收到的URI是/source，不包含myweb.com
+另外，请求URL中的请求指令也是不包含在rewrite指令接收到的URI内容中的
+http://myweb.com/source?agr1=value1&amp;agr2=value2
+rewrite接收到的URI为/source，不包含“?agr1=value1&amp;agr2=value2”
+replacement用于替换URI中被截取的内容，如果该字符串是由http://或者https://开头，则不会继续向下进行其他
+处理，而直接将重写后的URI返回给客户端
+<strong>提示：</strong>
+rewrite myweb.com http://example.com$request_un?permanent;
+replcacement中支持全局变量的使用，常用的还有$uri和$args等
+flag用来设置rewrite对URI的处理行为
+last:
+break:
+redirect:
+permanent:</p>
+<h4 id="18-rewrite_log指令"><span class="me-2">1.8 rewrite_log指令</span><a href="#18-rewrite_log指令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<h4 id="19-set指令"><span class="me-2">1.9 set指令</span><a href="#19-set指令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<h4 id="110-uninitialized_variable_warm指令"><span class="me-2">1.10 uninitialized_variable_warm指令</span><a href="#110-uninitialized_variable_warm指令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<h4 id="111-全局变量"><span class="me-2">1.11 全局变量</span><a href="#111-全局变量" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p>$args:
+$content_length:
+$content_type:
+$document_root:针对当前请求的根路径
+$document_uri:请求中的当前uri，并且不包括请求指令
+$host:请求url中的主机字段部分
+$uri:与变量$document_uri含义相同</p>
+<h4 id="112-rewrite的使用"><span class="me-2">1.12 rewrite的使用</span><a href="#112-rewrite的使用" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<h5 id="一域名跳转"><span class="me-2">一：域名跳转</span><a href="#一域名跳转" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+<ol>
+  <li>域名跳转
+    <div class="language-plaintext highlighter-rouge"><div class="code-header">
+        <span data-label-text="Plaintext"><i class="fas fa-code fa-fw small"></i></span>
+      <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>server
+{
+  listen 80;
+  server_name jump.myweb.name;
+  rewrite ^/ http://www.myweb.info/;
+}
+</pre></td></tr></tbody></table></code></div>    </div>
+  </li>
+  <li>多域名跳转
+    <div class="language-plaintext highlighter-rouge"><div class="code-header">
+        <span data-label-text="Plaintext"><i class="fas fa-code fa-fw small"></i></span>
+      <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre>server
+{
+  listen 80;
+  server_name jump.myweb.name jump.myweb.info;
+  if ($host ~ myweb\.info)
+  {
+ rewrite ^(.*) http://jump.myweb.name$1 permanent;
+  }
+}
+</pre></td></tr></tbody></table></code></div>    </div>
+  </li>
+  <li>三级域名跳转
+    <div class="language-plaintext highlighter-rouge"><div class="code-header">
+        <span data-label-text="Plaintext"><i class="fas fa-code fa-fw small"></i></span>
+      <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre>server
+{
+  listen 80;
+  server_name jump1.myweb.com jump2.myweb.com;
+  if ($http_host ~* ^(.*)\.myweb\.name$)
+  {
+ rewrite ^(.*) http://jump.myweb.name$1;
+ break;
+  }
+}
+</pre></td></tr></tbody></table></code></div>    </div>
+    <h5 id="二域名镜像"><span class="me-2">二：域名镜像</span><a href="#二域名镜像" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+    <div class="language-plaintext highlighter-rouge"><div class="code-header">
+        <span data-label-text="Plaintext"><i class="fas fa-code fa-fw small"></i></span>
+      <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="rouge-code"><pre>server
+{
+  listen 80;
+  server_name mirror1.myweb.com;
+  rewrite ^(.*) http://jump1.myweb.name$1 last;
+}
+server
+{
+  listen 81;
+  server_name mirror2.myweb.name;
+  rewrite ^(.*) http://jump2.myweb.name$1 last;
+}
+</pre></td></tr></tbody></table></code></div>    </div>
+    <div class="language-plaintext highlighter-rouge"><div class="code-header">
+        <span data-label-text="Plaintext"><i class="fas fa-code fa-fw small"></i></span>
+      <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre>server
+{
+  listen 80;
+  server_name jump.myweb.name;
+  location ^~ /source1
+  {
+ rewrite ^/source1(.*) http://jump.myweb.name/websrc2$1 last;
+ break;
+  }
+  location ^~ /source2
+  {
+ rewrite ^/source2(.*) http://jump.myweb.name/websrc2$1 last;
+  }
+}
+</pre></td></tr></tbody></table></code></div>    </div>
+    <h5 id="三独立域名"><span class="me-2">三：独立域名</span><a href="#三独立域名" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+    <h5 id="四目录自动添加"><span class="me-2">四：目录自动添加”/”</span><a href="#四目录自动添加" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+    <h5 id="五目录合并"><span class="me-2">五：目录合并</span><a href="#五目录合并" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+    <h5 id="六防盗链"><span class="me-2">六：防盗链</span><a href="#六防盗链" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5>
+  </li>
+</ol>
+
+  </div>
+
+  <div class="post-tail-wrapper text-muted">
+    <!-- categories -->
+    
+
+    <!-- tags -->
+    
+
+    <div
+      class="
+        post-tail-bottom
+        d-flex justify-content-between align-items-center mt-5 pb-2
+      "
+    >
+      <div class="license-wrapper">
+        
+          
+
+          本文由作者按照 
+        <a href="https://creativecommons.org/licenses/by/4.0/">
+          CC BY 4.0
+        </a>
+         进行授权
+        
+      </div>
+
+      <!-- Post sharing snippet -->
+
+<div class="share-wrapper d-flex align-items-center">
+  <span class="share-label text-muted">分享</span>
+  <span class="share-icons">
+    
+    
+    
+
+    
+
+      
+
+      <a href="https://twitter.com/intent/tweet?text=Nginxrewrite%20-%20%E5%90%B4%E5%BC%93%E5%B0%8F%E7%AB%99&url=http%3A%2F%2Flocalhost%3A4000%2Fposts%2FNginxRewrite%2F" target="_blank" rel="noopener" data-bs-toggle="tooltip" data-bs-placement="top" title="Twitter" aria-label="Twitter">
+        <i class="fa-fw fa-brands fa-square-x-twitter"></i>
+      </a>
+    
+
+      
+
+      <a href="https://www.facebook.com/sharer/sharer.php?title=Nginxrewrite%20-%20%E5%90%B4%E5%BC%93%E5%B0%8F%E7%AB%99&u=http%3A%2F%2Flocalhost%3A4000%2Fposts%2FNginxRewrite%2F" target="_blank" rel="noopener" data-bs-toggle="tooltip" data-bs-placement="top" title="Facebook" aria-label="Facebook">
+        <i class="fa-fw fab fa-facebook-square"></i>
+      </a>
+    
+
+      
+
+      <a href="https://t.me/share/url?url=http%3A%2F%2Flocalhost%3A4000%2Fposts%2FNginxRewrite%2F&text=Nginxrewrite%20-%20%E5%90%B4%E5%BC%93%E5%B0%8F%E7%AB%99" target="_blank" rel="noopener" data-bs-toggle="tooltip" data-bs-placement="top" title="Telegram" aria-label="Telegram">
+        <i class="fa-fw fab fa-telegram"></i>
+      </a>
+    
+
+    <button
+      id="copy-link"
+      aria-label="Copy link"
+      class="btn small"
+      data-bs-toggle="tooltip"
+      data-bs-placement="top"
+      title="分享链接"
+      data-title-succeed="链接已复制！"
+    >
+      <i class="fa-fw fas fa-link pe-none fs-6"></i>
+    </button>
+  </span>
+</div>
+
+    </div>
+    <!-- .post-tail-bottom -->
+  </div>
+  <!-- div.post-tail-wrapper -->
+</article>
+
+
+            
+          </main>
+
+          <!-- panel -->
+          <aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 text-muted">
+            <div class="access">
+              <!-- Get 5 last posted/updated posts -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <section id="access-lastmod">
+    <h2 class="panel-heading">最近更新</h2>
+    <ul class="content list-unstyled ps-0 pb-1 ms-1 mt-2">
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/welcome-to-jekyll/">Welcome to Jekyll!</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/JavaScript%E7%9A%84%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/">Javascript的高级特性</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/js%E5%88%B6%E4%BD%9C%E4%B8%87%E5%B9%B4%E5%8E%86/">Js制作万年历</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/Docker%E5%91%BD%E4%BB%A4/">Docker命令</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/Centos7%E4%B8%8A%E6%89%8B/">Centos7上手</a>
+        </li>
+      
+    </ul>
+  </section>
+  <!-- #access-lastmod -->
+
+
+              <!-- The trending tags list -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+    
+    
+      
+        
+        
+
+
+
+  <section>
+    <h2 class="panel-heading">热门标签</h2>
+    <div class="d-flex flex-wrap mt-3 mb-1 me-3">
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/tag/">tag</a>
+      
+    </div>
+  </section>
+
+
+            </div>
+
+            
+              
+              
+
+
+
+
+
+
+  <div class="toc-border-cover z-3"></div>
+  <section id="toc-wrapper" class="invisible position-sticky ps-0 pe-4 pb-4">
+    <h2 class="panel-heading ps-3 pb-2 mb-0">文章内容</h2>
+    <nav id="toc"></nav>
+  </section>
+
+
+            
+          </aside>
+        </div>
+
+        <div class="row">
+          <!-- tail -->
+          <div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 px-md-4">
+            
+              
+              <!-- Recommend the other 3 posts according to the tags and categories of the current post. -->
+
+<!-- The total size of related posts -->
+
+
+<!-- An random integer that bigger than 0 -->
+
+
+<!-- Equals to TAG_SCORE / {max_categories_hierarchy} -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+              
+              <!-- Navigation buttons at the bottom of the post. -->
+
+<nav class="post-navigation d-flex justify-content-between" aria-label="Post Navigation">
+  
+  
+
+  
+    <a
+      href="/posts/Centos%E4%B8%8B%E5%AE%89%E8%A3%85easywechat/"
+      class="btn btn-outline-primary"
+      aria-label="上一篇"
+    >
+      <p>Centos下安装easywechat</p>
+    </a>
+  
+
+  
+    <a
+      href="/posts/%E4%BB%8A%E6%97%A5%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/"
+      class="btn btn-outline-primary"
+      aria-label="下一篇"
+    >
+      <p>今日工作总结</p>
+    </a>
+  
+</nav>
+
+            
+
+            <!-- The Footer -->
+
+<footer
+  aria-label="Site Info"
+  class="
+    d-flex flex-column justify-content-center text-muted
+    flex-lg-row justify-content-lg-between align-items-lg-center pb-lg-3
+  "
+>
+  <p>©
+    <time>2025</time>
+
+    
+      <a href="">Tobytywang</a>.
+    
+
+    
+      <span
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="除非另有说明，本网站上的博客文章均由作者按照知识共享署名 4.0 国际 (CC BY 4.0) 许可协议进行授权。"
+      >保留部分权利。</span>
+    
+  </p>
+
+  <p>本站采用 <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> 主题 <a
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="v7.3.2"
+        href="https://github.com/cotes2020/jekyll-theme-chirpy"
+        target="_blank"
+        rel="noopener"
+      >Chirpy</a>
+  </p>
+</footer>
+
+          </div>
+        </div>
+
+        <!-- The Search results -->
+
+<div id="search-result-wrapper" class="d-flex justify-content-center d-none">
+  <div class="col-11 content">
+    <div id="search-hints">
+      <!-- The trending tags list -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+    
+    
+      
+        
+        
+
+
+
+  <section>
+    <h2 class="panel-heading">热门标签</h2>
+    <div class="d-flex flex-wrap mt-3 mb-1 me-3">
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/tag/">tag</a>
+      
+    </div>
+  </section>
+
+
+    </div>
+    <div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div>
+  </div>
+</div>
+
+      </div>
+
+      <aside aria-label="Scroll to Top">
+        <button id="back-to-top" type="button" class="btn btn-lg btn-box-shadow">
+          <i class="fas fa-angle-up"></i>
+        </button>
+      </aside>
+    </div>
+
+    <div id="mask" class="d-none position-fixed w-100 h-100 z-1"></div>
+
+    
+      <aside
+  id="notification"
+  class="toast"
+  role="alert"
+  aria-live="assertive"
+  aria-atomic="true"
+  data-bs-animation="true"
+  data-bs-autohide="false"
+>
+  <div class="toast-header">
+    <button
+      type="button"
+      class="btn-close ms-auto"
+      data-bs-dismiss="toast"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="toast-body text-center pt-0">
+    <p class="px-2 mb-3">发现新版本的内容。</p>
+    <button type="button" class="btn btn-primary" aria-label="Update">
+      更新
+    </button>
+  </div>
+</aside>
+
+    
+
+    <!-- Embedded scripts -->
+
+    
+      
+      <!-- The comments switcher -->
+
+
+    
+
+    <!--
+  Jekyll Simple Search loader
+  See: <https://github.com/christian-fei/Simple-Jekyll-Search>
+-->
+
+
+
+
+
+<script>
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    SimpleJekyllSearch({
+      searchInput: document.getElementById('search-input'),
+      resultsContainer: document.getElementById('search-results'),
+      json: '/assets/js/data/search.json',
+      searchResultTemplate: '  <article class="px-1 px-sm-2 px-lg-4 px-xl-0">    <header>      <h2><a href="{url}">{title}</a></h2>      <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">        {categories}        {tags}      </div>    </header>    <p>{content}</p>  </article>',
+      noResultsText: '<p class="mt-5">搜索结果为空</p>',
+      templateMiddleware: function(prop, value, template) {
+        if (prop === 'categories') {
+          if (value === '') {
+            return `${value}`;
+          } else {
+            return `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`;
+          }
+        }
+
+        if (prop === 'tags') {
+          if (value === '') {
+            return `${value}`;
+          } else {
+            return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`;
+          }
+        }
+      }
+    });
+  });
+</script>
+
+  </body>
+</html>
+

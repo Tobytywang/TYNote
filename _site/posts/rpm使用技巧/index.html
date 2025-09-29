@@ -1,0 +1,2004 @@
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- `site.alt_lang` can specify a language different from the UI -->
+<html lang="zh-CN" data-mode="dark">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta
+    name="viewport"
+    content="width=device-width, user-scalable=no initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
+  ><!-- Setup Open Graph image -->
+
+  
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Rpm使用技巧" />
+<meta property="og:locale" content="zh_CN" />
+<meta name="description" content="RPM使用技巧 rpm -h提示 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 Usage: rpm [OPTION...] --quiet Query/Verify package selection options: 查询/验证包选择选项: -a, --all query/verify all packages -f, --file query/verify package(s) owning file -g, --group query/verify package(s) in group -p, --package query/verify a package file -W, --ftswalk query/verify package(s) from TOP file tree walk --pkgid query/verify package(s) with package identifier --hdrid query/verify package(s) with header identifier --fileid query/verify package(s) with file identifier --specfile query a spec file --triggeredby query the package(s) triggered by the package --whatrequires query/verify the package(s) which require a dependency --whatprovides query/verify the package(s) which provide a dependency --nomanifest do not process non-package files as manifests Query options (with -q or --query): 查询选项: -c, --configfiles list all configuration files -d, --docfiles list all documentation files --dump dump basic file information -l, --list list files in package --queryformat=QUERYFORMAT use the following query format -s, --state display the states of the listed files Verify options (with -V or --verify): 验证选项: --nofiledigest don&#39;t verify digest of files --nomd5 don&#39;t verify digest of files --nofiles don&#39;t verify files in package --nodeps don&#39;t verify package dependencies --noscript don&#39;t execute verify script(s) File tree walk options (with --ftswalk): 文件树: --comfollow follow command line symlinks --logical logical walk --nochdir don&#39;t change directories --nostat don&#39;t get stat info --physical physical walk --seedot return dot and dot-dot --xdev don&#39;t cross devices --whiteout return whiteout information Signature options: 签名选项: --addsign sign package(s) (identical to --resign) -K, --checksig verify package signature(s) --delsign delete package signatures --import import an armored public key --resign sign package(s) (identical to --addsign) --nodigest don&#39;t verify package digest(s) --nosignature don&#39;t verify package signature(s) Database options: 数据库选项: --initdb initialize database --rebuilddb rebuild database inverted lists from installed package headers Install/Upgrade/Erase options: 安装/升级/删除选项: --aid add suggested packages to transaction --allfiles install all files, even configurations which might otherwise be skipped --allmatches remove all packages which match &lt;package&gt; (normally an error is generated if &lt;package&gt; specified multiple packages) --badreloc relocate files in non-relocatable package -e, --erase=&lt;package&gt;+ erase (uninstall) package --excludedocs do not install documentation --excludepath=&lt;path&gt; skip files with leading component &lt;path&gt; --fileconflicts detect file conflicts between packages --force short hand for --replacepkgs --replacefiles -F, --freshen=&lt;packagefile&gt;+ upgrade package(s) if already installed -h, --hash print hash marks as package installs (good with -v) --ignorearch don&#39;t verify package architecture --ignoreos don&#39;t verify package operating system --ignoresize don&#39;t check disk space before installing -i, --install install package(s) --justdb update the database, but do not modify the filesystem --nodeps do not verify package dependencies --nofiledigest don&#39;t verify digest of files --nomd5 don&#39;t verify digest of files (obsolete) --nocontexts don&#39;t install file security contexts --noorder do not reorder package installation to satisfy dependencies --nosuggest do not suggest missing dependency resolution(s) --noscripts do not execute package scriptlet(s) --notriggers do not execute any scriptlet(s) triggered by this package --oldpackage upgrade to an old version of the package (--force on upgrades does this automatically) --percent print percentages as package installs --prefix=&lt;dir&gt; relocate the package to &lt;dir&gt;, if relocatable --relocate=&lt;old&gt;=&lt;new&gt; relocate files from path &lt;old&gt; to &lt;new&gt; --replacefiles ignore file conflicts between packages --replacepkgs reinstall if the package is already present --test don&#39;t install, but tell if it would work or not -U, --upgrade=&lt;packagefile&gt;+ upgrade package(s) Common options for all rpm modes and executables: -D, --define=&#39;MACRO EXPR&#39; define MACRO with value EXPR -E, --eval=&#39;EXPR&#39; print macro expansion of EXPR --macros=&lt;FILE:...&gt; read &lt;FILE:...&gt; instead of default file(s) --nodigest don&#39;t verify package digest(s) --nosignature don&#39;t verify package signature(s) --rcfile=&lt;FILE:...&gt; read &lt;FILE:...&gt; instead of default file(s) -r, --root=ROOT use ROOT as top level directory (default: &quot;/&quot;) --querytags display known query tags --showrc display final rpmrc and macro configuration --quiet provide less detailed output -v, --verbose provide more detailed output --version print the version of rpm being used Options implemented via popt alias/exec: --scripts list install/erase scriptlets from package(s) --setperms set permissions of files in a package --setugids set user/group ownership of files in a package --conflicts list capabilities this package conflicts with --obsoletes list other packages removed by installing this package --provides list capabilities that this package provides --requires list capabilities required by package(s) --info list descriptive information from package(s) --changelog list change logs for this package --xml list metadata in xml --triggers list trigger scriptlets from package(s) --last list package(s) by install time, most recent first --dupes list duplicated packages --filesbypkg list all files from each package --fileclass list file names with classes --filecolor list file names with colors --fscontext list file names with security context from file system --fileprovide list file names with provides --filerequire list file names with requires --filecaps list file names with POSIX1.e capabilities Help options: -?, --help Show this help message --usage Display brief usage message 查看已经安装的软件包 查询已安装的软件 rpm -q 软件名 查询所有已经安装的包 rpm -qa 查询一个已经安装的文件属于哪个软件包 rpm -qf 文件名 查询已安装的软件包安装到了何处 rpm -ql 软件名或者rpm rpmquery -ql 查询一个已经安装软件包的信息 rpm -qi 软件名 查询一个已经安装软件的文档安装位置 rpm -qd 软件名 查看一个已经安装软件所依赖的软件包及文件 rpm -qR 软件名 查看未安装的软件包 查看一个软件包的用途，版本 rpm -qpi file.rpm 查看一个软件包所包含的文件 rpm -qpl file.rpm 查看软件包的文档所在的位置 rpm -qpd file.rpm 查看一个软件包的配置文件 rpm -qpc file.rpm 查看一个软件包的依赖关系 rpm -qpR file.rpm yum使用 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 Loaded plugins: replace, security Usage: yum [options] COMMAND List of Commands: 命令列表: check Check for problems in the rpmdb check-update Check for available package updates clean Remove cached data deplist List a package&#39;s dependencies distribution-synchronization Synchronize installed packages to the latest available versions downgrade downgrade a package erase Remove a package or packages from your system groupinfo Display details about a package group groupinstall Install the packages in a group on your system grouplist List available package groups groupremove Remove the packages in a group from your system help Display a helpful usage message history Display, or use, the transaction history info Display details about a package or group of packages install Install a package or packages on your system list List a package or groups of packages load-transaction load a saved transaction from filename makecache Generate the metadata cache provides Find what package provides the given value reinstall reinstall a package replace Replace a package with another that provides the same thing repolist Display the configured software repositories resolvedep Determine which package provides the given dependency search Search package details for the given string shell Run an interactive yum shell update Update a package or packages on your system update-minimal Works like update, but goes to the &#39;newest&#39; package match which fixes a problem that affects your system updateinfo Acts on repository update information upgrade Update packages taking obsoletes into account version Display a version for the machine and/or available repos. Options: -h, --help show this help message and exit -t, --tolerant be tolerant of errors -C, --cacheonly run entirely from system cache, don&#39;t update cache -c [config file], --config=[config file] config file location -R [minutes], --randomwait=[minutes] maximum command wait time -d [debug level], --debuglevel=[debug level] debugging output level --showduplicates show duplicates, in repos, in list/search commands -e [error level], --errorlevel=[error level] error output level --rpmverbosity=[debug level name] debugging output level for rpm -q, --quiet quiet operation -v, --verbose verbose operation -y, --assumeyes answer yes for all questions --assumeno answer no for all questions --version show Yum version and exit --installroot=[path] set install root --enablerepo=[repo] enable one or more repositories (wildcards allowed) --disablerepo=[repo] disable one or more repositories (wildcards allowed) -x [package], --exclude=[package] exclude package(s) by name or glob --disableexcludes=[repo] disable exclude from main, for a repo or for everything --obsoletes enable obsoletes processing during updates --noplugins disable Yum plugins --nogpgcheck disable gpg signature checking --disableplugin=[plugin] disable plugins by name --enableplugin=[plugin] enable plugins by name --skip-broken skip packages with depsolving problems --color=COLOR control whether color is used --releasever=RELEASEVER set value of $releasever in yum config and repo files --downloadonly don&#39;t update, just download --downloaddir=DLDIR specifies an alternate directory to store packages --setopt=SETOPTS set arbitrary config and repo options --replace-with=BASEPKG name of the base package to replace with Plugin Options: --security Include security relevant packages --bugfixes Include bugfix relevant packages --cve=CVE Include packages needed to fix the given CVE --bz=BZ Include packages needed to fix the given BZ --sec-severity=SEVERITY Include security relevant packages, of this severity --advisory=ADVISORY Include packages needed to fix the given advisory 常用命令 查找 yum search 列出所有可安装的软件包 yum list 列出所有可更新的软件包 yum list updates 列出所有已安装的软件包 yum list installed 列出所有已安装但是不在Yum Repository内的软件包命令 yum list extras 列出所有指定的软件包命令 yum list xxx 获取软件包信息 yum info xxx 列出所有软件包的信息 yum info 列出所有可更新的软件包命令 yum info updates 列出所有已安装的软件包信息命令 yum info installed 列出所有已安装但不在Yum Repository内的软件包信息命令 yum info extras 列出软件包提供哪些文件命令 yum provides" />
+<meta property="og:description" content="RPM使用技巧 rpm -h提示 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 Usage: rpm [OPTION...] --quiet Query/Verify package selection options: 查询/验证包选择选项: -a, --all query/verify all packages -f, --file query/verify package(s) owning file -g, --group query/verify package(s) in group -p, --package query/verify a package file -W, --ftswalk query/verify package(s) from TOP file tree walk --pkgid query/verify package(s) with package identifier --hdrid query/verify package(s) with header identifier --fileid query/verify package(s) with file identifier --specfile query a spec file --triggeredby query the package(s) triggered by the package --whatrequires query/verify the package(s) which require a dependency --whatprovides query/verify the package(s) which provide a dependency --nomanifest do not process non-package files as manifests Query options (with -q or --query): 查询选项: -c, --configfiles list all configuration files -d, --docfiles list all documentation files --dump dump basic file information -l, --list list files in package --queryformat=QUERYFORMAT use the following query format -s, --state display the states of the listed files Verify options (with -V or --verify): 验证选项: --nofiledigest don&#39;t verify digest of files --nomd5 don&#39;t verify digest of files --nofiles don&#39;t verify files in package --nodeps don&#39;t verify package dependencies --noscript don&#39;t execute verify script(s) File tree walk options (with --ftswalk): 文件树: --comfollow follow command line symlinks --logical logical walk --nochdir don&#39;t change directories --nostat don&#39;t get stat info --physical physical walk --seedot return dot and dot-dot --xdev don&#39;t cross devices --whiteout return whiteout information Signature options: 签名选项: --addsign sign package(s) (identical to --resign) -K, --checksig verify package signature(s) --delsign delete package signatures --import import an armored public key --resign sign package(s) (identical to --addsign) --nodigest don&#39;t verify package digest(s) --nosignature don&#39;t verify package signature(s) Database options: 数据库选项: --initdb initialize database --rebuilddb rebuild database inverted lists from installed package headers Install/Upgrade/Erase options: 安装/升级/删除选项: --aid add suggested packages to transaction --allfiles install all files, even configurations which might otherwise be skipped --allmatches remove all packages which match &lt;package&gt; (normally an error is generated if &lt;package&gt; specified multiple packages) --badreloc relocate files in non-relocatable package -e, --erase=&lt;package&gt;+ erase (uninstall) package --excludedocs do not install documentation --excludepath=&lt;path&gt; skip files with leading component &lt;path&gt; --fileconflicts detect file conflicts between packages --force short hand for --replacepkgs --replacefiles -F, --freshen=&lt;packagefile&gt;+ upgrade package(s) if already installed -h, --hash print hash marks as package installs (good with -v) --ignorearch don&#39;t verify package architecture --ignoreos don&#39;t verify package operating system --ignoresize don&#39;t check disk space before installing -i, --install install package(s) --justdb update the database, but do not modify the filesystem --nodeps do not verify package dependencies --nofiledigest don&#39;t verify digest of files --nomd5 don&#39;t verify digest of files (obsolete) --nocontexts don&#39;t install file security contexts --noorder do not reorder package installation to satisfy dependencies --nosuggest do not suggest missing dependency resolution(s) --noscripts do not execute package scriptlet(s) --notriggers do not execute any scriptlet(s) triggered by this package --oldpackage upgrade to an old version of the package (--force on upgrades does this automatically) --percent print percentages as package installs --prefix=&lt;dir&gt; relocate the package to &lt;dir&gt;, if relocatable --relocate=&lt;old&gt;=&lt;new&gt; relocate files from path &lt;old&gt; to &lt;new&gt; --replacefiles ignore file conflicts between packages --replacepkgs reinstall if the package is already present --test don&#39;t install, but tell if it would work or not -U, --upgrade=&lt;packagefile&gt;+ upgrade package(s) Common options for all rpm modes and executables: -D, --define=&#39;MACRO EXPR&#39; define MACRO with value EXPR -E, --eval=&#39;EXPR&#39; print macro expansion of EXPR --macros=&lt;FILE:...&gt; read &lt;FILE:...&gt; instead of default file(s) --nodigest don&#39;t verify package digest(s) --nosignature don&#39;t verify package signature(s) --rcfile=&lt;FILE:...&gt; read &lt;FILE:...&gt; instead of default file(s) -r, --root=ROOT use ROOT as top level directory (default: &quot;/&quot;) --querytags display known query tags --showrc display final rpmrc and macro configuration --quiet provide less detailed output -v, --verbose provide more detailed output --version print the version of rpm being used Options implemented via popt alias/exec: --scripts list install/erase scriptlets from package(s) --setperms set permissions of files in a package --setugids set user/group ownership of files in a package --conflicts list capabilities this package conflicts with --obsoletes list other packages removed by installing this package --provides list capabilities that this package provides --requires list capabilities required by package(s) --info list descriptive information from package(s) --changelog list change logs for this package --xml list metadata in xml --triggers list trigger scriptlets from package(s) --last list package(s) by install time, most recent first --dupes list duplicated packages --filesbypkg list all files from each package --fileclass list file names with classes --filecolor list file names with colors --fscontext list file names with security context from file system --fileprovide list file names with provides --filerequire list file names with requires --filecaps list file names with POSIX1.e capabilities Help options: -?, --help Show this help message --usage Display brief usage message 查看已经安装的软件包 查询已安装的软件 rpm -q 软件名 查询所有已经安装的包 rpm -qa 查询一个已经安装的文件属于哪个软件包 rpm -qf 文件名 查询已安装的软件包安装到了何处 rpm -ql 软件名或者rpm rpmquery -ql 查询一个已经安装软件包的信息 rpm -qi 软件名 查询一个已经安装软件的文档安装位置 rpm -qd 软件名 查看一个已经安装软件所依赖的软件包及文件 rpm -qR 软件名 查看未安装的软件包 查看一个软件包的用途，版本 rpm -qpi file.rpm 查看一个软件包所包含的文件 rpm -qpl file.rpm 查看软件包的文档所在的位置 rpm -qpd file.rpm 查看一个软件包的配置文件 rpm -qpc file.rpm 查看一个软件包的依赖关系 rpm -qpR file.rpm yum使用 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 Loaded plugins: replace, security Usage: yum [options] COMMAND List of Commands: 命令列表: check Check for problems in the rpmdb check-update Check for available package updates clean Remove cached data deplist List a package&#39;s dependencies distribution-synchronization Synchronize installed packages to the latest available versions downgrade downgrade a package erase Remove a package or packages from your system groupinfo Display details about a package group groupinstall Install the packages in a group on your system grouplist List available package groups groupremove Remove the packages in a group from your system help Display a helpful usage message history Display, or use, the transaction history info Display details about a package or group of packages install Install a package or packages on your system list List a package or groups of packages load-transaction load a saved transaction from filename makecache Generate the metadata cache provides Find what package provides the given value reinstall reinstall a package replace Replace a package with another that provides the same thing repolist Display the configured software repositories resolvedep Determine which package provides the given dependency search Search package details for the given string shell Run an interactive yum shell update Update a package or packages on your system update-minimal Works like update, but goes to the &#39;newest&#39; package match which fixes a problem that affects your system updateinfo Acts on repository update information upgrade Update packages taking obsoletes into account version Display a version for the machine and/or available repos. Options: -h, --help show this help message and exit -t, --tolerant be tolerant of errors -C, --cacheonly run entirely from system cache, don&#39;t update cache -c [config file], --config=[config file] config file location -R [minutes], --randomwait=[minutes] maximum command wait time -d [debug level], --debuglevel=[debug level] debugging output level --showduplicates show duplicates, in repos, in list/search commands -e [error level], --errorlevel=[error level] error output level --rpmverbosity=[debug level name] debugging output level for rpm -q, --quiet quiet operation -v, --verbose verbose operation -y, --assumeyes answer yes for all questions --assumeno answer no for all questions --version show Yum version and exit --installroot=[path] set install root --enablerepo=[repo] enable one or more repositories (wildcards allowed) --disablerepo=[repo] disable one or more repositories (wildcards allowed) -x [package], --exclude=[package] exclude package(s) by name or glob --disableexcludes=[repo] disable exclude from main, for a repo or for everything --obsoletes enable obsoletes processing during updates --noplugins disable Yum plugins --nogpgcheck disable gpg signature checking --disableplugin=[plugin] disable plugins by name --enableplugin=[plugin] enable plugins by name --skip-broken skip packages with depsolving problems --color=COLOR control whether color is used --releasever=RELEASEVER set value of $releasever in yum config and repo files --downloadonly don&#39;t update, just download --downloaddir=DLDIR specifies an alternate directory to store packages --setopt=SETOPTS set arbitrary config and repo options --replace-with=BASEPKG name of the base package to replace with Plugin Options: --security Include security relevant packages --bugfixes Include bugfix relevant packages --cve=CVE Include packages needed to fix the given CVE --bz=BZ Include packages needed to fix the given BZ --sec-severity=SEVERITY Include security relevant packages, of this severity --advisory=ADVISORY Include packages needed to fix the given advisory 常用命令 查找 yum search 列出所有可安装的软件包 yum list 列出所有可更新的软件包 yum list updates 列出所有已安装的软件包 yum list installed 列出所有已安装但是不在Yum Repository内的软件包命令 yum list extras 列出所有指定的软件包命令 yum list xxx 获取软件包信息 yum info xxx 列出所有软件包的信息 yum info 列出所有可更新的软件包命令 yum info updates 列出所有已安装的软件包信息命令 yum info installed 列出所有已安装但不在Yum Repository内的软件包信息命令 yum info extras 列出软件包提供哪些文件命令 yum provides" />
+<link rel="canonical" href="http://localhost:4000/posts/rpm%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/" />
+<meta property="og:url" content="http://localhost:4000/posts/rpm%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/" />
+<meta property="og:site_name" content="吴弓小站" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-02-15T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Rpm使用技巧" />
+<meta name="twitter:site" content="@tobytywang" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2017-02-15T00:00:00+08:00","datePublished":"2017-02-15T00:00:00+08:00","description":"RPM使用技巧 rpm -h提示 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 Usage: rpm [OPTION...] --quiet Query/Verify package selection options: 查询/验证包选择选项: -a, --all query/verify all packages -f, --file query/verify package(s) owning file -g, --group query/verify package(s) in group -p, --package query/verify a package file -W, --ftswalk query/verify package(s) from TOP file tree walk --pkgid query/verify package(s) with package identifier --hdrid query/verify package(s) with header identifier --fileid query/verify package(s) with file identifier --specfile query a spec file --triggeredby query the package(s) triggered by the package --whatrequires query/verify the package(s) which require a dependency --whatprovides query/verify the package(s) which provide a dependency --nomanifest do not process non-package files as manifests Query options (with -q or --query): 查询选项: -c, --configfiles list all configuration files -d, --docfiles list all documentation files --dump dump basic file information -l, --list list files in package --queryformat=QUERYFORMAT use the following query format -s, --state display the states of the listed files Verify options (with -V or --verify): 验证选项: --nofiledigest don&#39;t verify digest of files --nomd5 don&#39;t verify digest of files --nofiles don&#39;t verify files in package --nodeps don&#39;t verify package dependencies --noscript don&#39;t execute verify script(s) File tree walk options (with --ftswalk): 文件树: --comfollow follow command line symlinks --logical logical walk --nochdir don&#39;t change directories --nostat don&#39;t get stat info --physical physical walk --seedot return dot and dot-dot --xdev don&#39;t cross devices --whiteout return whiteout information Signature options: 签名选项: --addsign sign package(s) (identical to --resign) -K, --checksig verify package signature(s) --delsign delete package signatures --import import an armored public key --resign sign package(s) (identical to --addsign) --nodigest don&#39;t verify package digest(s) --nosignature don&#39;t verify package signature(s) Database options: 数据库选项: --initdb initialize database --rebuilddb rebuild database inverted lists from installed package headers Install/Upgrade/Erase options: 安装/升级/删除选项: --aid add suggested packages to transaction --allfiles install all files, even configurations which might otherwise be skipped --allmatches remove all packages which match &lt;package&gt; (normally an error is generated if &lt;package&gt; specified multiple packages) --badreloc relocate files in non-relocatable package -e, --erase=&lt;package&gt;+ erase (uninstall) package --excludedocs do not install documentation --excludepath=&lt;path&gt; skip files with leading component &lt;path&gt; --fileconflicts detect file conflicts between packages --force short hand for --replacepkgs --replacefiles -F, --freshen=&lt;packagefile&gt;+ upgrade package(s) if already installed -h, --hash print hash marks as package installs (good with -v) --ignorearch don&#39;t verify package architecture --ignoreos don&#39;t verify package operating system --ignoresize don&#39;t check disk space before installing -i, --install install package(s) --justdb update the database, but do not modify the filesystem --nodeps do not verify package dependencies --nofiledigest don&#39;t verify digest of files --nomd5 don&#39;t verify digest of files (obsolete) --nocontexts don&#39;t install file security contexts --noorder do not reorder package installation to satisfy dependencies --nosuggest do not suggest missing dependency resolution(s) --noscripts do not execute package scriptlet(s) --notriggers do not execute any scriptlet(s) triggered by this package --oldpackage upgrade to an old version of the package (--force on upgrades does this automatically) --percent print percentages as package installs --prefix=&lt;dir&gt; relocate the package to &lt;dir&gt;, if relocatable --relocate=&lt;old&gt;=&lt;new&gt; relocate files from path &lt;old&gt; to &lt;new&gt; --replacefiles ignore file conflicts between packages --replacepkgs reinstall if the package is already present --test don&#39;t install, but tell if it would work or not -U, --upgrade=&lt;packagefile&gt;+ upgrade package(s) Common options for all rpm modes and executables: -D, --define=&#39;MACRO EXPR&#39; define MACRO with value EXPR -E, --eval=&#39;EXPR&#39; print macro expansion of EXPR --macros=&lt;FILE:...&gt; read &lt;FILE:...&gt; instead of default file(s) --nodigest don&#39;t verify package digest(s) --nosignature don&#39;t verify package signature(s) --rcfile=&lt;FILE:...&gt; read &lt;FILE:...&gt; instead of default file(s) -r, --root=ROOT use ROOT as top level directory (default: &quot;/&quot;) --querytags display known query tags --showrc display final rpmrc and macro configuration --quiet provide less detailed output -v, --verbose provide more detailed output --version print the version of rpm being used Options implemented via popt alias/exec: --scripts list install/erase scriptlets from package(s) --setperms set permissions of files in a package --setugids set user/group ownership of files in a package --conflicts list capabilities this package conflicts with --obsoletes list other packages removed by installing this package --provides list capabilities that this package provides --requires list capabilities required by package(s) --info list descriptive information from package(s) --changelog list change logs for this package --xml list metadata in xml --triggers list trigger scriptlets from package(s) --last list package(s) by install time, most recent first --dupes list duplicated packages --filesbypkg list all files from each package --fileclass list file names with classes --filecolor list file names with colors --fscontext list file names with security context from file system --fileprovide list file names with provides --filerequire list file names with requires --filecaps list file names with POSIX1.e capabilities Help options: -?, --help Show this help message --usage Display brief usage message 查看已经安装的软件包 查询已安装的软件 rpm -q 软件名 查询所有已经安装的包 rpm -qa 查询一个已经安装的文件属于哪个软件包 rpm -qf 文件名 查询已安装的软件包安装到了何处 rpm -ql 软件名或者rpm rpmquery -ql 查询一个已经安装软件包的信息 rpm -qi 软件名 查询一个已经安装软件的文档安装位置 rpm -qd 软件名 查看一个已经安装软件所依赖的软件包及文件 rpm -qR 软件名 查看未安装的软件包 查看一个软件包的用途，版本 rpm -qpi file.rpm 查看一个软件包所包含的文件 rpm -qpl file.rpm 查看软件包的文档所在的位置 rpm -qpd file.rpm 查看一个软件包的配置文件 rpm -qpc file.rpm 查看一个软件包的依赖关系 rpm -qpR file.rpm yum使用 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 Loaded plugins: replace, security Usage: yum [options] COMMAND List of Commands: 命令列表: check Check for problems in the rpmdb check-update Check for available package updates clean Remove cached data deplist List a package&#39;s dependencies distribution-synchronization Synchronize installed packages to the latest available versions downgrade downgrade a package erase Remove a package or packages from your system groupinfo Display details about a package group groupinstall Install the packages in a group on your system grouplist List available package groups groupremove Remove the packages in a group from your system help Display a helpful usage message history Display, or use, the transaction history info Display details about a package or group of packages install Install a package or packages on your system list List a package or groups of packages load-transaction load a saved transaction from filename makecache Generate the metadata cache provides Find what package provides the given value reinstall reinstall a package replace Replace a package with another that provides the same thing repolist Display the configured software repositories resolvedep Determine which package provides the given dependency search Search package details for the given string shell Run an interactive yum shell update Update a package or packages on your system update-minimal Works like update, but goes to the &#39;newest&#39; package match which fixes a problem that affects your system updateinfo Acts on repository update information upgrade Update packages taking obsoletes into account version Display a version for the machine and/or available repos. Options: -h, --help show this help message and exit -t, --tolerant be tolerant of errors -C, --cacheonly run entirely from system cache, don&#39;t update cache -c [config file], --config=[config file] config file location -R [minutes], --randomwait=[minutes] maximum command wait time -d [debug level], --debuglevel=[debug level] debugging output level --showduplicates show duplicates, in repos, in list/search commands -e [error level], --errorlevel=[error level] error output level --rpmverbosity=[debug level name] debugging output level for rpm -q, --quiet quiet operation -v, --verbose verbose operation -y, --assumeyes answer yes for all questions --assumeno answer no for all questions --version show Yum version and exit --installroot=[path] set install root --enablerepo=[repo] enable one or more repositories (wildcards allowed) --disablerepo=[repo] disable one or more repositories (wildcards allowed) -x [package], --exclude=[package] exclude package(s) by name or glob --disableexcludes=[repo] disable exclude from main, for a repo or for everything --obsoletes enable obsoletes processing during updates --noplugins disable Yum plugins --nogpgcheck disable gpg signature checking --disableplugin=[plugin] disable plugins by name --enableplugin=[plugin] enable plugins by name --skip-broken skip packages with depsolving problems --color=COLOR control whether color is used --releasever=RELEASEVER set value of $releasever in yum config and repo files --downloadonly don&#39;t update, just download --downloaddir=DLDIR specifies an alternate directory to store packages --setopt=SETOPTS set arbitrary config and repo options --replace-with=BASEPKG name of the base package to replace with Plugin Options: --security Include security relevant packages --bugfixes Include bugfix relevant packages --cve=CVE Include packages needed to fix the given CVE --bz=BZ Include packages needed to fix the given BZ --sec-severity=SEVERITY Include security relevant packages, of this severity --advisory=ADVISORY Include packages needed to fix the given advisory 常用命令 查找 yum search 列出所有可安装的软件包 yum list 列出所有可更新的软件包 yum list updates 列出所有已安装的软件包 yum list installed 列出所有已安装但是不在Yum Repository内的软件包命令 yum list extras 列出所有指定的软件包命令 yum list xxx 获取软件包信息 yum info xxx 列出所有软件包的信息 yum info 列出所有可更新的软件包命令 yum info updates 列出所有已安装的软件包信息命令 yum info installed 列出所有已安装但不在Yum Repository内的软件包信息命令 yum info extras 列出软件包提供哪些文件命令 yum provides","headline":"Rpm使用技巧","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/rpm%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/"},"url":"http://localhost:4000/posts/rpm%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <title>Rpm使用技巧 | 吴弓小站
+  </title>
+
+  <!--
+  The Favicons for Web, Android, Microsoft, and iOS (iPhone and iPad) Apps
+  Generated by: https://realfavicongenerator.net/
+-->
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png">
+
+  <link rel="manifest" href="/assets/img/favicons/site.webmanifest">
+
+<link rel="shortcut icon" href="/assets/img/favicons/favicon.ico">
+<meta name="apple-mobile-web-app-title" content="吴弓小站">
+<meta name="application-name" content="吴弓小站">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
+
+  <!-- Resource Hints -->
+  
+    
+      
+        <link rel="preconnect" href="https://fonts.googleapis.com" >
+      
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" >
+      
+    
+      
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" >
+      
+    
+      
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" >
+      
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" >
+      
+    
+  
+
+  <!-- Bootstrap -->
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
+  
+
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
+
+  <!-- Web Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
+
+  <!-- 3rd-party Dependencies -->
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.32.2/dist/tocbot.min.css">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/loading-attribute-polyfill@2.1.1/dist/loading-attribute-polyfill.min.css">
+  
+
+  
+    <!-- Image Popup -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css">
+  
+
+  <!-- Scripts -->
+
+  <script src="/assets/js/dist/theme.min.js"></script>
+
+  <!-- JS selector for site. -->
+
+<!-- commons -->
+
+
+
+<!-- layout specified -->
+
+
+  
+
+  
+    <!-- image lazy-loading & popup & clipboard -->
+    
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/combine/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js,npm/loading-attribute-polyfill@2.1.1/dist/loading-attribute-polyfill.umd.min.js,npm/glightbox@3.3.0/dist/js/glightbox.min.js,npm/clipboard@2.0.11/dist/clipboard.min.js,npm/dayjs@1.11.13/dayjs.min.js,npm/dayjs@1.11.13/locale/zh.js,npm/dayjs@1.11.13/plugin/relativeTime.js,npm/dayjs@1.11.13/plugin/localizedFormat.js,npm/tocbot@4.32.2/dist/tocbot.min.js"></script>
+
+
+
+
+
+
+
+<script defer src="/assets/js/dist/post.min.js"></script>
+
+
+
+<!-- Pageviews -->
+
+  
+
+  
+    
+        
+    
+  
+
+
+
+  
+
+  <!-- A placeholder to allow defining custom metadata -->
+
+</head>
+
+
+  <body>
+    <!-- The Side Bar -->
+
+<aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
+  <header class="profile-wrapper">
+    <a href="/" id="avatar" class="rounded-circle"></a>
+
+    <a class="site-title d-block" href="/">吴弓小站</a>
+    <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
+  </header>
+  <!-- .profile-wrapper -->
+
+  <nav class="flex-column flex-grow-1 w-100 ps-0">
+    <ul class="nav">
+      <!-- home -->
+      <li class="nav-item">
+        <a href="/" class="nav-link">
+          <i class="fa-fw fas fa-home"></i>
+          <span>首页</span>
+        </a>
+      </li>
+      <!-- the real tabs -->
+      
+        <li class="nav-item">
+          <a href="/categories/" class="nav-link">
+            <i class="fa-fw fas fa-stream"></i>
+            
+
+            <span>分类</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+      
+        <li class="nav-item">
+          <a href="/tags/" class="nav-link">
+            <i class="fa-fw fas fa-tags"></i>
+            
+
+            <span>标签</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+      
+        <li class="nav-item">
+          <a href="/archives/" class="nav-link">
+            <i class="fa-fw fas fa-archive"></i>
+            
+
+            <span>归档</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+      
+        <li class="nav-item">
+          <a href="/about/" class="nav-link">
+            <i class="fa-fw fas fa-info-circle"></i>
+            
+
+            <span>关于</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+      
+    </ul>
+  </nav>
+
+  <div class="sidebar-bottom d-flex flex-wrap  align-items-center w-100">
+    
+
+    
+
+      
+        <a
+          href="https://github.com/Tobytywang"
+          aria-label="github"
+          
+
+          
+            target="_blank"
+            
+          
+
+          
+
+          
+            rel="noopener noreferrer"
+          
+        >
+          <i class="fab fa-github"></i>
+        </a>
+      
+    
+
+      
+        <a
+          href="https://twitter.com/tobytywang"
+          aria-label="twitter"
+          
+
+          
+            target="_blank"
+            
+          
+
+          
+
+          
+            rel="noopener noreferrer"
+          
+        >
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+      
+    
+
+      
+        <a
+          href="javascript:location.href = 'mailto:' + ['tobytywang','163.com'].join('@')"
+          aria-label="email"
+          
+
+          
+
+          
+
+          
+        >
+          <i class="fas fa-envelope"></i>
+        </a>
+      
+    
+          
+        
+
+      
+        <a
+          href="/feed.xml"
+          aria-label="rss"
+          
+
+          
+
+          
+
+          
+        >
+          <i class="fas fa-rss"></i>
+        </a>
+      
+    
+  </div>
+  <!-- .sidebar-bottom -->
+</aside>
+<!-- #sidebar -->
+
+
+    <div id="main-wrapper" class="d-flex justify-content-center">
+      <div class="container d-flex flex-column px-xxl-5">
+        <!-- The Top Bar -->
+
+<header id="topbar-wrapper" class="flex-shrink-0" aria-label="Top Bar">
+  <div
+    id="topbar"
+    class="d-flex align-items-center justify-content-between px-lg-3 h-100"
+  >
+    <nav id="breadcrumb" aria-label="Breadcrumb">
+      
+
+      
+        
+          
+            <span>
+              <a href="/">首页</a>
+            </span>
+
+          
+        
+          
+        
+          
+            
+              <span>Rpm使用技巧</span>
+            
+
+          
+        
+      
+    </nav>
+    <!-- endof #breadcrumb -->
+
+    <button type="button" id="sidebar-trigger" class="btn btn-link" aria-label="Sidebar">
+      <i class="fas fa-bars fa-fw"></i>
+    </button>
+
+    <div id="topbar-title">
+      文章
+    </div>
+
+    <button type="button" id="search-trigger" class="btn btn-link" aria-label="Search">
+      <i class="fas fa-search fa-fw"></i>
+    </button>
+
+    <search id="search" class="align-items-center ms-3 ms-lg-0">
+      <i class="fas fa-search fa-fw"></i>
+      <input
+        class="form-control"
+        id="search-input"
+        type="search"
+        aria-label="search"
+        autocomplete="off"
+        placeholder="搜索..."
+      >
+    </search>
+    <button type="button" class="btn btn-link text-decoration-none" id="search-cancel">取消</button>
+  </div>
+</header>
+
+
+        <div class="row flex-grow-1">
+          <main aria-label="Main Content" class="col-12 col-lg-11 col-xl-9 px-md-4">
+            
+              <!-- Refactor the HTML structure -->
+
+
+
+<!--
+  In order to allow a wide table to scroll horizontally,
+  we suround the markdown table with `<div class="table-wrapper">` and `</div>`
+-->
+
+
+
+<!--
+  Fixed kramdown code highlight rendering:
+  https://github.com/penibelst/jekyll-compress-html/issues/101
+  https://github.com/penibelst/jekyll-compress-html/issues/71#issuecomment-188144901
+-->
+
+
+
+<!-- Change the icon of checkbox -->
+
+
+
+<!-- Handle images -->
+
+
+
+
+
+<!-- Add header for code snippets -->
+
+
+
+<!-- Create heading anchors -->
+
+
+
+
+
+  
+  
+
+  
+    
+    
+
+    
+      
+        
+        
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+
+    
+  
+
+  
+  
+
+  
+    
+    
+
+    
+      
+        
+        
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+
+    
+  
+
+  
+  
+
+  
+    
+    
+
+    
+      
+        
+        
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+
+    
+  
+
+  
+  
+
+  
+
+
+
+
+<!-- return -->
+
+
+
+
+
+
+
+
+
+
+<article class="px-1" data-toc="true">
+  <header>
+    <h1 data-toc-skip>Rpm使用技巧</h1>
+    
+
+    <div class="post-meta text-muted">
+      <!-- published date -->
+      <span>
+        发表于
+        <!--
+  Date format snippet
+  See: ${JS_ROOT}/utils/locale-dateime.js
+-->
+
+
+
+
+<time
+  
+  data-ts="1487088000"
+  data-df="YYYY/MM/DD"
+  
+    data-bs-toggle="tooltip" data-bs-placement="bottom"
+  
+>
+  2017/02/15
+</time>
+
+      </span>
+
+      <!-- lastmod date -->
+      
+
+      
+
+      <div class="d-flex justify-content-between">
+        <!-- author(s) -->
+        <span>
+          
+
+          作者
+
+          <em>
+            
+              <a href="">Tobytywang</a>
+            
+          </em>
+        </span>
+
+        <div>
+          <!-- pageviews -->
+          
+
+          <!-- read time -->
+          <!-- Calculate the post's reading time, and display the word count in tooltip -->
+
+
+
+<!-- words per minute -->
+
+
+
+
+
+
+
+
+
+
+<!-- return element -->
+<span
+  class="readtime"
+  data-bs-toggle="tooltip"
+  data-bs-placement="bottom"
+  title="1980 字"
+>
+  <em>11 分钟</em>阅读</span>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+    <div id="toc-bar" class="d-flex align-items-center justify-content-between invisible">
+      <span class="label text-truncate">Rpm使用技巧</span>
+      <button type="button" class="toc-trigger btn me-1">
+        <i class="fa-solid fa-list-ul fa-fw"></i>
+      </button>
+    </div>
+
+    <button id="toc-solo-trigger" type="button" class="toc-trigger btn btn-outline-secondary btn-sm">
+      <span class="label ps-2 pe-1">文章内容</span>
+      <i class="fa-solid fa-angle-right fa-fw"></i>
+    </button>
+
+    <dialog id="toc-popup" class="p-0">
+      <div class="header d-flex flex-row align-items-center justify-content-between">
+        <div class="label text-truncate py-2 ms-4">Rpm使用技巧</div>
+        <button id="toc-popup-close" type="button" class="btn mx-1 my-1 opacity-75">
+          <i class="fas fa-close"></i>
+        </button>
+      </div>
+      <div id="toc-popup-content" class="px-4 py-3 pb-4"></div>
+    </dialog>
+  
+
+  <div class="content">
+    <h2 id="rpm使用技巧"><span class="me-2">RPM使用技巧</span><a href="#rpm使用技巧" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+<h3 id="rpm--h提示"><span class="me-2">rpm -h提示</span><a href="#rpm--h提示" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
+<div class="language-plaintext highlighter-rouge"><div class="code-header">
+        <span data-label-text="Plaintext"><i class="fas fa-code fa-fw small"></i></span>
+      <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+</pre></td><td class="rouge-code"><pre>Usage: rpm [OPTION...]
+  --quiet
+
+Query/Verify package selection options:
+查询/验证包选择选项:
+  -a, --all                        query/verify all packages
+  -f, --file                       query/verify package(s) owning file
+  -g, --group                      query/verify package(s) in group
+  -p, --package                    query/verify a package file
+  -W, --ftswalk                    query/verify package(s) from TOP file tree walk
+  --pkgid                          query/verify package(s) with package identifier
+  --hdrid                          query/verify package(s) with header identifier
+  --fileid                         query/verify package(s) with file identifier
+  --specfile                       query a spec file
+  --triggeredby                    query the package(s) triggered by the package
+  --whatrequires                   query/verify the package(s) which require a
+                                   dependency
+  --whatprovides                   query/verify the package(s) which provide a
+                                   dependency
+  --nomanifest                     do not process non-package files as manifests
+
+Query options (with -q or --query):
+查询选项:
+  -c, --configfiles                list all configuration files
+  -d, --docfiles                   list all documentation files
+  --dump                           dump basic file information
+  -l, --list                       list files in package
+  --queryformat=QUERYFORMAT        use the following query format
+  -s, --state                      display the states of the listed files
+
+Verify options (with -V or --verify):
+验证选项:
+  --nofiledigest                   don't verify digest of files
+  --nomd5                          don't verify digest of files
+  --nofiles                        don't verify files in package
+  --nodeps                         don't verify package dependencies
+  --noscript                       don't execute verify script(s)
+
+File tree walk options (with --ftswalk):
+文件树:
+  --comfollow                      follow command line symlinks
+  --logical                        logical walk
+  --nochdir                        don't change directories
+  --nostat                         don't get stat info
+  --physical                       physical walk
+  --seedot                         return dot and dot-dot
+  --xdev                           don't cross devices
+  --whiteout                       return whiteout information
+
+Signature options:
+签名选项:
+  --addsign                        sign package(s) (identical to --resign)
+  -K, --checksig                   verify package signature(s)
+  --delsign                        delete package signatures
+  --import                         import an armored public key
+  --resign                         sign package(s) (identical to --addsign)
+  --nodigest                       don't verify package digest(s)
+  --nosignature                    don't verify package signature(s)
+
+Database options:
+数据库选项:
+  --initdb                         initialize database
+  --rebuilddb                      rebuild database inverted lists from installed
+                                   package headers
+
+Install/Upgrade/Erase options:
+安装/升级/删除选项:
+  --aid                            add suggested packages to transaction
+  --allfiles                       install all files, even configurations which
+                                   might otherwise be skipped
+  --allmatches                     remove all packages which match &lt;package&gt;
+                                   (normally an error is generated if &lt;package&gt;
+                                   specified multiple packages)
+  --badreloc                       relocate files in non-relocatable package
+  -e, --erase=&lt;package&gt;+           erase (uninstall) package
+  --excludedocs                    do not install documentation
+  --excludepath=&lt;path&gt;             skip files with leading component &lt;path&gt;
+  --fileconflicts                  detect file conflicts between packages
+  --force                          short hand for --replacepkgs --replacefiles
+  -F, --freshen=&lt;packagefile&gt;+     upgrade package(s) if already installed
+  -h, --hash                       print hash marks as package installs (good with
+                                   -v)
+  --ignorearch                     don't verify package architecture
+  --ignoreos                       don't verify package operating system
+  --ignoresize                     don't check disk space before installing
+  -i, --install                    install package(s)
+  --justdb                         update the database, but do not modify the
+                                   filesystem
+  --nodeps                         do not verify package dependencies
+  --nofiledigest                   don't verify digest of files
+  --nomd5                          don't verify digest of files (obsolete)
+  --nocontexts                     don't install file security contexts
+  --noorder                        do not reorder package installation to satisfy
+                                   dependencies
+  --nosuggest                      do not suggest missing dependency resolution(s)
+  --noscripts                      do not execute package scriptlet(s)
+  --notriggers                     do not execute any scriptlet(s) triggered by
+                                   this package
+  --oldpackage                     upgrade to an old version of the package
+                                   (--force on upgrades does this automatically)
+  --percent                        print percentages as package installs
+  --prefix=&lt;dir&gt;                   relocate the package to &lt;dir&gt;, if relocatable
+  --relocate=&lt;old&gt;=&lt;new&gt;           relocate files from path &lt;old&gt; to &lt;new&gt;
+  --replacefiles                   ignore file conflicts between packages
+  --replacepkgs                    reinstall if the package is already present
+  --test                           don't install, but tell if it would work or not
+  -U, --upgrade=&lt;packagefile&gt;+     upgrade package(s)
+
+Common options for all rpm modes and executables:
+  -D, --define='MACRO EXPR'        define MACRO with value EXPR
+  -E, --eval='EXPR'                print macro expansion of EXPR
+  --macros=&lt;FILE:...&gt;              read &lt;FILE:...&gt; instead of default file(s)
+  --nodigest                       don't verify package digest(s)
+  --nosignature                    don't verify package signature(s)
+  --rcfile=&lt;FILE:...&gt;              read &lt;FILE:...&gt; instead of default file(s)
+  -r, --root=ROOT                  use ROOT as top level directory (default: "/")
+  --querytags                      display known query tags
+  --showrc                         display final rpmrc and macro configuration
+  --quiet                          provide less detailed output
+  -v, --verbose                    provide more detailed output
+  --version                        print the version of rpm being used
+
+Options implemented via popt alias/exec:
+  --scripts                        list install/erase scriptlets from package(s)
+  --setperms                       set permissions of files in a package
+  --setugids                       set user/group ownership of files in a package
+  --conflicts                      list capabilities this package conflicts with
+  --obsoletes                      list other packages removed by installing this
+                                   package
+  --provides                       list capabilities that this package provides
+  --requires                       list capabilities required by package(s)
+  --info                           list descriptive information from package(s)
+  --changelog                      list change logs for this package
+  --xml                            list metadata in xml
+  --triggers                       list trigger scriptlets from package(s)
+  --last                           list package(s) by install time, most recent
+                                   first
+  --dupes                          list duplicated packages
+  --filesbypkg                     list all files from each package
+  --fileclass                      list file names with classes
+  --filecolor                      list file names with colors
+  --fscontext                      list file names with security context from file
+                                   system
+  --fileprovide                    list file names with provides
+  --filerequire                    list file names with requires
+  --filecaps                       list file names with POSIX1.e capabilities
+
+Help options:
+  -?, --help                       Show this help message
+  --usage                          Display brief usage message
+
+</pre></td></tr></tbody></table></code></div></div>
+<h3 id="查看已经安装的软件包"><span class="me-2">查看已经安装的软件包</span><a href="#查看已经安装的软件包" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
+<h4 id="查询已安装的软件"><span class="me-2">查询已安装的软件</span><a href="#查询已安装的软件" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">rpm -q 软件名</code><br />
+查询所有已经安装的包<br />
+<code class="language-plaintext highlighter-rouge">rpm -qa</code></p>
+<h4 id="查询一个已经安装的文件属于哪个软件包"><span class="me-2">查询一个已经安装的文件属于哪个软件包</span><a href="#查询一个已经安装的文件属于哪个软件包" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">rpm -qf 文件名</code></p>
+<h4 id="查询已安装的软件包安装到了何处"><span class="me-2">查询已安装的软件包安装到了何处</span><a href="#查询已安装的软件包安装到了何处" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">rpm -ql 软件名</code>或者<code class="language-plaintext highlighter-rouge">rpm rpmquery -ql</code></p>
+<h4 id="查询一个已经安装软件包的信息"><span class="me-2">查询一个已经安装软件包的信息</span><a href="#查询一个已经安装软件包的信息" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">rpm -qi 软件名</code></p>
+<h4 id="查询一个已经安装软件的文档安装位置"><span class="me-2">查询一个已经安装软件的文档安装位置</span><a href="#查询一个已经安装软件的文档安装位置" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">rpm -qd 软件名</code></p>
+<h4 id="查看一个已经安装软件所依赖的软件包及文件"><span class="me-2">查看一个已经安装软件所依赖的软件包及文件</span><a href="#查看一个已经安装软件所依赖的软件包及文件" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">rpm -qR 软件名</code></p>
+<h3 id="查看未安装的软件包"><span class="me-2">查看未安装的软件包</span><a href="#查看未安装的软件包" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
+<h4 id="查看一个软件包的用途版本"><span class="me-2">查看一个软件包的用途，版本</span><a href="#查看一个软件包的用途版本" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">rpm -qpi file.rpm</code></p>
+<h4 id="查看一个软件包所包含的文件"><span class="me-2">查看一个软件包所包含的文件</span><a href="#查看一个软件包所包含的文件" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">rpm -qpl file.rpm</code></p>
+<h4 id="查看软件包的文档所在的位置"><span class="me-2">查看软件包的文档所在的位置</span><a href="#查看软件包的文档所在的位置" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">rpm -qpd file.rpm</code></p>
+<h4 id="查看一个软件包的配置文件"><span class="me-2">查看一个软件包的配置文件</span><a href="#查看一个软件包的配置文件" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">rpm -qpc file.rpm</code></p>
+<h4 id="查看一个软件包的依赖关系"><span class="me-2">查看一个软件包的依赖关系</span><a href="#查看一个软件包的依赖关系" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">rpm -qpR file.rpm</code></p>
+<h2 id="yum使用"><span class="me-2">yum使用</span><a href="#yum使用" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+<div class="language-plaintext highlighter-rouge"><div class="code-header">
+        <span data-label-text="Plaintext"><i class="fas fa-code fa-fw small"></i></span>
+      <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+</pre></td><td class="rouge-code"><pre>Loaded plugins: replace, security
+Usage: yum [options] COMMAND
+
+List of Commands:
+命令列表:
+check          Check for problems in the rpmdb
+check-update   Check for available package updates
+clean          Remove cached data
+deplist        List a package's dependencies
+distribution-synchronization Synchronize installed packages to the latest available versions
+downgrade      downgrade a package
+erase          Remove a package or packages from your system
+groupinfo      Display details about a package group
+groupinstall   Install the packages in a group on your system
+grouplist      List available package groups
+groupremove    Remove the packages in a group from your system
+help           Display a helpful usage message
+history        Display, or use, the transaction history
+info           Display details about a package or group of packages
+install        Install a package or packages on your system
+list           List a package or groups of packages
+load-transaction load a saved transaction from filename
+makecache      Generate the metadata cache
+provides       Find what package provides the given value
+reinstall      reinstall a package
+replace        Replace a package with another that provides the same thing
+repolist       Display the configured software repositories
+resolvedep     Determine which package provides the given dependency
+search         Search package details for the given string
+shell          Run an interactive yum shell
+update         Update a package or packages on your system
+update-minimal Works like update, but goes to the 'newest' package match which fixes a problem that affects your system
+updateinfo     Acts on repository update information
+upgrade        Update packages taking obsoletes into account
+version        Display a version for the machine and/or available repos.
+
+
+Options:
+  -h, --help            show this help message and exit
+  -t, --tolerant        be tolerant of errors
+  -C, --cacheonly       run entirely from system cache, don't update cache
+  -c [config file], --config=[config file]
+                        config file location
+  -R [minutes], --randomwait=[minutes]
+                        maximum command wait time
+  -d [debug level], --debuglevel=[debug level]
+                        debugging output level
+  --showduplicates      show duplicates, in repos, in list/search commands
+  -e [error level], --errorlevel=[error level]
+                        error output level
+  --rpmverbosity=[debug level name]
+                        debugging output level for rpm
+  -q, --quiet           quiet operation
+  -v, --verbose         verbose operation
+  -y, --assumeyes       answer yes for all questions
+  --assumeno            answer no for all questions
+  --version             show Yum version and exit
+  --installroot=[path]  set install root
+  --enablerepo=[repo]   enable one or more repositories (wildcards allowed)
+  --disablerepo=[repo]  disable one or more repositories (wildcards allowed)
+  -x [package], --exclude=[package]
+                        exclude package(s) by name or glob
+  --disableexcludes=[repo]
+                        disable exclude from main, for a repo or for
+                        everything
+  --obsoletes           enable obsoletes processing during updates
+  --noplugins           disable Yum plugins
+  --nogpgcheck          disable gpg signature checking
+  --disableplugin=[plugin]
+                        disable plugins by name
+  --enableplugin=[plugin]
+                        enable plugins by name
+  --skip-broken         skip packages with depsolving problems
+  --color=COLOR         control whether color is used
+  --releasever=RELEASEVER
+                        set value of $releasever in yum config and repo files
+  --downloadonly        don't update, just download
+  --downloaddir=DLDIR   specifies an alternate directory to store packages
+  --setopt=SETOPTS      set arbitrary config and repo options
+  --replace-with=BASEPKG
+                        name of the base package to replace with
+
+  Plugin Options:
+    --security          Include security relevant packages
+    --bugfixes          Include bugfix relevant packages
+    --cve=CVE           Include packages needed to fix the given CVE
+    --bz=BZ             Include packages needed to fix the given BZ
+    --sec-severity=SEVERITY
+                        Include security relevant packages, of this severity
+    --advisory=ADVISORY
+                        Include packages needed to fix the given advisory
+</pre></td></tr></tbody></table></code></div></div>
+<h3 id="常用命令"><span class="me-2">常用命令</span><a href="#常用命令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
+<h4 id="查找"><span class="me-2">查找</span><a href="#查找" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">yum search</code></p>
+<h4 id="列出所有可安装的软件包"><span class="me-2">列出所有可安装的软件包</span><a href="#列出所有可安装的软件包" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">yum list</code></p>
+<h4 id="列出所有可更新的软件包"><span class="me-2">列出所有可更新的软件包</span><a href="#列出所有可更新的软件包" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">yum list updates</code></p>
+<h4 id="列出所有已安装的软件包"><span class="me-2">列出所有已安装的软件包</span><a href="#列出所有已安装的软件包" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">yum list installed</code></p>
+<h4 id="列出所有已安装但是不在yum-repository内的软件包命令"><span class="me-2">列出所有已安装但是不在Yum Repository内的软件包命令</span><a href="#列出所有已安装但是不在yum-repository内的软件包命令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">yum list extras</code></p>
+<h4 id="列出所有指定的软件包命令"><span class="me-2">列出所有指定的软件包命令</span><a href="#列出所有指定的软件包命令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">yum list xxx</code></p>
+<h4 id="获取软件包信息"><span class="me-2">获取软件包信息</span><a href="#获取软件包信息" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">yum info xxx</code></p>
+<h4 id="列出所有软件包的信息"><span class="me-2">列出所有软件包的信息</span><a href="#列出所有软件包的信息" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">yum info</code></p>
+<h4 id="列出所有可更新的软件包命令"><span class="me-2">列出所有可更新的软件包命令</span><a href="#列出所有可更新的软件包命令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">yum info updates</code></p>
+<h4 id="列出所有已安装的软件包信息命令"><span class="me-2">列出所有已安装的软件包信息命令</span><a href="#列出所有已安装的软件包信息命令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">yum info installed</code></p>
+<h4 id="列出所有已安装但不在yum-repository内的软件包信息命令"><span class="me-2">列出所有已安装但不在Yum Repository内的软件包信息命令</span><a href="#列出所有已安装但不在yum-repository内的软件包信息命令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">yum info extras</code></p>
+<h4 id="列出软件包提供哪些文件命令"><span class="me-2">列出软件包提供哪些文件命令</span><a href="#列出软件包提供哪些文件命令" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+<p><code class="language-plaintext highlighter-rouge">yum provides</code></p>
+
+  </div>
+
+  <div class="post-tail-wrapper text-muted">
+    <!-- categories -->
+    
+
+    <!-- tags -->
+    
+
+    <div
+      class="
+        post-tail-bottom
+        d-flex justify-content-between align-items-center mt-5 pb-2
+      "
+    >
+      <div class="license-wrapper">
+        
+          
+
+          本文由作者按照 
+        <a href="https://creativecommons.org/licenses/by/4.0/">
+          CC BY 4.0
+        </a>
+         进行授权
+        
+      </div>
+
+      <!-- Post sharing snippet -->
+
+<div class="share-wrapper d-flex align-items-center">
+  <span class="share-label text-muted">分享</span>
+  <span class="share-icons">
+    
+    
+    
+
+    
+
+      
+
+      <a href="https://twitter.com/intent/tweet?text=Rpm%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7%20-%20%E5%90%B4%E5%BC%93%E5%B0%8F%E7%AB%99&url=http%3A%2F%2Flocalhost%3A4000%2Fposts%2Frpm%25E4%25BD%25BF%25E7%2594%25A8%25E6%258A%2580%25E5%25B7%25A7%2F" target="_blank" rel="noopener" data-bs-toggle="tooltip" data-bs-placement="top" title="Twitter" aria-label="Twitter">
+        <i class="fa-fw fa-brands fa-square-x-twitter"></i>
+      </a>
+    
+
+      
+
+      <a href="https://www.facebook.com/sharer/sharer.php?title=Rpm%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7%20-%20%E5%90%B4%E5%BC%93%E5%B0%8F%E7%AB%99&u=http%3A%2F%2Flocalhost%3A4000%2Fposts%2Frpm%25E4%25BD%25BF%25E7%2594%25A8%25E6%258A%2580%25E5%25B7%25A7%2F" target="_blank" rel="noopener" data-bs-toggle="tooltip" data-bs-placement="top" title="Facebook" aria-label="Facebook">
+        <i class="fa-fw fab fa-facebook-square"></i>
+      </a>
+    
+
+      
+
+      <a href="https://t.me/share/url?url=http%3A%2F%2Flocalhost%3A4000%2Fposts%2Frpm%25E4%25BD%25BF%25E7%2594%25A8%25E6%258A%2580%25E5%25B7%25A7%2F&text=Rpm%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7%20-%20%E5%90%B4%E5%BC%93%E5%B0%8F%E7%AB%99" target="_blank" rel="noopener" data-bs-toggle="tooltip" data-bs-placement="top" title="Telegram" aria-label="Telegram">
+        <i class="fa-fw fab fa-telegram"></i>
+      </a>
+    
+
+    <button
+      id="copy-link"
+      aria-label="Copy link"
+      class="btn small"
+      data-bs-toggle="tooltip"
+      data-bs-placement="top"
+      title="分享链接"
+      data-title-succeed="链接已复制！"
+    >
+      <i class="fa-fw fas fa-link pe-none fs-6"></i>
+    </button>
+  </span>
+</div>
+
+    </div>
+    <!-- .post-tail-bottom -->
+  </div>
+  <!-- div.post-tail-wrapper -->
+</article>
+
+
+            
+          </main>
+
+          <!-- panel -->
+          <aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 text-muted">
+            <div class="access">
+              <!-- Get 5 last posted/updated posts -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <section id="access-lastmod">
+    <h2 class="panel-heading">最近更新</h2>
+    <ul class="content list-unstyled ps-0 pb-1 ms-1 mt-2">
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/welcome-to-jekyll/">Welcome to Jekyll!</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/JavaScript%E7%9A%84%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/">Javascript的高级特性</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/js%E5%88%B6%E4%BD%9C%E4%B8%87%E5%B9%B4%E5%8E%86/">Js制作万年历</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/Docker%E5%91%BD%E4%BB%A4/">Docker命令</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/Centos7%E4%B8%8A%E6%89%8B/">Centos7上手</a>
+        </li>
+      
+    </ul>
+  </section>
+  <!-- #access-lastmod -->
+
+
+              <!-- The trending tags list -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+    
+    
+      
+        
+        
+
+
+
+  <section>
+    <h2 class="panel-heading">热门标签</h2>
+    <div class="d-flex flex-wrap mt-3 mb-1 me-3">
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/tag/">tag</a>
+      
+    </div>
+  </section>
+
+
+            </div>
+
+            
+              
+              
+
+
+
+
+
+
+  <div class="toc-border-cover z-3"></div>
+  <section id="toc-wrapper" class="invisible position-sticky ps-0 pe-4 pb-4">
+    <h2 class="panel-heading ps-3 pb-2 mb-0">文章内容</h2>
+    <nav id="toc"></nav>
+  </section>
+
+
+            
+          </aside>
+        </div>
+
+        <div class="row">
+          <!-- tail -->
+          <div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 px-md-4">
+            
+              
+              <!-- Recommend the other 3 posts according to the tags and categories of the current post. -->
+
+<!-- The total size of related posts -->
+
+
+<!-- An random integer that bigger than 0 -->
+
+
+<!-- Equals to TAG_SCORE / {max_categories_hierarchy} -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+              
+              <!-- Navigation buttons at the bottom of the post. -->
+
+<nav class="post-navigation d-flex justify-content-between" aria-label="Post Navigation">
+  
+  
+
+  
+    <a
+      href="/posts/Systemctl/"
+      class="btn btn-outline-primary"
+      aria-label="上一篇"
+    >
+      <p>Systemctl</p>
+    </a>
+  
+
+  
+    <a
+      href="/posts/%E6%9B%B4%E6%96%B0CentOS%E8%BD%AF%E4%BB%B6%E6%BA%90/"
+      class="btn btn-outline-primary"
+      aria-label="下一篇"
+    >
+      <p>更新centos软件源</p>
+    </a>
+  
+</nav>
+
+            
+
+            <!-- The Footer -->
+
+<footer
+  aria-label="Site Info"
+  class="
+    d-flex flex-column justify-content-center text-muted
+    flex-lg-row justify-content-lg-between align-items-lg-center pb-lg-3
+  "
+>
+  <p>©
+    <time>2025</time>
+
+    
+      <a href="">Tobytywang</a>.
+    
+
+    
+      <span
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="除非另有说明，本网站上的博客文章均由作者按照知识共享署名 4.0 国际 (CC BY 4.0) 许可协议进行授权。"
+      >保留部分权利。</span>
+    
+  </p>
+
+  <p>本站采用 <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> 主题 <a
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="v7.3.2"
+        href="https://github.com/cotes2020/jekyll-theme-chirpy"
+        target="_blank"
+        rel="noopener"
+      >Chirpy</a>
+  </p>
+</footer>
+
+          </div>
+        </div>
+
+        <!-- The Search results -->
+
+<div id="search-result-wrapper" class="d-flex justify-content-center d-none">
+  <div class="col-11 content">
+    <div id="search-hints">
+      <!-- The trending tags list -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+    
+    
+      
+        
+        
+
+
+
+  <section>
+    <h2 class="panel-heading">热门标签</h2>
+    <div class="d-flex flex-wrap mt-3 mb-1 me-3">
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/tag/">tag</a>
+      
+    </div>
+  </section>
+
+
+    </div>
+    <div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div>
+  </div>
+</div>
+
+      </div>
+
+      <aside aria-label="Scroll to Top">
+        <button id="back-to-top" type="button" class="btn btn-lg btn-box-shadow">
+          <i class="fas fa-angle-up"></i>
+        </button>
+      </aside>
+    </div>
+
+    <div id="mask" class="d-none position-fixed w-100 h-100 z-1"></div>
+
+    
+      <aside
+  id="notification"
+  class="toast"
+  role="alert"
+  aria-live="assertive"
+  aria-atomic="true"
+  data-bs-animation="true"
+  data-bs-autohide="false"
+>
+  <div class="toast-header">
+    <button
+      type="button"
+      class="btn-close ms-auto"
+      data-bs-dismiss="toast"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="toast-body text-center pt-0">
+    <p class="px-2 mb-3">发现新版本的内容。</p>
+    <button type="button" class="btn btn-primary" aria-label="Update">
+      更新
+    </button>
+  </div>
+</aside>
+
+    
+
+    <!-- Embedded scripts -->
+
+    
+      
+      <!-- The comments switcher -->
+
+
+    
+
+    <!--
+  Jekyll Simple Search loader
+  See: <https://github.com/christian-fei/Simple-Jekyll-Search>
+-->
+
+
+
+
+
+<script>
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    SimpleJekyllSearch({
+      searchInput: document.getElementById('search-input'),
+      resultsContainer: document.getElementById('search-results'),
+      json: '/assets/js/data/search.json',
+      searchResultTemplate: '  <article class="px-1 px-sm-2 px-lg-4 px-xl-0">    <header>      <h2><a href="{url}">{title}</a></h2>      <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">        {categories}        {tags}      </div>    </header>    <p>{content}</p>  </article>',
+      noResultsText: '<p class="mt-5">搜索结果为空</p>',
+      templateMiddleware: function(prop, value, template) {
+        if (prop === 'categories') {
+          if (value === '') {
+            return `${value}`;
+          } else {
+            return `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`;
+          }
+        }
+
+        if (prop === 'tags') {
+          if (value === '') {
+            return `${value}`;
+          } else {
+            return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`;
+          }
+        }
+      }
+    });
+  });
+</script>
+
+  </body>
+</html>
+

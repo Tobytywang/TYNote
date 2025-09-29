@@ -1,0 +1,589 @@
+[
+  
+  {
+    "title": "Welcome to Jekyll!",
+    "url": "/posts/welcome-to-jekyll/",
+    "categories": "jekyll, update",
+    "tags": "tag",
+    "date": "2025-09-18 16:39:47 +0800",
+    "content": "You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.  Jekyll requires blog post files to be named according to the following format:  YEAR-MONTH-DAY-title.MARKUP  Where YEAR is a four-digit number, MONTH and DAY are both two-digit numbers, and MARKUP is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.  Jekyll also offers powerful support for code snippets:  def print_hi(name)   puts \"Hi, #{name}\" end print_hi('Tom') #=&gt; prints 'Hi, Tom' to STDOUT.  Check out the Jekyll docs for more info on how to get the most out of Jekyll. File all bugs/feature requests at Jekyll’s GitHub repo. If you have questions, you can ask them on Jekyll Talk.  "
+  },
+  
+  {
+    "title": "Javascript的高级特性",
+    "url": "/posts/JavaScript%E7%9A%84%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-03-20 00:00:00 +0800",
+    "content": "JavaScript的高级特性 1 作用域 与C、C++、Java等语言不同，JavaScript的作用域不是以花括号包围块级作用域，而是由函数来决定的，if、for语句中的花括号不是独立的作用域。 1.1 函数作用域 JavaScript中，一个函数内定义的变量只对这个函数内部可见，称之为函数作用域。 在函数中引用一个变量时，JavaScript首先会搜索当前作用域，或者称为“局部作用域”，如果没有找到则会搜索上层作用域，一直到全局作用域。 示例一： var v1 = 'v1';  var f1 = function() {   console.log(v1);    // 输出v1 }; f1();  var f2 = function() {   var v1 = 'local';   console.log(v1);    // 输出local } f2();  示例二： var scope = 'global';  var f = function() {   console.log(scope);    // 输出undefined   var scope = 'f'; } f();  由于在作用域内搜索到了scope变量，所以上层作用域中的scope就被屏蔽了。 我们可以这样认为：无论在函数内什么地方定义的变量，在一进入函数时就被定义了，但直到var所在的那一行它才会被初始化。（事实上， JavaScript 的内部实现并不是这样，未 定义变量和值为 undefined 的变量还是有区别的。） 示例三: var f = function() {   var scope = 'f0';   (function() {     var scope = 'f1';     (function() {       cosole.log(scope); // 输出 f1     })();   })(); }; f();  在最内层函数引用了scope变量，通过作用域搜索，找到了其父作用域中定义的scope变量。 这种嵌套关系是在定义时决定的，而不是在调用时决定的，这被称为静态作用域或者词法作用域。 示例四： var scope = 'top';  var f1 = function() {   console.log(scope); }; f1();    // 输出 top  var f2 = function() {   var scope = 'f2';   f1(); }; f2();    // 输出 top  这个例子中，f2调用f1查找到的scope变量，是在父作用域中定义的scope变量，而不是在f2中定义的scope变量。这说明了作用域的嵌套关系不是在调用时确定的，而是在定义时确定的。  1.2 全局作用域 JavaScript中有一种特殊的对象称为全局对象。这个对象在Nodejs中对应的是global对象，在浏览器中对应的是window对象。由于全局对象的所有属性在任何地方都是可见的，所以这个对象又称为全局作用域。 全局作用域中的变量不论在什么函数中都是可以被直接引用的，而不必通过全局对象。 满足以下条件的变量属于全局作用域：    在最外层定义的变量   全局对象的属性   任何隐式定义的变量（未定义直接赋值的变量）   不通过var声明直接赋值的变量都会被定义在全局作用域中。 而模块化编程的一个重要原则就是避免使用全局变量，所以我们在任何地方都不应该隐式定义变量。  2 闭包 闭包是函数式编程中的概念，意思是”由函数（环境）及其封闭的自由变量组成的集合体” 2.1 什么是闭包 通俗点来说，JavaScript中的每一个函数都是一个闭包，但通常意义上嵌套的函数更能体现出闭包的特性： 示例： var generateClosure = function() {   var count = 0;   var get = function() {     count++;     return count;    // 返回count的值   };   return get;    // 返回get函数 };  var counter = generateClosure();    // counter现在是一个函数（get()） console.log(counter());    // 输出 1 console.log(counter());    // 输出 2 console.log(counter());    // 输出 3  在这段代码中，generateClosure()函数中有一个局部变量count，初值为0。还有一个叫做get的函数，get将其父作用域，也就是generateClosure()函数中的count变量增加1，并返回count的值值。 generateClosure()的返回值是get函数。在外部，我们通过counter变量调用了generateClosur()函数并获取了它的返回值，也就是get函数，接下来反复调用几次counter()，我们发现每次返回的值都递增了1。  让我们看看上面的例子有什么特点，按照通常命令式编程思维的理解， count 是 generateClosure 函数内部的变量，它的生命周期就是 generateClosure 被调用的时 期，当 generateClosure 从调用栈中返回时， count 变量申请的空间也就被释放。问题是，在 generateClosure() 调用结束后， counter() 却引用了“已经释放了的” count 变量，而且非但没有出错，反而每次调用 counter() 时还修改并返回了 count。这是怎 么回事呢？  这正是所谓闭包的特性。当一个函数返回它内部定义的一个函数时，就产生了一个闭包，闭包不但包括被返回的函数，还包括这个函数的定义环境 。  上面的例子中，当函数generateClosure()的内部函数get被一个外部变量counter引用时，counter和generateClosure()的局部变量就是一个闭包。 示例二： var generateClosure = function() {   var count = 0;   var get = function() {     count ++;     return count;   };   return get; };  var counter1 = generateClosure(); var counter2 = generateClosure(); console.log(counter1()); console.log(counter2()); console.log(counter1()); console.log(counter1()); console.log(counter2());  上面的例子中，counter1和counter2分别调用了generateClosure()函数，生成了两个闭包的实例，它们内部引用的count变量分别属于各自的运行环境。我们可以理解为，在generateClosure()返回get函数时，私下将get能引用到的generateClosure()函数的内部变量（也就是count）也返回了，并在内存中生成了一个副本。  2.2 闭包的用途 闭包主要有两个主要用途，一是实现嵌套的回调函数，二是隐藏对象的细节。    嵌套的回调函数     exports.add_user = function(user_info, callback) {    // 增加 user   var uid = parseInt(user_info['uid']);   mongodb.open(function(err, db){    // 创建数据库链接  if (err) {callback(err); return;}    // 如果有错误  db.collection('users', function(err, collection) {    //    if (err) {callback(err); return;}    collection.ensureIndex(\"uid\", function(err){      if (err) {callback(err); return;}      collection.ensureIndex(\"username\", function(err){        if (err) {callback{err}; return;}        collection.findOne({uid: uid}, function(err) {          if (err) {callback(err); return;}          if (doc) {            callback('occupied');          } else {            var user = {              uid: uid,              user: user_info,            };            collection.insert(user, function(err){              callback(err);            });          }        });      });    });  });   }); };          这段代码中用到了闭包的层层嵌套，每一层的嵌套都是一个回掉函数。回调函数不会立即执行，而是等待相应请求处理完后由请求的函数回调。 我们可以看到，在嵌套的每一层中都有对callback的引用，而且最里层还用到了外层定义的uid变量。由于闭包机制的存在，即使外层函数已经执行完毕，其作用域内申请的变量也不会释放，因为里层的函数还有可能会引用到这些变量。这样就实现了嵌套的异步回调。      实现私有成员 JavaScript没有私有属性，也就是说对象的每一个属性都是暴露给外部的，通过闭包可以实现变量的隐藏。 ``` var generateClosure = function() {   var count = 0;   var get = function() {  count ++;  return count;   };   return get; };   var counter = generateClosure(); console.log(counter()); console.log(counter()); console.log(counter()); http://javascript.crockford.com/private.html。  ## 3 对象 ### 3.1 创建和访问 JavaScript中的对象实际上就是一个由属性组成的关联数组，属性由名称和值组成，值的类型可以是任何数据结构，或者函数和其他对象。  var foo = {}; foo.prop_1 = ‘bar’; foo.prop_2 = false; foo.prop_3 = function() {   return ‘hello world’; } console.log(foo.prop_3()); 示例中我们使用{}来创建对象，这是*对象字面量*的表示方法，也可以用foo = new Object()来显示的创建一个对象。 1. 使用关联数组访问对象成员  var foo = {}; foo[‘prop_1’] = ‘bar’; foo[‘prop_2’] = ‘false’; foo[‘prop_3’] = ‘function() {   return ‘hello world’; }’ 在JavaScript中，使用句点运算符和使用关联数组引用是等价的，也就是说任何对象（包括this指针）都可以使用这种模式。 2. 使用对象初始化器创建对象  var foo = {   ‘prop_1’: ‘bar’,   prop_2: ‘false’,   prop_3: function() {     return ‘hello world’;   } }; 这种方法称为对象的初始化器。  ## 3.2 构造函数 构造函数允许我们设计C++中的“类”。  function User(name, uri) {    // 表明这是 User 的构造函数   this.name = name;   this.uri = uri;   this.display = function() {     console.log(this.name);   } }  var someuser = new User(‘byvoid’, ‘http://www.byvoid.com’);  ## 3.3 上下文对象  ## 3.4 原型 原型是JavaScript中面向对象的重要概念，前面的例子中都没有涉及原型，仅仅通过构造函数和new语句来生成类。 下面让我们关注如何使用原型和构造函数共同生成对象。  function Person() { } Person.prototype.name = ‘BYVoid’; Person.prototype.showName = function () {   console.log(this.name); }; var person = new Person(); person.showName(); 上面的代码使用原型而不是构造函数来初始化对象，这样做与直接在构造函数中定义属性有什么不同呢？ 1. 构造函数内定义的属性继承方式与原型不同    子对象需要显示调用父对象才能继承构造函数内定义的属性 2. 构造函数内定义的任何属性，包括函数在内都会被重复创建，同一个构造函数产生的两个对象不共享实例。 3. 构造函数内定义的函数有运行时闭包的开销，因为构造函数内的局部变量对其中定义的函数来说也是可见的。  下面的代码用来验证以上问题：  function Foo() {   var innerVar = ‘hello’;   this.prop1 = ‘BYVoid’;   this.func1 = function(){     innerVar = ‘’;   }; } Foo.prototype.prop2 = ‘Carbo’; Foo.prototype.func2 = function () {   console.log(this.prop2); };  var foo1 = new Foo(); var foo2 = new Foo();  console.log(foo1.func1 == foo2.func1);    // 输出false console.log(foo1.func2 == foo2.func2);    // 输出true  尽管如此，并不是说在构造函数内创建属性不好，而是两者各有各的适用范围。那么我们什么时候使用原型，什么时候使用构造函数内定义来创建属性呢？ 1. 除非必须使用构造函数闭包，否则尽量用原型定义成员函数，因为这样可以减少开销 2. 尽量在构造函数内定义一般成员，尤其是对象或数组，因为用原型定义的成员是多个实例共享的。  ### 原型链机制 JavaScript中有两个特殊的对象：Object和Function，它们都是构造函数，用于生成对象。 Object.protorype是所有对象的祖先，Function。protorype是所有函数的原型，包括构造函数。  我们把JavaScript中的对象分为三类：一类是用户创建的对象，一类是构造函数对象，一类是原型对象。 1. 用于创建的对象，即一般意义上用new语句显示构造的对象。 2. 构造函数对象指的是普通的构造函数，即通过new调用生成普通对象的函数。 3. 原型对象特指构造函数prototype属性指向的对象。  这三类对象中每一类都有一个__proto__属性，它指向该对象的原型，从任何对象沿它开始遍历都可以追溯到Object.prototype。 构造函数对象有prototype属性，指向一个原型对象，通过该构造函数创建对象时，被创建对象的__proto__属性将会指向构造函数的prototype属性。 原型对象有constructor属性，指向它对应的构造函数。  // 定义构造函数 function Foo() { } // Object的原型对象 Object.prototype.name = ‘My Object’; // Foo的原型对象 Foo.protorype.name = ‘Bar’;  var obj = new Object(); var foo = new Foo();  console.log(obj.name);    // 输出 My Object console.log(foo.name);    // 输出 Bar console.log(foo.proto.name);    // 输出 Bar console.log(foo.proto.proto.name);    // 输出 My Object console.log(foo.proto.constructor.prototype.name);    // 输出 Bar  ### 3.5 对象的复制 JavaScript和Java一样没有C语言中一样的指针，所有对象类型的变量都是指向对象的引用，两个变量之间赋值传递一个对象并不会对这个变量进行复制，而只是传递引用。 如果我们需要完整的复制一个对象，就需要我们自己手动实现这样一个函数，复制对象的所有属性：  Object.prototype.clone = function() {   var newObj = {};   for (var i in this) {     newObj[i] = this[i];   }   return newObj; } var obj = {   name: ‘byvoid’,   likes: [‘node’] };  var newObj = obj.clone(); obj.likes.push(‘python’); console.log(obj.likes);    // 输出 [ ‘node’, ‘python’ ] console.log(newObj.likes);    // 输出 [ ‘node’, ‘python’] ``` "
+  },
+  
+  {
+    "title": "Js制作万年历",
+    "url": "/posts/js%E5%88%B6%E4%BD%9C%E4%B8%87%E5%B9%B4%E5%8E%86/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-03-06 00:00:00 +0800",
+    "content": "JS基础 Date函数获取时间 http://www.cnblogs.com/LiuJL/p/5417685.html 获取最大天数 http://www.jb51.net/article/76016.htm JQuery操作表格 http://www.cnblogs.com/lxblog/archive/2013/01/11/2856582.html https://zhidao.baidu.com/question/581126031.html  $(“table tr”).eq(1).find(“td”).eq(1).addClass(‘red’).html(‘0’); # "
+  },
+  
+  {
+    "title": "Docker命令",
+    "url": "/posts/Docker%E5%91%BD%E4%BB%A4/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-03-03 00:00:00 +0800",
+    "content": "Docker命令 attach    Attach to a running container, 链接到一个正在运行的容器 build     Build an image from a Dockerfile，从一个docker容器构建镜像 commit    Create a new image from a container's changes，快照！ cp        Copy files/folders between a container and the local filesystem，在容器之间拷贝文件 create    Create a new container，创建一个新的镜像 diff      Inspect changes on a container's filesystem，比较两个容器系统的不同 events    Get real time events from the server，从客户机获取真实的时间事件 exec      Run a command in a running container，试用一个正在运行的容器运行命令 export    Export a container's filesystem as a tar archive， history   Show the history of an image images    List images import    Import the contents from a tarball to create a filesystem image info      Display system-wide information inspect   Return low-level information on a container, image or task kill      Kill one or more running containers load      Load an image from a tar archive or STDIN login     Log in to a Docker registry. logout    Log out from a Docker registry. logs      Fetch the logs of a container network   Manage Docker networks node      Manage Docker Swarm nodes pause     Pause all processes within one or more containers port      List port mappings or a specific mapping for the container ps        List containers pull      Pull an image or a repository from a registry push      Push an image or a repository to a registry rename    Rename a container restart   Restart a container rm        Remove one or more containers rmi       Remove one or more images run       Run a command in a new container save      Save one or more images to a tar archive (streamed to STDOUT by default) search    Search the Docker Hub for images service   Manage Docker services start     Start one or more stopped containers stats     Display a live stream of container(s) resource usage statistics stop      Stop one or more running containers swarm     Manage Docker Swarm tag       Tag an image into a repository top       Display the running processes of a container unpause   Unpause all processes within one or more containers update    Update configuration of one or more containers version   Show the Docker version information volume    Manage Docker volumes wait      Block until a container stops, then print its exit code  "
+  },
+  
+  {
+    "title": "软件源汇总",
+    "url": "/posts/%E8%BD%AF%E4%BB%B6%E6%BA%90%E6%B1%87%E6%80%BB/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-26 00:00:00 +0800",
+    "content": "软件源 网易：mirrors.163.com 阿里：mirrors.aliyun.com 东软信息学院：mirrors.neusoft.edu.cn  操作系统 Ubuntu    wiki.ubuntu.org.cn/源列表  "
+  },
+  
+  {
+    "title": "Centos7上手",
+    "url": "/posts/Centos7%E4%B8%8A%E6%89%8B/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-26 00:00:00 +0800",
+    "content": "CentOS7上手体验 新建用户 $ useradd xxx $ passwd xxx  增加sudo权限 $ visudo  系统升级 yum 常用命令 yum install 全部安装 yum install pkg 安装指定的软件包  yum update 下载更新系统已安装的所有软件包 yum upgrade 大规模的升级（包括旧的淘汰的包） yum update pkg 更新指定的软件包 yum check-update 检查可更新的所有软件包 yum upgrade pkg 升级指定程序包  yum info pkg 显示安装包信息 yum search 检测所有可用的软件的名称、描述、概述和已列出的维护者？ yum list 显示所有已经安装的和可以安装的软件 yum list available 列出资源库中可以安装的rpm包 yum list updates 列出资源库中所有可更新的rpm包 yum list installed 列出资源库中所有已安装的rpm包 yum list extras 列出已安装但是不在资源库中的rpm包 yum list pkg 显示指定程序包的安装情况  yum remove 删除程序包 yum deplist 查看软件包的依赖情况  yum clean packages 删除缓存目录下的软件包 yum clean headers 删除缓存目录下的headers yum clean oldheaders 删除缓存目录下旧的headers yum clean 删除缓存目录下的软件包和旧的headers  yum makecache 更新缓存？  $ yum check命令？ $ yum update 下载更新系统已安装的所有软件包 $ yum repolist Loaded plugins: fastestmirror, langpacks Determining fastest mirrors repo id                    repo name                               status epel/7/x86_64              EPEL for redhat/centos 7 - x86_64       11239 extras/7/x86_64            Qcloud centos extras - x86_64           264 os/7/x86_64                Qcloud centos os - x86_64               9363 updates/7/x86_64           Qcloud centos updates - x86_64          856 repolist: 21722 $ ls /etc/yum.repos.d CentOS-Base.repo  CentOS-Debuginfo.repo  CentOS-Media.repo    CentOS-Vault.repo CentOS-CR.repo    CentOS-Epel.repo       CentOS-Sources.repo  CentOS-fasttrack.repo  吐槽 使用yum info vim查找不到匹配的信息（但是系统已经安装了vim） 使用yum info vim-minimal查找到的是7.4的版本 使用yum info git查到的是1.8的版本（我在windows上使用的是2.10） 使用yum info php查找到的5.4的版本（php和git都来自os/7/x86_64包） 使用yum search查找不到mysql 使用yum info mariadb查找到的是5.5的版本 使用yum info nginx查找到的是1.10的版本（这个比较新，来自epel/7/x86_64包） 使用yum info golang查找到的是1.6的版本（来自os/7/x86_64包） 使用yum info docker查找到的是1.12的版本（情况不明）  其他 使用rpm -qa查找所有安装的软件，基本情况如下： 软件|版本 –|– perl|5.16 file|5.11 readline|6.2 tar|1.26 cpio|2.11 python|2.7 which|2.20 openssh|6.6 kernal|3.10 ipset|6.19 nano|2.3 bash-completion|2.1 snappy|1.1 gzip|1.5 pcre|8.32 glibc|2.17 passwd|0.79 zlib|1.2 bash|4.2 libstdc++|4.8 info|5.1 sed|4.2 grep|2.20 gawk|4.0 pkgconfig|0.27 ppp|2.4 setuptool|1.19 less|less-458-9.el7.x86_64 attr|2.4 ncurses|5.9 setup|2.8 glibc|2.17 pygpgme|0.3-9 lua|5.1.4 glib2|2.46 make|3.82 grubby|8.28 openssl|openssl-1.0.1e-60.el7_3.1.x86_64 curl|7.29 rpm|4.11 yum|3.4 grub2-tools|2.02 bc|1.06 time|1.7 lsof|4.87 ntp|4.2 selinux-policy-targeted-3.13.1-102.el7_3.13.noarch|| openssh-clients|6.6.1p1-33 sudo|1.8 gdb|7.6 wget|1.14 tcsh|6.18 zip|3.0 pcre|8.32 libgcc|4.8.5 glib2|2.46 vim-minimal|7.4 vim-common|7.4 sqlite|3.7 hostname|3.13 ed|1.9 grub2|2.02 openssh-server|6.6 "
+  },
+  
+  {
+    "title": "Chrome插件汇总",
+    "url": "/posts/chrome%E6%8F%92%E4%BB%B6%E6%B1%87%E6%80%BB/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-25 00:00:00 +0800",
+    "content": "   Adblock Plus   Adguard 广告拦截器   cVim   Infinity        Proxy SwitchyOmega      Todoist Chrome   捕捉网页截图-FireShot的   番茄土豆  "
+  },
+  
+  {
+    "title": "Cvim使用",
+    "url": "/posts/cVim%E4%BD%BF%E7%94%A8/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-25 00:00:00 +0800",
+    "content": "cVim使用 基本命令 命令|功能 –|– k,w|上 j,s|下 h|左 l|右 u|上半页 d|下半页 gg|网页头 G|网页尾 0|网页最左 $|网页最右  查找和visual模式 直接输入v就会输入光标，移动到需要复制的地方，使用v或者V复制。 命令|功能 –|– /|查找（支持正则表达式） n|查找的下一个匹配项 N|查找的上一个匹配项 v|visual模式 V|行选visual模式 y|复制                 命令       功能                       l       在历史中查找                 b       在书签中查找           标签页命令 命令|功能 –|– r|刷新 x|关闭当前标签页 X|关闭最后打开的标签页 J|左标签页 K|右标签页 H|回退 L|前进 g0|最开头的标签页 g$|最后一个标签页 t|打开新标签页 o|在当前页面打开连接                 命令       功能                       &lt;       把当前标签页左移                 &gt;       把当前标签页右移                 N%       移动到第N个标签页                 zr       把chrome重启                 gp       把当前标签页固定，解固定                 gx0       关闭当前标签页左边的所有标签页                 gx$       关闭当前标签页右边的所有标签页           打标签 命令|功能 –|– M|打标签到（可以使任意字母） go*|回到标签  连接和输入 命令|功能 –|– f|在当前标签页打开链接 F|新标签页打开链接 W|新窗口打开链接 gi|进入第一个搜索框 gy|复制网页链接 p|当前页面打开复制的链接 P|新标签页打开复制的链接  文本框操作 命令|功能 –|– "
+  },
+  
+  {
+    "title": "初识企业号开发",
+    "url": "/posts/%E5%88%9D%E8%AF%86%E4%BC%81%E4%B8%9A%E5%8F%B7%E5%BC%80%E5%8F%91/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-22 00:00:00 +0800",
+    "content": "微信企业号开发 特点 相比于服务号/订阅好，企业号下可以同时拥有多个应用，每个应用都类似于一个单独的服务号。  开发文档概况 开始开发   主动调用   回调模式 认证接口   身份认证   成员登录认证   单点登录认证 资源接口   管理企业号应用   自定义菜单   管理通讯录   管理素材文件 能力接口   发消息   接受消息与事件   微信JS-SDK接口   会话服务   客服服务   企业号微信支付   摇一摇周边   卡券服务 SaaS套件接口   第三方应用授权   管理后台单点登录 其他   基础样式库   附录   更新日志  "
+  },
+  
+  {
+    "title": "Npm包管理器",
+    "url": "/posts/npm%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-21 00:00:00 +0800",
+    "content": " "
+  },
+  
+  {
+    "title": "Linux解决boot目录空间不足",
+    "url": "/posts/Linux%E8%A7%A3%E5%86%B3boot%E7%9B%AE%E5%BD%95%E7%A9%BA%E9%97%B4%E4%B8%8D%E8%B6%B3/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-21 00:00:00 +0800",
+    "content": "# http://www.linuxidc.com/Linux/2015-05/117401.htm http://www.2cto.com/os/201305/208245.html "
+  },
+  
+  {
+    "title": "Laravel目录",
+    "url": "/posts/Laravel%E7%9B%AE%E5%BD%95/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-21 00:00:00 +0800",
+    "content": "Laravel目录 如何新建一个Laravel项目 Laravel是一个标准的Composer包，使用Composer可以很方便的创建一个Laravel项目：  方法一： $ composer global require \"laravel/installer\" $ laravel new xxx  这种方法将在~/.composer/vendor/bin目录中下载一个laravel的安装程序，将这个bin目录添加到环境变量$PATH中即可在命令行里使用laravel new xxx来新建Laravel项目。  方法二： $ composer create-project laravel/laravel --prefer-dist  通过composer提供的命令来安装一个新的laravel项目。  方法三（composer的引入，算不上一个方法）： $ composer require laravel/laravel path  我们前面说的global require会在/home/xxx/.config/composer/目录下建立一个vendor文件夹用来安放我们下载的项目。  这里的require则会在指定的目录下（如果没有指定目录，就在当前目录）安装composer包。  总结 使用方法一和方法二创建的项目都是可以直接使用的，方法三创建的项目是一个包含了多个vendor的目录，不适合直接开发程序。  新建项目之后要做的事情    修改storage/文件夹的权限   查看.env文件        检查APP_KEY配置项目      Lravel目录 app/ bootstrap/ config/ database/ public/ resources/ routes/ storage/ tests/ artisan composer.json composer.lock package.json phpunit.xml readme.md server.php webpack.mix.js yarn.lock   artisan命令行工具 http://www.phpddt.com/manual/laravel/html/artisan.html     出现问题   PHP Warning:  require(/home/lich/code/php/blog/bootstrap/../vendor/autoload.php): failed to open stream: No such file or directory in /home/lich/code/php/blog/bootstrap/autoload.php on line 17 PHP Fatal error:  require(): Failed opening required '/home/lich/code/php/blog/bootstrap/../vendor/autoload.php' (include_path='.:/usr/share/php') in /home/lich/code/php/blog/bootstrap/autoload.php on line 17      解决方法   $ apt-get install php-dom $ composer install      artisan命令行工具包装了很多实用的命令，比beego框架的bee命令更加强大。 "
+  },
+  
+  {
+    "title": "Composer包管理器",
+    "url": "/posts/Composer%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-21 00:00:00 +0800",
+    "content": "Composer包管理器 Composer的基本内容 composer的包管理是基于项目的。 Composer – PHP依赖管理的新时代 对于现代语言而言，包管理基本上是标配，著名的有NodeJS的npm，Python的pip，Java的Maven，Ruby的gem灯。  PHP的标准包管理工具是PEAR，不过PEAR有很多缺点：    依赖处理非常容易出问题   配置非常复杂   难用的命令行接口   Composer作为一个开源的PHP包管理工具，使用简单，功能强大，是替代PEAR使用的绝佳选择。  安装Composer composer是作为一个.phar文件来发布的。安装composer要做的就是将composer.phar下载到我们的计算机上，相当的简单： $ curl -sS https://getcomposer.org/installer | php  在这个命令中，我们可以使用--install-dir选项选择将composer安装到指定的目录： $ curl -sS https://getcomposer.org/installer | php -- --install-dir=bin  也可以进行全局安装（即将composer.phar加入到环境变量中）： $ curl -sS https//getcomposer.org/installer | php $ mv composer.phar /usr/local/bin/composer   声明依赖 在项目目录下创建一个composer.json文件，指明依赖： {   \"require\": {     \"monolog/monolog\": \"1.2.*\"   } }  安装依赖 composer install   自动加载 require 'vendor/autoload.php';   PHP 开发者该知道的5个Composer小技巧 仅更新单个库 composer update foo/bar   对于如下的警告信息 Warning: The lock file is not up to date with the latest changes in composer.json, you may be getting outdated dependencies, run update to update them.  如果你编辑了composer.json，就可能会看到这样的信息，哪怕是一个简单的空格。这种情况下，只需要执行update nothing: $ composer update nothing Loading composer repositories with package information Updating dependencies Nothing to install or update Writing lock file Generating autoload files  这样一来，composer不会更新库，只会更新composer.lock。  注意nothing不是update命令的关键字。只是没有nothing这个包导致的结果。如果你输入foobar，结果也一样。  最新的composer里支持使用--lock选项 composer update --lock   不编辑composer.json的情况下安装库 每安装一个库都要修改composer.json太麻烦了，不如直接用require命令： composer require \"foo/bar:1.0.0\"   这种方法可以用来快速建立一个项目。init命令有--require选项，可以自动编写composer.json： $ composer init --require=foo/bar:1.0.0 -n $ cat composer.json {   \"require\": {     \"foo/bar\": \"1.0.0\"   } }   派生很容易 初始化的时候，使用create-project命令： composer create-project doctrine/orm path 2.2.0  这会自动克隆仓库，并检出制定的版本。克隆库的时候用这个命令很方便，不需要寻找原始的url了。  考虑缓存，dist包优先 install和update的--prefer-dist选项表示我们要使用压缩包而不是克隆源码包。  若要修改，源代码优先 当你需要修改库的时候，克隆源码包就比下载压缩包方便了。使用--prefer-source来选择克隆源代码。 composer update symfony/yaml --prefer-source   为生产环境做准备 composer dump-autoload --optimize  "
+  },
+  
+  {
+    "title": "Ubuntu中安装nodejs",
+    "url": "/posts/Ubuntu%E4%B8%AD%E5%AE%89%E8%A3%85nodejs/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-20 00:00:00 +0800",
+    "content": "Ubunt中安装nodejs 在考虑安装nodejs之前，我们有几种方法作为备选项。  使用apt-get安装 在命令行中输入apt-get install nodejs和apt-get install npm来安装node.js和npm。  版本问题 默认安装的nodejs是4.2.6，npm是3.5.2，都比较老，所以还是不推荐使用这种方式来安装  nodejs和npm是否相互依赖 通过apt-cache depends npm命令可以看到npm是依赖nodejs的。  下载安装 这个方法需要现在(http://nodejs.cn/#download) 网站上下载对应的文件。  参考https://my.oschina.net/blogshi/blog/260953  下载完成后如何安装 解压缩到任意目录（我的是/usr/local/node），并将其中的bin/文件夹添加到环境变量中，就可以在终端使用node命令和npm命令了。  使用nvm安装 这个方法来自鱼hexo的推荐方法：https://hexo.io/zh-cn/docs/index.html ，就是运行的有点慢。  其他 淘宝npm镜像：  设置淘宝镜像最简单的就是将主目录下的.npmrc文件中添加源信息，不需要额外下载cnpm。  http://www.cnblogs.com/trying/p/4064518.html  http://www.tuicool.com/articles/UVR3qqA  http://yijiebuyi.com/blog/b12eac891cdc5f0dff127ae18dc386d4.html "
+  },
+  
+  {
+    "title": "Ubuntu下使用composer安装laravel",
+    "url": "/posts/Ubuntu%E4%B8%8B%E4%BD%BF%E7%94%A8Composer%E5%AE%89%E8%A3%85Laravel/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-20 00:00:00 +0800",
+    "content": "Ubuntu下使用Composer安装Laravel Composer是处理PHP包依赖关系的一个工具。  Laravel作为一个标准的Composer包发布，我们可以使用Composer来快速的安装Laravel应用。  Lravavel作为一个框架，和Go语言里的Beego框架是类似的。 安装好的Laravel可以提供一个全局的laravel命令，类似于Beego框架的bee工具。  配置信息 使用composer config -l -g可以查看composer的全局配置文件 [repositories.packagist.org.type] composer [repositories.packagist.org.url] https://packagist.phpcomposer.com [process-timeout] 300 [use-include-path] false [preferred-install] auto [notify-on-install] true [github-protocols] [https, ssh] [vendor-dir] vendor (/home/lich/vendor) [bin-dir] {$vendor-dir}/bin (/home/lich/vendor/bin) [cache-dir] /home/lich/.cache/composer [data-dir] /home/lich/.local/share/composer [cache-files-dir] {$cache-dir}/files (/home/lich/.cache/composer/files) [cache-repo-dir] {$cache-dir}/repo (/home/lich/.cache/composer/repo) [cache-vcs-dir] {$cache-dir}/vcs (/home/lich/.cache/composer/vcs) [cache-ttl] 15552000 [cache-files-ttl] 15552000 [cache-files-maxsize] 300MiB (314572800) [bin-compat] auto [discard-changes] false [autoloader-suffix] [sort-packages] false [optimize-autoloader] false [classmap-authoritative] false [apcu-autoloader] false [prepend-autoloader] true [github-domains] [github.com] [bitbucket-expose-hostname] true [disable-tls] false [secure-http] true [cafile] [capath] [github-expose-hostname] true [gitlab-domains] [gitlab.com] [store-auths] prompt [archive-format] tar [archive-dir] . [home] /home/lich/.config/composer  在最后我们可以看到有[home]项目，这个是composer的家目录，我们后面执行全局安装laravel的命令就会安装在这个目录下的vendor文件中。  设置全局中文软件源 按照(https://pkg.phpcomposer.com/) 的说明进行设置，其中第一个修改composer全局变量的方式，就是修改/home/xxx/.config/composer文件夹中的config.json文件中的内容(以下就是修改过的内容) {     \"config\": {},     \"repositories\": {         \"packagist\": {             \"type\": \"composer\",             \"url\": \"https://packagist.phpcomposer.com\"         }     } }   全局安装laravel 按照() 的说明进行安装，安装好之后会在/home/xxx/.config/composer/vendor建立一个标准的composer包（我的猜测，该说法没有证据佐证）。 其中bin/目录下有一个指向可执行php脚本laravel的一个链接，这个脚本就是我们以后在命令行中可以使用的laravel命令。  安装完之后记得修改环境变量，将/home/xxx/.config/composer/vendor/bin/目录加入$PATH，就可以在任意位置执行laravel命令了。 "
+  },
+  
+  {
+    "title": "Atom安装插件",
+    "url": "/posts/Atom%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-20 00:00:00 +0800",
+    "content": " Atom安装插件  1. 通过设置面板安装 点击编辑(edit)&gt;&gt;设置(preference)&gt;&gt;安装(install)来搜索插件并安装，不过这种方法我只没有成功。  有可能需要访问的内容被墙了或着是类似与go get需要配合git使用。  2. 直接使用apm工具 在命令行中输入apm install package来安装。  这种方式和在图形界面搜索安装使用的是同样的原理，因为我都没有成功过。  3. 使用npm命令安装 找到插件目录 使用npm命令安装，需要找到atom的安装路径，其中的package是安装插件的目录。这个路径一般是用户家目录下的.atom文件夹（Windows一般在C:\\Users\\xxx.atom，Linux在/home/xxx/.atom）。  3.1 找到npm的位置 另外还需要找到安装atom时跟atom一起安装npm的位置。  在Windows下，npm的位置在  在Ubuntu下，npm的位置在/usr/share/atom/resources/app/apm/bin/npm，这个位置是我用locate npm | grep npm$命令定位到的。  3.2 使用git clone下载想要安装的插件 在atom.io/packages里可以查找插件，定位它们在github上的位置，使用git客户端下载它们，并将它们放在之前我们找到的.atom下的packages文件夹下。  进入插件目录，在其中执行npm install命令即可，重启一半就可以看到效果  比较好的插件有    go-plus(写go语言的插件)：   atom-simplified-chinese-menu(菜单的中文汉化)：https://github.com/chinakids/atom-simplified-chinese-menu.git   emmet-atom(html自动补全)：   file-type-icons(改善左侧treeview的显示效果)：   md-writer(使用markdown写博客)：   参考 http://www.cnblogs.com/20145221GQ/p/5334762.html  Markdown https://segmentfault.com/q/1010000004170163/a-1020000004181709 "
+  },
+  
+  {
+    "title": "Ubuntu设置环境变量",
+    "url": "/posts/Ubuntu%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-17 00:00:00 +0800",
+    "content": "在Ubuntu中设置环境变量 当前终端 方法一： export 单一用户设置方法 方法一： sudo gedit ~/.bashrc+source ~./bashrc 全局设置方法 方法一： sudo gedit /etc/environment+source /etc/environment 方法二： sudo vi /etc/profile+source /etc/profile 几个文件的区别 /etc/profile 此文件为系统的每个用户设置环境变量，当用户第一次登录时，该文件被执行，并从/etc/profile.d目录的配置文件中搜索shell的设置。 /etc/bashrc 为每一个运行bash shell的用户执行此文件，当bash shell被打开时，该文件被读取。 ~/.bash_profile 每个用户都可以使用该文件专用于自己使用的shell信息，当用户登录时，该文件仅仅被执行一次，默认情况下，它设置一些环境，执行用户的.bashrc文件。 在不同的Linux操作系统下，这个文件有可能是不同的，可能事~/.bash_profile，~/.bash_login，~/.profile，如果这几种都存在的话，执行的顺序可能是：~/.bash_profile，~/.bash_login，~/.profile。 ~/.bashrc 该文件包含专用于你的bash shell的bash信息，当登录以及每次打开新的shell时，该文件被读取。 "
+  },
+  
+  {
+    "title": "Composer",
+    "url": "/posts/Composer/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-16 00:00:00 +0800",
+    "content": "Composer的使用 http://blog.csdn.net/think2me/article/details/38456931 基本命令    composer create-project:   composer require:   composer install:   使用技巧 https://segmentfault.com/a/1190000000355928 "
+  },
+  
+  {
+    "title": "Centos安装nmp",
+    "url": "/posts/Centos%E5%AE%89%E8%A3%85NMP/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-16 00:00:00 +0800",
+    "content": "源的问题 CentOS的源似乎与Ubuntu不同。 CentOS的默认源如下所示(其实已经做过修改了，应该是手动添加了epel源)： CentOS-Base.repo CentOS-Base.rpmnew CentOS-Debuging.repo CentOS-fasttrack.repo CentOS-Media.repo CentOS-Vault.repo webstatic-archive.repo webstatic.repo webstatic-testing.repo epel.repo epel.rpmnew epel-test.repo  使用命令yum repolist可以查看系统中的所有源。 一些被禁用了的源可以使用yum repolist --enablerepo来查看。 CentOS基本源 这个是CentOS默认安装应用的源，内容可能会比较老。 webstatic源 这个是对网站服务器功能的一个扩展。 epel源 这个是对基本源的一个扩展，内容比较少。 remi源 这个源以来epel建立，资源相对丰富 IUS源和rpmforge源 暂时还没有用到 使用remi源安装PHP 编译安装Nginx http://nginx.org/ 使用MySQL的源来安装MySQL https://dev.mysql.com/downloads/file/?id=459918 "
+  },
+  
+  {
+    "title": "Centos配置np",
+    "url": "/posts/CentOS%E9%85%8D%E7%BD%AENP/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-16 00:00:00 +0800",
+    "content": "配置一 server {     listen 80;     server_name localhost;     index index.html index.htm index.php;     root /usr/local/nginx/html;      location ~ \\.php$ {         include fastcgi_params;         fastcgi_pass 127.0.0.1：9000;         fastcgi_index index.php;         fastcgi_param SCRIPT_FILENAME /usr/local/nginx/html$fastcgi_script_name;     } }  配置二 http://blog.jobbole.com/50121/ server {     listen 80;     server_name foo.com;      root /path;      location / {         index index.html index.htm index.php;          if (!-e $request_filename) {             rewrite . /index.php last;         }     }      location ~ \\.php$ {         include fastcgi_params;         fastcgi_param SCRIPT_FILENAME /path$fastcgi_script_name;         fastcgi_pass 127.0.0.1:9000;         fastcgi_index index.php;     } }  评价一：index应该放在server环境下。 评价二：if不应该代替try_files：try_files $uri $uri/ /index.php;。 评价三：Nginx有两份fastcgi的配置文件，分别是fastcig_params和fastcgi.conf，它们没有太大的区别，唯一的区别在与后者比前者多一行SCRIPT_FILENAME的定义：fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name。 "
+  },
+  
+  {
+    "title": "Emmet插件使用方法",
+    "url": "/posts/emmet%E6%8F%92%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-15 00:00:00 +0800",
+    "content": "emmet使用方法 emmet的前身是大名鼎鼎的zen coding，它使用仿css选择器的语法来生成代码。  快速编写HTML代码 初始化 html:5或者!：用于HTML5文档类型 html:xt：用于XHTML过渡文档类型 html:4s：用于HTML4严格文档类型  轻松添加类，id文本和属性 添加类和id p.bar#foo  定义元素的内容和属性 h1{foo} a[href=#]  嵌套 &gt;：子元素符号 +：同级元素符号 ^：可以使该符号前的标签提升一行   分组 通过嵌套和括号快速生成代码块： (.foo&gt;h1)+(.bar&gt;h2)   隐式声明 输入.item，emmet会根据父标签来进行判定。 比如，在&lt;ul&gt;中输入.item，就会生成&lt;li class=\"item\"&gt;&lt;/li&gt; 下面是所有隐形标签的名称 - li - tr - td - option   定义多个元素 使用*来定义多个元素 ul&gt;li*3   定义多个带属性的元素 ul&gt;li.item$*3   CSS缩写  值 宽度：w100 宽度：h10p+m5e height: 10p; margin: 5em;  p表示百分比 e表示em x表示ex  附加属性 @f可以生成 @font-face {   font-family;   src:url(); }   模糊匹配  供应商前缀 输入trs -webkit-transform:; -moz-transform:; -ms-transform:; -o-transform:; transform:;   渐变  附加功能 lorem或者lipsum即可生成文字，还可以加数字指定个数。 "
+  },
+  
+  {
+    "title": "服务器安装php Mysql",
+    "url": "/posts/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85PHP-MySQL/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-15 00:00:00 +0800",
+    "content": "Centos安装PHP-MySQL 上次其实已经安装了PHP和MySQL，运行起来好像也没问题，但是在安装PHP的php-mysql扩展时一直报错，所以又重新安装了一遍。 这次没有选择最新版本，采用的都是webstatic库里提供的版本。 具体是从php(5.6.29),mysql(5.7.16)换成了php(5.6.30),msyql(5.5.54),刚好能够满足Laravel的要求，先这样用几天，有问题的话再生级。 升级步骤 先从webstatic.com上查找如何安装webstatic仓库。 使用yum list | php查找可以安装的软件名，再使用yum install进行安装。 可以使用rpm -qa来查找所有已经安装过的软件。 mysql安装之后的链接问题 安装好mysql之后，试图通过mysql -root -p去登陆，提示以下错误： ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2) 启动service服务，提示失败： 提示一 http://bbs.csdn.net/topics/390877652 删除/var/lib/mysql下面的ib_logfile0等文件。 未果。 尝试数次之后决定不再使用webstatic安装 epel包里似乎没有mysql包 使用以下文章里的信息进行安装 http://www.centoscn.com/mysql/2016/0626/7537.html https://dev.mysql.com/downloads/repo/yum/ "
+  },
+  
+  {
+    "title": "更新centos软件源",
+    "url": "/posts/%E6%9B%B4%E6%96%B0CentOS%E8%BD%AF%E4%BB%B6%E6%BA%90/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-15 00:00:00 +0800",
+    "content": "更新CentOS软件源 查看当前软件仓库 [tianyu@iZm5ebruzaqhhhy7wja8qxZ backup]$ yum repolist Loaded plugins: replace, security repo id                        repo name                                                             status base                           CentOS-6 - Base                                                        6,696 epel                           Extra Packages for Enterprise Linux 6 - x86_64                        12,259 extras                         CentOS-6 - Extras                                                         63 updates                        CentOS-6 - Updates                                                       825 webtatic                       Webtatic Repository EL6 - x86_64                                         747 repolist: 20,590   rpmforge源  参考条目 http://www.cnblogs.com/mchina/archive/2013/01/04/2842275.html "
+  },
+  
+  {
+    "title": "Rpm使用技巧",
+    "url": "/posts/rpm%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-15 00:00:00 +0800",
+    "content": "RPM使用技巧 rpm -h提示 Usage: rpm [OPTION...]   --quiet  Query/Verify package selection options: 查询/验证包选择选项:   -a, --all                        query/verify all packages   -f, --file                       query/verify package(s) owning file   -g, --group                      query/verify package(s) in group   -p, --package                    query/verify a package file   -W, --ftswalk                    query/verify package(s) from TOP file tree walk   --pkgid                          query/verify package(s) with package identifier   --hdrid                          query/verify package(s) with header identifier   --fileid                         query/verify package(s) with file identifier   --specfile                       query a spec file   --triggeredby                    query the package(s) triggered by the package   --whatrequires                   query/verify the package(s) which require a                                    dependency   --whatprovides                   query/verify the package(s) which provide a                                    dependency   --nomanifest                     do not process non-package files as manifests  Query options (with -q or --query): 查询选项:   -c, --configfiles                list all configuration files   -d, --docfiles                   list all documentation files   --dump                           dump basic file information   -l, --list                       list files in package   --queryformat=QUERYFORMAT        use the following query format   -s, --state                      display the states of the listed files  Verify options (with -V or --verify): 验证选项:   --nofiledigest                   don't verify digest of files   --nomd5                          don't verify digest of files   --nofiles                        don't verify files in package   --nodeps                         don't verify package dependencies   --noscript                       don't execute verify script(s)  File tree walk options (with --ftswalk): 文件树:   --comfollow                      follow command line symlinks   --logical                        logical walk   --nochdir                        don't change directories   --nostat                         don't get stat info   --physical                       physical walk   --seedot                         return dot and dot-dot   --xdev                           don't cross devices   --whiteout                       return whiteout information  Signature options: 签名选项:   --addsign                        sign package(s) (identical to --resign)   -K, --checksig                   verify package signature(s)   --delsign                        delete package signatures   --import                         import an armored public key   --resign                         sign package(s) (identical to --addsign)   --nodigest                       don't verify package digest(s)   --nosignature                    don't verify package signature(s)  Database options: 数据库选项:   --initdb                         initialize database   --rebuilddb                      rebuild database inverted lists from installed                                    package headers  Install/Upgrade/Erase options: 安装/升级/删除选项:   --aid                            add suggested packages to transaction   --allfiles                       install all files, even configurations which                                    might otherwise be skipped   --allmatches                     remove all packages which match &lt;package&gt;                                    (normally an error is generated if &lt;package&gt;                                    specified multiple packages)   --badreloc                       relocate files in non-relocatable package   -e, --erase=&lt;package&gt;+           erase (uninstall) package   --excludedocs                    do not install documentation   --excludepath=&lt;path&gt;             skip files with leading component &lt;path&gt;   --fileconflicts                  detect file conflicts between packages   --force                          short hand for --replacepkgs --replacefiles   -F, --freshen=&lt;packagefile&gt;+     upgrade package(s) if already installed   -h, --hash                       print hash marks as package installs (good with                                    -v)   --ignorearch                     don't verify package architecture   --ignoreos                       don't verify package operating system   --ignoresize                     don't check disk space before installing   -i, --install                    install package(s)   --justdb                         update the database, but do not modify the                                    filesystem   --nodeps                         do not verify package dependencies   --nofiledigest                   don't verify digest of files   --nomd5                          don't verify digest of files (obsolete)   --nocontexts                     don't install file security contexts   --noorder                        do not reorder package installation to satisfy                                    dependencies   --nosuggest                      do not suggest missing dependency resolution(s)   --noscripts                      do not execute package scriptlet(s)   --notriggers                     do not execute any scriptlet(s) triggered by                                    this package   --oldpackage                     upgrade to an old version of the package                                    (--force on upgrades does this automatically)   --percent                        print percentages as package installs   --prefix=&lt;dir&gt;                   relocate the package to &lt;dir&gt;, if relocatable   --relocate=&lt;old&gt;=&lt;new&gt;           relocate files from path &lt;old&gt; to &lt;new&gt;   --replacefiles                   ignore file conflicts between packages   --replacepkgs                    reinstall if the package is already present   --test                           don't install, but tell if it would work or not   -U, --upgrade=&lt;packagefile&gt;+     upgrade package(s)  Common options for all rpm modes and executables:   -D, --define='MACRO EXPR'        define MACRO with value EXPR   -E, --eval='EXPR'                print macro expansion of EXPR   --macros=&lt;FILE:...&gt;              read &lt;FILE:...&gt; instead of default file(s)   --nodigest                       don't verify package digest(s)   --nosignature                    don't verify package signature(s)   --rcfile=&lt;FILE:...&gt;              read &lt;FILE:...&gt; instead of default file(s)   -r, --root=ROOT                  use ROOT as top level directory (default: \"/\")   --querytags                      display known query tags   --showrc                         display final rpmrc and macro configuration   --quiet                          provide less detailed output   -v, --verbose                    provide more detailed output   --version                        print the version of rpm being used  Options implemented via popt alias/exec:   --scripts                        list install/erase scriptlets from package(s)   --setperms                       set permissions of files in a package   --setugids                       set user/group ownership of files in a package   --conflicts                      list capabilities this package conflicts with   --obsoletes                      list other packages removed by installing this                                    package   --provides                       list capabilities that this package provides   --requires                       list capabilities required by package(s)   --info                           list descriptive information from package(s)   --changelog                      list change logs for this package   --xml                            list metadata in xml   --triggers                       list trigger scriptlets from package(s)   --last                           list package(s) by install time, most recent                                    first   --dupes                          list duplicated packages   --filesbypkg                     list all files from each package   --fileclass                      list file names with classes   --filecolor                      list file names with colors   --fscontext                      list file names with security context from file                                    system   --fileprovide                    list file names with provides   --filerequire                    list file names with requires   --filecaps                       list file names with POSIX1.e capabilities  Help options:   -?, --help                       Show this help message   --usage                          Display brief usage message   查看已经安装的软件包 查询已安装的软件 rpm -q 软件名 查询所有已经安装的包 rpm -qa 查询一个已经安装的文件属于哪个软件包 rpm -qf 文件名 查询已安装的软件包安装到了何处 rpm -ql 软件名或者rpm rpmquery -ql 查询一个已经安装软件包的信息 rpm -qi 软件名 查询一个已经安装软件的文档安装位置 rpm -qd 软件名 查看一个已经安装软件所依赖的软件包及文件 rpm -qR 软件名 查看未安装的软件包 查看一个软件包的用途，版本 rpm -qpi file.rpm 查看一个软件包所包含的文件 rpm -qpl file.rpm 查看软件包的文档所在的位置 rpm -qpd file.rpm 查看一个软件包的配置文件 rpm -qpc file.rpm 查看一个软件包的依赖关系 rpm -qpR file.rpm yum使用 Loaded plugins: replace, security Usage: yum [options] COMMAND  List of Commands: 命令列表: check          Check for problems in the rpmdb check-update   Check for available package updates clean          Remove cached data deplist        List a package's dependencies distribution-synchronization Synchronize installed packages to the latest available versions downgrade      downgrade a package erase          Remove a package or packages from your system groupinfo      Display details about a package group groupinstall   Install the packages in a group on your system grouplist      List available package groups groupremove    Remove the packages in a group from your system help           Display a helpful usage message history        Display, or use, the transaction history info           Display details about a package or group of packages install        Install a package or packages on your system list           List a package or groups of packages load-transaction load a saved transaction from filename makecache      Generate the metadata cache provides       Find what package provides the given value reinstall      reinstall a package replace        Replace a package with another that provides the same thing repolist       Display the configured software repositories resolvedep     Determine which package provides the given dependency search         Search package details for the given string shell          Run an interactive yum shell update         Update a package or packages on your system update-minimal Works like update, but goes to the 'newest' package match which fixes a problem that affects your system updateinfo     Acts on repository update information upgrade        Update packages taking obsoletes into account version        Display a version for the machine and/or available repos.   Options:   -h, --help            show this help message and exit   -t, --tolerant        be tolerant of errors   -C, --cacheonly       run entirely from system cache, don't update cache   -c [config file], --config=[config file]                         config file location   -R [minutes], --randomwait=[minutes]                         maximum command wait time   -d [debug level], --debuglevel=[debug level]                         debugging output level   --showduplicates      show duplicates, in repos, in list/search commands   -e [error level], --errorlevel=[error level]                         error output level   --rpmverbosity=[debug level name]                         debugging output level for rpm   -q, --quiet           quiet operation   -v, --verbose         verbose operation   -y, --assumeyes       answer yes for all questions   --assumeno            answer no for all questions   --version             show Yum version and exit   --installroot=[path]  set install root   --enablerepo=[repo]   enable one or more repositories (wildcards allowed)   --disablerepo=[repo]  disable one or more repositories (wildcards allowed)   -x [package], --exclude=[package]                         exclude package(s) by name or glob   --disableexcludes=[repo]                         disable exclude from main, for a repo or for                         everything   --obsoletes           enable obsoletes processing during updates   --noplugins           disable Yum plugins   --nogpgcheck          disable gpg signature checking   --disableplugin=[plugin]                         disable plugins by name   --enableplugin=[plugin]                         enable plugins by name   --skip-broken         skip packages with depsolving problems   --color=COLOR         control whether color is used   --releasever=RELEASEVER                         set value of $releasever in yum config and repo files   --downloadonly        don't update, just download   --downloaddir=DLDIR   specifies an alternate directory to store packages   --setopt=SETOPTS      set arbitrary config and repo options   --replace-with=BASEPKG                         name of the base package to replace with    Plugin Options:     --security          Include security relevant packages     --bugfixes          Include bugfix relevant packages     --cve=CVE           Include packages needed to fix the given CVE     --bz=BZ             Include packages needed to fix the given BZ     --sec-severity=SEVERITY                         Include security relevant packages, of this severity     --advisory=ADVISORY                         Include packages needed to fix the given advisory  常用命令 查找 yum search 列出所有可安装的软件包 yum list 列出所有可更新的软件包 yum list updates 列出所有已安装的软件包 yum list installed 列出所有已安装但是不在Yum Repository内的软件包命令 yum list extras 列出所有指定的软件包命令 yum list xxx 获取软件包信息 yum info xxx 列出所有软件包的信息 yum info 列出所有可更新的软件包命令 yum info updates 列出所有已安装的软件包信息命令 yum info installed 列出所有已安装但不在Yum Repository内的软件包信息命令 yum info extras 列出软件包提供哪些文件命令 yum provides "
+  },
+  
+  {
+    "title": "Systemctl",
+    "url": "/posts/Systemctl/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-15 00:00:00 +0800",
+    "content": "https://linux.cn/article-5926-1.html "
+  },
+  
+  {
+    "title": "Ggyun阅读",
+    "url": "/posts/GGYun%E9%98%85%E8%AF%BB/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-06 00:00:00 +0800",
+    "content": "Router 1.登陆逻辑 在请求登陆页面时，使用Get方法，在提交登陆信息时，使用的是POST方法，两次都提交到一个页面，可以使用beego的自定义方法使用同一个链接（Controller）来处理。 2.控制链接（Controller）的数量 以me项目为例，涉及到许多前段的页面和后端的登陆，主页，栏目管理，内容管理，人员管理页面等众多路由， 3.POST必须建立在GET之上 4.使用自动路由（AutoRouter） 5.构建API Controller 0.Constant 使用Constant定义常量 1.BaseController "
+  },
+  
+  {
+    "title": "Laravel的一个简单应用",
+    "url": "/posts/Laravel%E7%9A%84%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-05 00:00:00 +0800",
+    "content": "Laravel的一个简单应用 Model/数据库 php artisan make:migration create_tasks_table –create=tasks:创建数据库迁移 php artisan migrate:运行迁移 php artisan make:model Task:创建数据模型 "
+  },
+  
+  {
+    "title": "Typecho数据库分析",
+    "url": "/posts/Typecho%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E6%9E%90/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-04 00:00:00 +0800",
+    "content": "Typecho数据库 typecho共有七个数据库 一：comments评论 +———-+——————+——+—–+———-+—————-+ | Field    | Type             | Null | Key | Default  | Extra          | +———-+——————+——+—–+———-+—————-+ | coid     | int(10) unsigned | NO   | PRI | NULL     | auto_increment | | cid      | int(10) unsigned | YES  | MUL | 0        |                | | created  | int(10) unsigned | YES  | MUL | 0        |                | | author   | varchar(200)     | YES  |     | NULL     |                | | authorId | int(10) unsigned | YES  |     | 0        |                | | ownerId  | int(10) unsigned | YES  |     | 0        |                | | mail     | varchar(200)     | YES  |     | NULL     |                | | url      | varchar(200)     | YES  |     | NULL     |                | | ip       | varchar(64)      | YES  |     | NULL     |                | | agent    | varchar(200)     | YES  |     | NULL     |                | | text     | text             | YES  |     | NULL     |                | | type     | varchar(16)      | YES  |     | comment  |                | | status   | varchar(16)      | YES  |     | approved |                | | parent   | int(10) unsigned | YES  |     | 0        |                | +———-+——————+——+—–+———-+—————-+ coid:, cid:, created:创建时间, author:作者, authorID:作者ID(0), ownerID:拥有者ID(?), mail:邮箱, url:网址, ip:ip?, agent:Typecho 1.0/14.10.10, text:内容, type:comment, status:审核状态, parent:父ID, 二：contents内容 +————–+——————+——+—–+———+—————-+ | Field        | Type             | Null | Key | Default | Extra          | +————–+——————+——+—–+———+—————-+ | cid          | int(10) unsigned | NO   | PRI | NULL    | auto_increment | | title        | varchar(200)     | YES  |     | NULL    |                | | slug         | varchar(200)     | YES  | UNI | NULL    |                | | created      | int(10) unsigned | YES  | MUL | 0       |                | | modified     | int(10) unsigned | YES  |     | 0       |                | | text         | text             | YES  |     | NULL    |                | | order        | int(10) unsigned | YES  |     | 0       |                | | authorId     | int(10) unsigned | YES  |     | 0       |                | | template     | varchar(32)      | YES  |     | NULL    |                | | type         | varchar(16)      | YES  |     | post    |                | | status       | varchar(16)      | YES  |     | publish |                | | password     | varchar(32)      | YES  |     | NULL    |                | | commentsNum  | int(10) unsigned | YES  |     | 0       |                | | allowComment | char(1)          | YES  |     | 0       |                | | allowPing    | char(1)          | YES  |     | 0       |                | | allowFeed    | char(1)          | YES  |     | 0       |                | | parent       | int(10) unsigned | YES  |     | 0       |                | +————–+——————+——+—–+———+—————-+ cid:ID, title:文章名称, slug:文章副标题, created:创建时间, modified:修改时间, text:内容, order:排序, authorId:作者ID, template:模板, type:分类(post/page), status:发布还是未发布, password:密码, commentsNum:评论数量, allowComment:是否允许评论, allowPing:是否允许ping?, allowFeed:是否允许Feed, parent:父id, 三：fields分类 +————-+——————+——+—–+———+——-+ | Field       | Type             | Null | Key | Default | Extra | +————-+——————+——+—–+———+——-+ | cid         | int(10) unsigned | NO   | PRI | NULL    |       | | name        | varchar(200)     | NO   | PRI | NULL    |       | | type        | varchar(8)       | YES  |     | str     |       | | str_value   | text             | YES  |     | NULL    |       | | int_value   | int(10)          | YES  | MUL | 0       |       | | float_value | float            | YES  | MUL | 0       |       | +————-+——————+——+—–+———+——-+ cid:, name:, type:, str_value:, int_value:, float_value:, 四：metas分类 +————-+——————+——+—–+———+—————-+ | Field       | Type             | Null | Key | Default | Extra          | +————-+——————+——+—–+———+—————-+ | mid         | int(10) unsigned | NO   | PRI | NULL    | auto_increment | | name        | varchar(200)     | YES  |     | NULL    |                | | slug        | varchar(200)     | YES  | MUL | NULL    |                | | type        | varchar(32)      | NO   |     | NULL    |                | | description | varchar(200)     | YES  |     | NULL    |                | | count       | int(10) unsigned | YES  |     | 0       |                | | order       | int(10) unsigned | YES  |     | 0       |                | | parent      | int(10) unsigned | YES  |     | 0       |                | +————-+——————+——+—–+———+—————-+ mid:分类ID, name:分类名称, slug:? type:category, description:分类描述, count:计数?, order:排序?, parent:父id?, 五：options菜单 +——-+——————+——+—–+———+——-+ | Field | Type             | Null | Key | Default | Extra | +——-+——————+——+—–+———+——-+ | name  | varchar(32)      | NO   | PRI | NULL    |       | | user  | int(10) unsigned | NO   | PRI | 0       |       | | value | text             | YES  |     | NULL    |       | +——-+——————+——+—–+———+——-+ name:设置键, user:所属用户, value:设置值, 六：relationships关系表 +——-+——————+——+—–+———+——-+ | Field | Type             | Null | Key | Default | Extra | +——-+——————+——+—–+———+——-+ | cid   | int(10) unsigned | NO   | PRI | NULL    |       | | mid   | int(10) unsigned | NO   | PRI | NULL    |       | +——-+——————+——+—–+———+——-+ cid:内容ID, mid:评论ID, 七：users用户 +————+——————+——+—–+———+—————-+ | Field      | Type             | Null | Key | Default | Extra          | +————+——————+——+—–+———+—————-+ | uid        | int(10) unsigned | NO   | PRI | NULL    | auto_increment | | name       | varchar(32)      | YES  | UNI | NULL    |                | | password   | varchar(64)      | YES  |     | NULL    |                | | mail       | varchar(200)     | YES  | UNI | NULL    |                | | url        | varchar(200)     | YES  |     | NULL    |                | | screenName | varchar(32)      | YES  |     | NULL    |                | | created    | int(10) unsigned | YES  |     | 0       |                | | activated  | int(10) unsigned | YES  |     | 0       |                | | logged     | int(10) unsigned | YES  |     | 0       |                | | group      | varchar(16)      | YES  |     | visitor |                | | authCode   | varchar(64)      | YES  |     | NULL    |                | +————+——————+——+—–+———+—————-+ uid:用户ID, name:用户名, password:用户密码, mail:用户邮箱, url:用户, screenName:登录名, created:创建时间, activated:是否激活, logged:是否登陆, group:分组(权限), authCode: 八：总结    users   contents,comments,relationships   fileds,metas,options?  "
+  },
+  
+  {
+    "title": "Laravel项目的目录",
+    "url": "/posts/Laravel%E9%A1%B9%E7%9B%AE%E7%9A%84%E7%9B%AE%E5%BD%95/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-02-04 00:00:00 +0800",
+    "content": "Laravel目录 app(应用核心代码)   Console()     Kernel.php   Exceptions()     Handler.php   Http()     Controllers(控制器)       Auth()         ForgotPasswordController.php       Controller.php     Middleware(中间件)       EncryptCookies.php       RedirectlfAuthenticated.php       VerifyCsrToken.php     Kernel.php   Providers()   User.php bootstrap(少许文件用于框架的启动和自动载入设置，cache文件夹用于包含框架生成的启动文件以提高性能)   cache()     .gitignore     services.php   app.php   autoload.php config(应用所有的配置文件)   app.php   auth.php   broadcasting.php   cache.php   compile.php   database.php   filesystems.php   mail.php   queue.php   services.php   session.php   view.php database(包含了数据迁移及填充文件)   factories()     ModelFactory.php   migrations(生成的迁移文件)   seeds()     DatabaseSeeder.php   .gitignore public(静态文件，View层|前端控制器和资源文件)   css()   js()   .htaccess   favicon.ico   index.php   robots.txt   web.config resources(资源文件，View层|视图文件以及原生资源文件，以及本地化文件)   assets()     js()       components()         Example.vue       app.js       bootstrap.js     sass()       _variables.scss       app.scss   lang()     en()       auth.php       pagination.php       passwords.php       validation.php   views(View层，模板文件)     errors()       503.blade.php     shared()       navbar.blade.php     vendor()       .gitkeep     welcome.blade.php routes(路由器)   api.php   console.php   web.php storage(编译过的Blade模板，基于文件的session，文件缓存，其他由框架生成的文件|app用于存放应用要使用的文件，framework目录用于存放框架生成的文件和缓存，logs文件包含应用的日志文件)   app()     public()       .gitignore     .gitignore   framework()     cache()     sessions()     views()     .gitignore   logs()     .gitignore     laravel.log tests(自动化测试，一个开箱即用的PHPUnit示例)   ExampleTest.php   TestCase.php vendor(Composer依赖) .env-----------配置文件 .env.example---配置文件 .gitattributes-git文件 .gitignore-----git文件 artisan--------命令行工具 composer.json--Composer配置文件 composer.lock--Composer文件 gulpfile.js----gulp文件？ package.json---包依赖文件 phpunit.xml----？ readme.md   server.php yarn.lock  Laravel 5.1 官方文档中文版 第五章 架构 5.1 一次请求的生命周期 +public/index.php: | +bootstrap/app.php:载入Composer自动加载设置，创建服务容器实例 | +HTTP/Console内核:根据请求的类型不同，分别交给HTTP内核和Console内核 |  HTTP内核 继承自Illuminate\\Foundation\\Http\\Kernel类，定义了一个bootstrappers数组，数组中的类在请求前被执行，这些bootstarppers配置了错误处理，日志，检测应用环境以及其他在请求被处理前需要执行的任务。 该内核还定义了一系列在请求前需要经过的HTTP中间件，这些中间件处理HTTP会话的读写、判断应用是否处于维护模式、验证CSRF令牌等。 内核的标志性方法handle处理的逻辑相当简单：获取一个Request，返回一个Response。 服务提供者 内核启动最重要的动作之一就是为应用载入服务提供者，应用的所有服务提供者被配置在config/app.php配置文件的providers数组中。 首先，所有提供者的register方法被调用，然后，所有提供者被注册之后，boot方法被调用。 服务提供者负责启动框架的所有各种各样的组件，比如数据库，队列，验证器，以及路由器组件等。 分发请求 一旦应用被启动并且所有的服务提供者被注册，Request将会被交给路由器进行分发，路由器将分发请求到路由或者控制器，同时运行所有路由指定的中间件。 服务提供者 服务提供者是启动Laravel应用中最关键的部分，应用实例被创建后，服务提供者被注册，请求被交给启动后的应用进行处理。 对Laravel应用如何通过服务提供者构建和启动有一个牢固的掌握非常有价值。 应用默认的服务提供者存放在app/Providers目录下，该目录在默认情况下是空的，这里是添加自定义启动和服务容器绑定的最佳位置。 对大型应用，你可能希望创建多个服务提供者，每一个都有更加细粒度的启动。 5.2 目录 app目录 应用的核心代码位于app目录下，该目录位于命名空间App下，并且被Composer通过PSR-4自动载入标准自动加载。 可以通过Artisan命令app:name来修改该命名空间。 包含Console、Http、Providers等目录。 Console和Http目录提供了进入应用核心的API，HTTP协议和CLI是和应用进行交互的两种机制，但实际上并不包含应用逻辑。换句话说，它们只是两个向应用发布命令的方式。Console目录包含了所有的Artisan命令，Http包含了控制器、过滤器和请求等。 Jobs目录是放置队列任务的地方，应用中的任务可以被队列化，也可以在当前请求生命周期内同步执行。 Events目录是放置事件类的地方，事件可以用于通知应用其他部分给定的动作已经发生，并提供灵活的解耦处理。 Listeners目录包含事件的处理器类，处理器接收一个事件并提供对该事件发生后的响应逻辑，比如UserRegistered事件可以被SendWelcomeEmail监听器处理。 Exceptions目录包含应用的异常处理器，同时还是处理应用抛出的异常的好地方。 命名空间 应用默认的命名空间是App；可以使用’php artisan app:name xxxx’修改应用名称。 服务提供者 服务提供者是所有Laravel应用启动的中心，你自己的应用以及所有Laravel的核心服务都是通过服务提供者启动。 “启动”意味着注册事物，包括注册服务容器绑定、时间监听器、中间件甚至路由。 config/app.php中的providers数组存储着要加载的所有服务提供者类。 服务提供者的实现 所有的服务继承者继承自“Illuminate\\Support\\ServiceProvider”类，继承该抽象类要求至少在服务提供者中定义一个方法：register，在register方法内，你唯一要做的事情就是绑事物到服务容器，不要尝试在其中注册任何时间监听器，路由或者任何其他功能。通过’php artisan make:provider RiakServiceProvider’生成一个新的提供者 boot方法 "
+  },
+  
+  {
+    "title": "设计模式",
+    "url": "/posts/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-29 00:00:00 +0800",
+    "content": "设计模式遵循的原则 1. 单一职责原则 就一个类而言，应该只有一个引起它变化的原因。 如果你能够想到多于一个的动机去改变一个类，那么这个类就具有多于一个的职责。 2. 开放封闭原则 软件实体可扩展（类，模块，函数等），但是不可修改。 在最初编写代码时，假设变化不会发生。当发生变化时，我们就创建抽象来隔离以后发生的同类变化。 拒绝不成熟的抽象和抽象本身一样重要。 3. 依赖倒转原则 高层模块不应该依赖底层模块。两者都应该依赖抽象。 抽象不应该依赖细节，细节应该依赖抽象。 4. 里氏替换原则 子类型应该能够替换掉它们的父类型。 5. 迪米特法则 如果两个类不必彼此直接通信，那么这两个类就不应当发生直接的相互作用。如果其中的一个类需要调用另一个类的方法的话，应该通过第三者转发这个调用。 在类的结构设计上，每一个类都应该尽量降低成员的访问权限。 6. 合成/聚合复用原则 尽量使用合成/聚合，尽量不要使用类继承。 设计模式（建造型） 1. 简单工厂模式 2. 抽象工厂模式 3. 建造者模式 4. 原型模式 5. 单例模式 设计模式（结构型） 1. 适配器模式 类适配器有类适配器和对象适配器两种，类适配器需要多继承特性的支持。 class Adapter : Target {   private Adaptee adaptee = new Adaptee();   public override void Request()   {     adaptee.SpecificRequest();   } }  static void Main(string[] args) {   Target target = new Adapter();   target.Request(); }  2. 桥接模式 将抽象部分与它的实现部分分离，使他们都可以独立的变化。  3. 装饰模式 4. 组合模式 5. 享元模式 6. 代理模式 7. 外观模式 "
+  },
+  
+  {
+    "title": "Php笔记",
+    "url": "/posts/PHP%E7%AC%94%E8%AE%B0/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-27 00:00:00 +0800",
+    "content": "PHP笔记 一：变量     数值   字符串   数组   索引数组   数组   二：控制结构 三：基础    HTML表单   模板   常量   日期和时间     四：     文件和数据库     "
+  },
+  
+  {
+    "title": "今日工作总结",
+    "url": "/posts/%E4%BB%8A%E6%97%A5%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-26 00:00:00 +0800",
+    "content": "在windows上使用Nginx+php-cgi安装Typecho的经历 这次是本地安装，所以遇到的问题比较多。    首先是Typecho的坑，安装Typecho必须自己先建立一个空的数据库。   然后是Nginx配置的坑，填写root路径的时候，需要用双斜线。   第三是静态文件，两个问题，一个是它原来用的一些东西有的是通过cdn获得的，在没有网络的情况下无法获取，另一个可能是由于Nginx配置的原因，导致部分静态文件（比如CSS文件）获取不了。   在创建Typecho的时候需要指定一个网站的网址，我是通过127.0.0.1:8009端口访问的这个文件夹，安装完以后默认的所有链接都是127.0.0.1:8009:8009，根本无法正常的使用。 一个思路是通过设置Nginx来指定一个类似于正常网络环境的域名，另一个思路是在填写的时候手动填写（这个好像不太靠谱）。   总结 今天计划的事情都没有做好，以后计划调整一下。 需要在线学习的内容只能延后（HTML/CSS）。 我有JS/PHP/GO的电子书，有空可以看一下。 （Go）在此基础上还需要对原先的me代码进行反省，由此可能会涉及到对于Beego/Go框架的一些学习，以及一些编程经验的总结学习。 （PHP）Laravel的内容因为没有网络，学习起来可能困难一点，就先打一下PHP的基础好了。 Nginx是很重要的东西，需要着力搞一下。  前端的内容主要是HTML/CSS的分离（禅意花园），响应式设计（媒体查询等），JS的学习。 "
+  },
+  
+  {
+    "title": "Nginxrewrite",
+    "url": "/posts/NginxRewrite/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-25 00:00:00 +0800",
+    "content": "Nginx配置 一：Rewrite功能 1.1 Nginx后端服务器组的5个指令 upstream指令 该指令用于给后端服务器命名。 默认情况下，服务器组收到请求后，按照“轮叫调度（RR）”策略调用服务器。 server指令 server address [parameters] 该指令用于定义组内的服务器。 parameters： weight=number：权重 max_fails=number：设置一个请求失败的次数 fail_timeout=time：一是设置max_fails指令尝试请求服务器的时间，二是服务器无效状态持续时间 backup：设置某台服务器为备用服务器 down：设置某台服务器为宕机状态 示例： upstream backup {  server backend1.example.com weight=5;  server 127.0.0.1:8000 max_fails=3 fail_timeout=30s;  server unix:/tmp/backend3; }  这里有三个服务器，分别是基于域名，基于IP，基于进程间通信的Unix Domain Socket ip_hash指令 对话保持功能 不能和server中的weight一起使用 根据用户IP来分配，Nginx必须是最前端服务器 客户端必须是C类地址 示例： upstream backend {  ip_hash;  server myback1.proxy.com;  server myback2.proxy.com; }  keepalive指令? 控制网络连接保持功能 keepalive connections; least_conn指令 使用负载均衡策略 1.2 Rewrite功能 依赖于PCRE 地址重写与地址转发 概念： 地址重写：将google.cn重写为google.com 地址转发：将一个域名指到另一个已有站点的过程 区别： 地址转发后浏览器地址栏中显示的地址不改变，地址重写后浏览器地址栏显示的地址为重写后的地址 在一次地址转发过程中，只产生一次网络请求，地址重写会产生两次请求 地址转发发生在同一个站点里，地址重写没有该限制 地址转发到的页面可以不用全路径名表示，地址重写到的页面必须用完整的路径名表示 地址转发过程中，可以将客户端请求的request范围内属性传递给新的页面，地址重写不可以 地址转发的速度较地址重定向快 1.3 Rewrite规则 借助于ngx_http_rewrite_module模块 1.4 if指令 if ( condition ) {} 1.变量名或者使用“=，!=”判断变量与字符串是否相等 使用正则表达式进行匹配，成功时视为true 变量与正则表达式之间用“~，~，!~，!~”链接 ~表示对大小敏感 ~*表示对大小写不敏感 !表示对结果取反 在正则表达式中，可以使用小括号对变量进行截取，在花括号中使用$引用截取的量 if ($http_user_agent ~ MSIE) { } if ($http_user_agent ~* \"id=([^;])(?:;|$)\") {   # 可以使用$1和$2获得截取到的值   # set $id $1; 将截取的id赋给$1以备后用 }  2.判断请求的文件是否存在 -f或者!-f 3.判断请求的目录是否存在 -d或者!-d 4.判断请求的目录或文件是否存在 -e或者!-e 5. 判断请求的文件是否可执行 -x或者!-x 1.5 break指令 用于中断当前作用域中的其他Nginx配置 可以在server块，location块，if块中使用 location / {   if ($slow) {     set $id $1     break;     limit_rate 10k;   } } 1.6 return 指令 ** 直接向客户端返回响应状态代码 return [ text ] return code URI; return URL; code：返回给客户端的HTTP状态吗 text：为返回给客户端的响应体内容 1.7 rewrite指令 URI:主机名[传输协议+主机+资源路径]+片段标志符+相对URI Scheme:[//][][用户名[:密码]@]主机名[:端口号]][/资源路径] URL：是URI的子集：传输协议+主机+资源具体地址 Scheme://主机名[:端口号][/资源路径] 该指令可在server块或者location块中配置 rewrite regex replacement [flag]; 注意： rewrite接受到的URI不包含host地址 rewrite myweb.com http://newweb.com/permanent; 我们希望重写http://myweb.com/source是办不到的，因为rewrite指令接收到的URI是/source，不包含myweb.com 另外，请求URL中的请求指令也是不包含在rewrite指令接收到的URI内容中的 http://myweb.com/source?agr1=value1&amp;agr2=value2 rewrite接收到的URI为/source，不包含“?agr1=value1&amp;agr2=value2” replacement用于替换URI中被截取的内容，如果该字符串是由http://或者https://开头，则不会继续向下进行其他 处理，而直接将重写后的URI返回给客户端 提示： rewrite myweb.com http://example.com$request_un?permanent; replcacement中支持全局变量的使用，常用的还有$uri和$args等 flag用来设置rewrite对URI的处理行为 last: break: redirect: permanent: 1.8 rewrite_log指令 1.9 set指令 1.10 uninitialized_variable_warm指令 1.11 全局变量 $args: $content_length: $content_type: $document_root:针对当前请求的根路径 $document_uri:请求中的当前uri，并且不包括请求指令 $host:请求url中的主机字段部分 $uri:与变量$document_uri含义相同 1.12 rewrite的使用 一：域名跳转    域名跳转     server {   listen 80;   server_name jump.myweb.name;   rewrite ^/ http://www.myweb.info/; }           多域名跳转     server {   listen 80;   server_name jump.myweb.name jump.myweb.info;   if ($host ~ myweb\\.info)   {  rewrite ^(.*) http://jump.myweb.name$1 permanent;   } }           三级域名跳转     server {   listen 80;   server_name jump1.myweb.com jump2.myweb.com;   if ($http_host ~* ^(.*)\\.myweb\\.name$)   {  rewrite ^(.*) http://jump.myweb.name$1;  break;   } }          二：域名镜像     server {   listen 80;   server_name mirror1.myweb.com;   rewrite ^(.*) http://jump1.myweb.name$1 last; } server {   listen 81;   server_name mirror2.myweb.name;   rewrite ^(.*) http://jump2.myweb.name$1 last; }          server {   listen 80;   server_name jump.myweb.name;   location ^~ /source1   {  rewrite ^/source1(.*) http://jump.myweb.name/websrc2$1 last;  break;   }   location ^~ /source2   {  rewrite ^/source2(.*) http://jump.myweb.name/websrc2$1 last;   } }          三：独立域名     四：目录自动添加”/”     五：目录合并     六：防盗链     "
+  },
+  
+  {
+    "title": "Centos下安装easywechat",
+    "url": "/posts/Centos%E4%B8%8B%E5%AE%89%E8%A3%85easywechat/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-20 00:00:00 +0800",
+    "content": "在Centos下安装easywechat（php）环境 使用的操作系统为centos6.8。 涉及的主要内容有：    php的安装（5.6.x版本）   MySQL的安装(5.7版本)   php-fpm模块的安装   nginx的安装（1.10.2）   composer的安装   easywechat的安装   一：PHP和MySQL的安装 由于操作系统默认的镜像比较老，通过yum无法安装新版本的php和MySQL。 有以下几种方式来安装新版本的PHP和MySQL： 1.1 EPEL方法安装 1.2 rpm包安装 1.3 编译安装  二：Nginx的安装 我们通过编译安装的方式来安装Nginx。  三：php-fpm的安装  四：compser的安装 安装： http://blog.csdn.net/gb4215287/article/details/53942845 http://docs.phpcomposer.com/01-basic-usage.html http://docs.phpcomposer.com/00-intro.html#Globally http://semaphoreci.com/community/tutorials/getting-started-with-composer-for-php-dependency-management 使用： 卸载： https://segmentfault.com/a/1190000006835510 错误：    ssl链接错误：http://stackoverflow.com/questions/36787413/curl-35-ssl-connect-error   Failed to decode zlib stream：https://github.com/composer/composer/issues/4619   sudo: composer: command not found     安装easywechat     easywechat是一个标准的composer包，直接使用composer即可创建。     "
+  },
+  
+  {
+    "title": "Lavarel教程笔记",
+    "url": "/posts/Lavarel%E6%95%99%E7%A8%8B%E7%AC%94%E8%AE%B0/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-15 00:00:00 +0800",
+    "content": "Lavarel教程 [https://www.laravist.com/series/laravel-5-basic/episodes/1] 一：安装和基本运行 安装Composer：curl -sS https://getcomposer.org/installer | php 下载composer.phar文件，将可执行文件phar放在PATH目录中 composer create-project laravel/laravel xxx 开启web服务：    使用php内置服务器：php -S localhost:8888 -t public   使用php artison serve     二：Lavarel的工作流程     1.路由（HTTP） 2.     三：Lavarel向视图传递变量（V）     输出变量：     #name=’xxx’;return view(‘sites.about’)-&gt;with(‘name’) 传统方法（PHP）：&lt;?= $name ?&gt; 模板方法：  或者{!! !!}(不转意) {!! $name !!}的写法和&lt;?= $name ?&gt;的写法是类似的     其他输出方式：            使用with返回：return view(‘test’)-&gt;with(‘name’, $name);       使用with返回数组：return view(‘test2’)-&gt;with( [‘first’=&gt;’Hello’, ‘second’=&gt;’World’]);       使用data变量：$data = [];$data[‘first’] = ‘first’;$data[‘second’] = ‘second’;return view(‘test2’, $data);       使用compact返回：return view(‘test2’, compact(‘first’, ‘second’));         四：Blade的用法（V）         公用模板         引入其他文件：@yield(‘content’) @yield(‘footer’) 被其他文件引用：@extends(‘app’) @section(‘content’) @stop @section(‘footer’) @stop         条件判断         传统方法：&lt;?php if xxx ?&gt; blade方法：@if($first == ‘xxx’) @else @endif         循环判断         模板方法：@foreach($people as $person)  @foreach @if(count($people)&gt; 0) @endif         五：Lavarel的环境配置(.env文件)         键（大写，横线隔断）=值（小写） config/database.php文件引用了env环境文件，将env设置为gitignore可以防止密码的泄露，做到合理的解耦         六：Migration基础（数据库的版本控制，M）         database/migration/users_table和 xx/xx/password_resets_table文件用来定义数据库信息，使用php artison migrate命令可以用来注册数据库 php arrison make:migration create-articles_table –create=articles         八：Eloquent入门         php artison make:model article php artsion tincker:类似于php的交互界面 $article= new App\\Article; $article-&gt;title=’My First Article’; $article-&gt;content=’content’; $article-&gt;published_at=Carbon\\Carbon::now(); $article-&gt;save(); $article-&gt;toArray(); $first=App\\Article::find(1); $first-&gt;title=’Update’; $first-&gt;save(); $second=App\\Article::where(‘content’,’=’,’content’)-&gt;get(); $second=App\\Article::where()-&gt;first(); $article=App\\Article::create([‘title’=&gt;’Second Title’, ‘content’=&gt;’Second Content’, ‘published_at’=&gt;Carbon\\Carbon::now()]); $article-&gt;update([‘title’=&gt;’Change Title’]);                 "
+  },
+  
+  {
+    "title": "Npm使用技巧",
+    "url": "/posts/npm%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-11 00:00:00 +0800",
+    "content": "NPM使用    查看全局安装过的包：npm list -g –depth 0 ——来自[http://blog.csdn.net/a454213722/article/details/51981503]  "
+  },
+  
+  {
+    "title": "Php和cgi",
+    "url": "/posts/PHP%E5%92%8CCGI/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-11 00:00:00 +0800",
+    "content": "PHP的运行方式 1. CGI与FastCGI 1.1 CGI HTTP服务器最基本的功能是根据请求返回静态文件（.html,.css,.js等），当其中有动态内容时（比如需要查询数据库时），服务器就无能为了了。这时候服务器可以参照CGI协议将这个请求转发给同在服务器上的其他程序，由其他程序来完成查询数据库等操作，在按照CGI要求的格式返回给服务器。这些程序可以用PHP,Perl等各种语言来实现。  当使用CGI方式工作时，需要给服务器（比如Apache）指定php-cgi.exe的位置。Apache收到动态请求后，启动一个php-cgi进程来解析请求中的php代码，解析结束后关闭进程。这种方式是最直观的，但是每次都要启动新的进程，带来的开销比较大。  1.2 FastCGI方式 FastCGI的出现是为了解决传统CGI工作方式开销较大的问题。在这个模式下工作，每次Apache收到动态请求后交给一个cgi进程管理程序来负责解析。对于每一个请求，进程管理器新建一个线程来解析请求，开销相对较小。  1.3 PHP对CGI/FastCGI的实现 CGI和FastCGI都是技术方式或者协议的名称，各个语言都有自己的实现。 windows下php有四个可执行文件:php.exe,php-cgi.exe,php-win.exe,phpdbg.exe。其中phpdbg.exe是php的调试程序，php.exe是交互式的命令行程序。php-cgi才是php在服务器上运行时所需的解释程序。php-win.exe类似于php.exe，只是在运行时不会在控制台输出内容。 [http://blog.csdn.net/daiyan_csdn/article/details/53912410]  2. PHP与WebServer 2.1 与Apache协同工作 [https://segmentfault.com/q/1010000002753412] 2.1.1 作为Apache的一个模块 PHP作为Apache的一个模块（libphp5.so）集成到apache进程运行，这时php的运行和php-cgi没有任何关系： LoadModule php5_module modules/libphp5.so AddHandler application/x-httpd-php .php 2.1.2 Apache作为一个FastCGI进程管理器来管理php-cgi 使用mod_fcgid模块： 》载入mod_fcgid模块(不能和php5_module同时使用) LoadModule fcgid_module modules/mod_fcgid.so AddHandler fcgid-script .php 》php-cgi的进程数量 FcgidMaxProcesses 5 》指定php-cgi来处理php请求 FcgidWrapper /png/php/5.4.39NTS/bin/php-cgi .php 》在需要使用php-cgi来执行PHP的Directory加上Options   +ExecCGI,比如: &lt;Directory “/png/www/a.com/public_html/fcgid”&gt;     Options +ExecCGI &lt;/Directory&gt; 2.2 PHP搭配Nginx使用 Nginx搭配PHP使用需要用到php-fpm模块，这里php-fpm充当了php解释器的作用，也充当了FastCGI进程管理器的作用。 2.3 PHP内置WebServer 现在的PHP已经内置了一个WebServer，可以在没有Apache的情况下工作，在命令行下敲入以下命令就可以启用：php -S 0.0.0.0:8080 -t /www ###  [http://blog.163.com/wz_pk007/blog/static/17062705020122611470999/] [http://www.mike.org.cn/articles/what-is-cgi-fastcgi-php-fpm-spawn-fcgi/] [http://www.cnblogs.com/zl0372/articles/php_4.html] "
+  },
+  
+  {
+    "title": "Lavarel学习资源整理",
+    "url": "/posts/Lavarel%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90%E6%95%B4%E7%90%86/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-11 00:00:00 +0800",
+    "content": "Lavarel学习资源整理 网站 Laravel学院[http://laravelacademy.org/]：有基础教程，博客系列等免费内容 Laravist[https://www.laravist.com/series/laravel-5-basic]：有Lavarel5.1的视频教程 blog.qiji.tech[http://blog.qiji.tech/archives/category/laravel/laravel-5-fundamentals]：有英文视频教程的翻译，对应的英文教程在这儿[https://laracasts.com/series/laravel-5-fundamentals] golavarel和lavarel-china: Never land的博客[http://blog.csdn.net/Jackdowson123/article/details/54177727]：不错的Lavarel博客 配置Lavarel的开发和运行环境    环境 Lavarel基于PHP环境，PHP的应用环境也分好几种，最时髦的应该是LNMP(Linux+Nginx+MySQL+PHP)，这里PHP和Nginx使用php-fpm交互。由于php-fpm在windows上还没有对应的实现，我在学习的时候用的是php-cgi.exe（应该属于fastcgi的一种）。 这里的关键在于配置Nginx的fastcgi支持。   Lavarel的版本 Lavarel最新的版本时5.3，但是LTS版本是5.1，由于资料相对缺乏，所以我选择了较为稳定的5.1作为学习的对象。   其他环境 Lavarel作为一个php应用，采用composer作为包管理器，必然会涉及composer的使用，另外前端可能会用到诸如gulp,bower等工具，所以也会用到nodejs的包管理工具npm。   如何进行Lavarel的开发 [http://laravelacademy.org/post/2207.html]     创建应用骨架： 使用lavarel new test或者composer create-project laravel/laravel test –prefer-dist   配置Web服务器： 设置Nginx   创建数据库： 设置MySQL   "
+  },
+  
+  {
+    "title": "Css3媒体查询指令",
+    "url": "/posts/CSS3%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2%E6%8C%87%E4%BB%A4/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-11 00:00:00 +0800",
+    "content": "CSS3媒体查询指令 语法 @media mediatype and|not|only (media feature) {   CSS-Code; } 或者对不同的媒体使用不同的样式表： &lt; link rel=”stylesheet” media=”mediatype and|not|only (media feature)” href=”mystylesheet.css”&gt; 媒体类型     print:用户打印机和打印预览   screen:用于电脑屏幕，平板电脑，智能手机   speech:用户屏幕阅读器等发声设备     媒体功能      height/width:定义输出设备中的页面可见区域高度/宽度   max-height/max-width:定义输出设备中的页面最大可见区域高度   min-height/min-width:定义输出设备中的页面最小可见区域高度  "
+  },
+  
+  {
+    "title": "Vagrant的安装",
+    "url": "/posts/Vagrant%E7%9A%84%E5%AE%89%E8%A3%85/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-10 00:00:00 +0800",
+    "content": "初识Vagrant Vagrant是一个类似Docker的虚拟机工具。底层可以采用Virtual Box和VM Ware等来做虚拟机支持，当然也可以在Windows等非Linux平台上运行。   实际部署一个基于Vagrant的虚拟环境需要安装VirtualBox。 下载    vagrant的下载地址[https://www.vagrantup.com/downloads.html]   vitualbox的下载地址[https://www.virtualbox.org/]   这两个都是可视化的安装过程，一路点下去就好了，也没什么坑。  "
+  },
+  
+  {
+    "title": "Php5.6和laravel在centos6.8上的部署",
+    "url": "/posts/PHP5.6%E5%92%8CLaravel%E5%9C%A8centos6.8%E4%B8%8A%E7%9A%84%E9%83%A8%E7%BD%B2/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-10 00:00:00 +0800",
+    "content": "lavarel在centos6.8上的部署 lavarel作为一个php框架，需要PHP版本在5.6.4以上（其他的需求也列在下面）。由于我使用的centos6.8默认安装的php版本比较低，所以在部署lavarel之前还需要先升级系统的php版本。 其他需求： PHP &gt;= 5.6.4 OpenSSL PHP Extension（SSL链接） PDO PHP Extension（数据库操作） Mbstring PHP Extension Tokenizer PHP Extension XML PHP Extension（使用XML文件） 升级PHP    给系统安装epel包[http://www.tecmint.com/how-to-enable-epel-repository-for-rhel-centos-6-5/]   安装epmi包[http://blog.csdn.net/shelly1072/article/details/53128495]   安装最新版本的php   出现的问题：    系统好像默认安装了PHP5.3.3（或者是我之前用yum安装过）但是使用rpm -qa命令查找不到任何信息。这种情况可能是安装了但没有rpm记录，所以还是尝试用rpm删除以后在安装更高版本的php。–可能是因为在卸载原先的php之后没有重启httpd，所以httpd还是显示php5.3.3的信息。     安装Lavarel     Lavarel的安装资料      主要参考：[https://laravel-china.org/docs/5.3/homestead]   [http://www.golaravel.com/]   [https://laravel-china.org/]   [http://laravelacademy.org/]   [http://lavarel.com]   PHPComposer[http://www.phpcomposer.com/]  "
+  },
+  
+  {
+    "title": "配置php,apache作为微信公众号的后台",
+    "url": "/posts/%E9%85%8D%E7%BD%AEphp,apache%E4%BD%9C%E4%B8%BA%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E7%9A%84%E5%90%8E%E5%8F%B0/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-04 00:00:00 +0800",
+    "content": "Apache安装与配置 一：安装 操作系统：centos6.8 使用yum install php来安装php,默认会设定httpd为依赖，自动安装apache2。 * 安装的php版本为5.3，包括php,php-common,php-cli和php-devel等包。  * 安装的httpd版本为2.2.15，包括httpd和httpd-tools等包。 二：配置    修改监听端口为8081[http://www.centoscn.com/apache/2015/0324/4989.html]   设置nginx的反向代理，将weixin.wangtianyu00.com:80端口定向到8081端口   在apache的www目录下放置php文件，从浏览器能正常访问，说明配置正确。     三：上传方倍工作室默认php文件到服务器     四：配置公众号的开发者模式     五：实现正常访问     下一步的计划     使用方备工作室提供的简单代码可以实现基本的回复功能，但要作为一个可以接入任意公众号的产品，还需要将整个过程可视化，这方面可能需要参照一些php的后台应用。     "
+  },
+  
+  {
+    "title": "微信公众平台开发者模式准备",
+    "url": "/posts/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E8%80%85%E6%A8%A1%E5%BC%8F%E5%87%86%E5%A4%87/",
+    "categories": "",
+    "tags": "",
+    "date": "2017-01-03 00:00:00 +0800",
+    "content": "#微信公众号 一：微信公众号的种类 现在登录微信公众平台[http://mp.weixin.qq.com]，可以看到我们能申请的账号种类有服务号，订阅号，小程序和企业号。点击详情可以看到这些类别之间的差异。 1.1 按使用情景分    订阅号：主要偏于为用户传达资讯（类似报纸杂志），认证前后都是每天只可以群发一条消息；   服务号：主要偏于服务交互（类似银行，114，提供服务查询），认证前后都是每个月可群发4条消息；   企业号：主要用于公司内部通讯使用，需要先有成员的通讯信息验证才可以关注成功企业号；   1.2 按账号主体分 除了公众号类型之外，还会要求选择一个账号的主体类型，这个类型包括：个体户（企业），企业（企业），媒体，政府，其他组织和个人（共有五类六种）。选择类型后提交资质验证申请之后可以由未认证状态转为认证状态。需要注意的是，以个人为主体的公众号是无法认证的。 验证方式有两种：有对公账户的可以使用支付验证注册，没有对公账户的，需要使用微信认证（每次300） 1.3 接口权限的问题 微信公众号可以使用不同的接口来自定义公众号的功能，这些接口根据公众号种类的不同而有所不同（指未认证的订阅号，认证的订阅号，未认证的服务号，认证的服务号等四种）。 这些类型中，认证的服务号拥有最多的权限，未认证的订阅号和服务号拥有类似的权限（除了未认证的服务号拥有自定义菜单的接口权限）。 二：微信号功能详解（个人主体、未认证） 2.1 功能    群发功能   自动回复   自定义菜单   投票管理   其他            卡券功能       摇一摇周边       客服功能       微信连Wi-fi       微信小店         2.2 管理                  消息管理   用户管理   素材管理     2.3 推广      广告主   流量主     2.3 统计      用户分析   图文分析   菜单分析   消息分析   接口分析   网页分析     2.4 设置      公众号设置   微信认证   安全中心            管理员微信号       风险操作保护                    登陆           群发消息           修改服务期配置           修改AppSecret           查看AppSecret                       风险操作提醒       风险操作记录       修改密码           违规记录     2.5 开发      基本配置            开发者ID                    AppID（应用ID）           AppSecret（应用密钥）                       服务器配置                    URL           Token           EncodingAESKey（消息加解密密钥）           消息加密模式                       微信开放平台账号绑定           开发者工具            开发者工具                    开发者文档           在线接口调试工具           web开发者工具           公众平台测试账号           公众号第三方平台                       腾讯云                    腾讯云CDN加速           腾讯云安全防护                           运维中心   接口权限     2.6 接口权限（个人主体、未认证）      对话服务-基础支持-获取access_token   对话服务-基础支持-获取微信服务器IP地址   对话服务-接收消息-验证消息真实性   对话服务-接收消息-验证普通消息   对话服务-接收消息-验证事件推送   对话服务-接收消息-接受语音识别结果   对话服务-发送消息-被动回复消息   网页服务-基础接口-判断当前客户端版本是否支持指定JS接口   网页服务-图像接口-获取jsapi_ticket   网页服务-音频接口   网页服务-智能接口（网页语音识别）   网页服务-设备信息   网页服务-地理位置   网页服务-界面操作   网页服务-微信扫一扫     三：开发文档     3.1 开始前必读     3.1.1 首页（微信公众平台开发概述）     微信公众平台-&gt;公众平台开发接口-&gt;公众号-&gt;用户 每个用户对每个公众号有一个OpenID，需要在多公众号，移动应用之间做用户共通，则需要前往微信开放平台，将这些公众号和应用绑定到一个开发平台之下，绑定之后，用户对这些应用有一个共同的UnionID 公众平台针对微信公众号进行开发，需要对移动应用，PC端网站，公众号第三方平台进行开发，需要前往微信开放平台进行接入。 开发须知：在申请到认证公众号之前，可以申请测试公众号；可以使用接口调试工具来在线调试某些接口；开发出现问题时，可以通过接口调用的返回码。 公众平台以access_token为接口调用凭据，所有接口的调用需要先获取access_token， access_token在2小时内有效，过期需要重新获取，但1天内获取次数有限，开发者需自行存储。            重点难点：公众号用户管理，access_token的原理           3.1.2 开发者规范 3.1.5 接口调用频次限制说明 {“errcode”:45009,”errmsg”:”api freq out of limit”} 3.1.6 接口返回码说明 3.1.7 入门指引 xxxxx 3.2 开始开发 3.2.1 接入指南    填写服务器配置   验证服务器地址的有效性   依据接口文档实现业务逻辑   验证成功后，用户每次向公众号发送消息、或者产生自定义菜单、或产生微信支付订单等情况时，开发者填写的服务器配置URL都将得到微信服务期推送过来的消息和事件，开发者可以根据自身业务逻辑进行响应，如回复消息等。 用户向微信公众号发送消息时，公众号方收到的是一个OpenID，是用户微信号加密后的结果，每个用户对每个公众号都有一个唯一的OpenID。 微信公众接口必须以 http:// 或者 https:// 开头，对应80端口和443端口 3.2.2 接口域名说明 ？？？？ 3.2.3 获取access_token access_token是公众号的全局唯一接口调用凭据，公众号调用各接口时都需要使用access_token，开发者需要进行妥善保存。access_token的存储空间至少要保留512个字符空间。access_token的有效期为2个小时，需定时刷新，重复获取将导致上次获取的access_token失效？？？？    为了保密AppSecret，第三方需要一个access_token获取和刷新的中控服务器。而其他业务逻辑服务器所使用的access_token均来自该中控服务器，不应该各自去刷新，否则会造成access_token覆盖而影响业务；   3.2.4 获取微信服务器IP地址 3.3 自定义菜单 3.3.1 自定义菜单创建接口 3.3.2 自定义菜单查询接口 3.3.3 自定义菜单删除接口 3.3.4 自定义菜单事件推送 3.3.5 个性化菜单接口 3.3.6 获取公众号的菜单配置 3.4 消息管理 3.4.1 接收消息-接受普通消息 3.4.2 接收消息-接收事件推送 3.4.3 发送消息-被动回复消息 3.4.4 发送消息-被动回复时的加解密 3.4.5 发送消息-客服接口 3.4.6 发送消息-群发接口 3.4.7 发送消息-模板消息接口 3.4.8 发送消息-模板消息运营规范 3.4.9 获取公众号自动回复配置 3.5 微信网页开发 3.5.1 微信网页授权 3.5.2 微信网页开发样式库 3.5.3 微信JS-SDK 3.5.4 微信Web开发者工具 3.6 素材管理 3.6.1 新增临时素材 3.6.2 获取临时素材 3.7 用户管理 3.7.1 用户分组管理 3.7.2 设置用户备注名 3.8 账号管理 3.8.1 生成带参数的二维码 3.9 数据统计 3.10 微信卡券 3.11 微信门店 3.12 微信小店 3.13 微信设备功能 3.14 新版客服功能 3.15 微信摇一摇周边 3.16 微信连Wi-fi 3.17 微信扫一扫 3.18 其他文档    微信公众平台·小程序   微信开放平台文档  "
+  },
+  
+  {
+    "title": "高性能网站优化指南",
+    "url": "/posts/%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%AB%99%E4%BC%98%E5%8C%96%E6%8C%87%E5%8D%97/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-30 00:00:00 +0800",
+    "content": "##高性能网站建设指南 我们自己建站的时候，由于没有优化的意识，即使网站的内容不多，也会花费很长的时间来加载。反观那些大公司做出来的网站，即使是在加入了视频和许多炫酷的JS效果的基础上依然可以做到秒开。这一慢一快，差就差在我们没有给我们的网站做性能优化。这本书的作者列举了14项用来优化网站响应速度的技巧，了解并熟练使用它们对优化网站的访问速度大有脾益。 一：减少请求    图片地图   图片地图允许你在一个图片上关联多喝URL，减少了下载请求的数量。   服务器端图片地图将所有点击提交到一个URL，由后端来判断xy坐标。客户端图片地图通过http的map来实现。   缺点形状单一，无法实现鼠标滑过提示等状态。   CSS Sprites   CSS Sprites将所有图片整合到一张图片上，再通过指定位置来获得其中的小块图片。[CSS Sprites: Image Slicing’s Kiss of Death]   内联图片和脚本   通过data:url可以在web页面中包含图片但无需任何额外的http请求。（data:url是和http:url同等级别的标准，其他的还有：ftp:, file:, mailto:, smtp:, pop:, dns:, whois:, finger:, daytime:, news:, urn:等）   缺点：跨越不同页面时不会被缓存，编码过的logo会导致页面变大。   技巧：可以通过css内联作为背景！（为什么是背景？）   其他：PHP中的file_get_contents可以很容易的通过从磁盘中读取图片并将其插入到页面中来创建内联图片。   样式表的合并（合并脚本和样式表）   理想情况下，一个页面应该使用不多于一个的脚本和样式表。     二：使用内容分发网络（CDN）     将组件服务器分散到不同的地点而不是建立分布式的应用程序服务器。 CDN用户发布静态的内容，如图片，脚本，样式表和Flash。动态的内容往往依赖于数据库连接，状态管理，验证，硬件和OS优化，这不是CDN能做的。同时静态文件更容易存储，具有较少的依赖性。     三：添加Expires头     web服务器使用Expires头来告诉web客户端它可以使用一个组件的当前副本，直到指定的时间为止。  （HTTP 1.0） Cache-Control使用max-age指令指定组件被缓存多久。它以秒为单位定义了一个更新窗。如果从组件被请求开始过去的秒数少于max-age，浏览器就是用缓存的版本。  （HTTP 1.1） mod_expires Apache模块使你在使用Expires头时能够像max-age那样以相对的方式设置日期。这通过Expires-Default指令完成。 空缓存和完整缓存 图片，样式表和脚本都应该使用缓存 合并脚本和样式表可以增加缓存的完整度：完整度是我们要考虑的问题吗？ ？？：万一在缓存的这段时间内我们的内容发生了改变，怎么办（只对那些不会经常变更的内容进行缓存）-&gt;通过添加版本号，当新版本的内容发布之后，由于名称不同，会再次下载。     四：压缩组件     web客户端可以通过请求中的Accept-Encoding头来标识对于压缩的支持：Accept-Encoding:gzip, deflate。web服务器通过响应中的Content-Encoding头来通知客户端。 压缩可以用在样式表和脚本上。通常对于大于1KB或2KB的文件进行压缩，mod_gzip_minimun_file_size指令控制着希望压缩的文件的最小值，默认是500B。 代理缓存：通过在Web服务器的响应中添加Vary头，Web服务器可以告诉代理根据一个或多个请求头来改变缓存的响应。Vary: Accept-Encoding。 浏览器白名单：只为支持压缩的浏览器提供压缩的内容。将User-Agent作为代理的另外一种评判标准添加到Vary头中。Vary:Accept-Encoding, User-Agent [太乱了，略过]     五：将样式表放在顶部         总结：规则一和规则三通过限制不必要的HTTP请求解决了响应时间的问题。规则二通过将HTTP响应拉近用户来减少响应时间。规则四通过减少HTTP响应的大小来减少响应时间。  "
+  },
+  
+  {
+    "title": "Windows内建linux子系统",
+    "url": "/posts/Windows%E5%86%85%E5%BB%BALinux%E5%AD%90%E7%B3%BB%E7%BB%9F/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-30 00:00:00 +0800",
+    "content": "Windows原生运行Linux的技术细节 一：Windows的用户模式和内核模式 根据处理器上运行的代码的类型，处理器在两种模式之间切换：应用程序在用户模式下进行，核心操作系统组件在内核模式下进行；多个驱动程序在内核模式下运行时，某些驱动程序可能在用户模式下进行。 启动用户模式的应用程序时，windows为应用程序创建进程，进程包含该应用程序的“虚拟地址空间”和“句柄表格”。每个程序都单独运行，收到操作系统的监控。程序损坏时不会影响到系统中的其他部分。 内核模式下运行的所有代码共享一个虚拟地址空间。&gt;这表示内核模式驱动程序未从其他驱动程序和操作系统自身独立开来。如果内核模式驱动程序意外写入错误的虚拟地址，可能会影响其他驱动程序甚至操作系统。&lt; [https://i-msdn.sec.s-msft.com/dynimg/IC535109.png]  二：Windows NT子系统 NT内核将应用程序所能调用的API和内核层之间做了隔离，这样NT可以支持多个子系统：POSIX,OS/2,Win32等。这些子系统最初的用途是简化UNIX和OS/2应用程序向Windows移植的工作，虽然POSIX和OS/2子系统已被取消，但它们的架构保留了下来。 Pico进程和驱动：DrawBridge项目引进的Pico进程和相应的驱动提供了一种基于过程的容器。这是一种不包含操作系统服务的轻量级解决方案，系统调用是由一对Pico驱动处理的。 用户模式Linux，通过这种方式可将 Linux 作为应用程序在其他 Linux 宿主机基础之上运行。此时来宾 Linux 内核无需直接访问硬件，而是将系统调用转发至宿主机 Linux，由其代为访问。 [http://www.oschina.net/news/73063/windows-run-linux] "
+  },
+  
+  {
+    "title": "Nginx虚拟主机和反向代理的区别",
+    "url": "/posts/Nginx%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA%E5%92%8C%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E5%8C%BA%E5%88%AB/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-30 00:00:00 +0800",
+    "content": "Nginx的设置 虚拟主机 通过设置以下信息可以定义一台虚拟主机，当设置的条件满足时，nginx会响应设定目录下的静态文件。  server { \tlisten 80; \tserver_name www.aaa.com; \tlocation / { \t\troot www; \t} }   以上代码定义了一个监听www.aaa.com:80端口的虚拟主机，请求满足条件时，会去访问设定的根目录下的静态文件。 反向代理 和虚拟主机不同的是，反向代理是将一个满足条件的请求发送到另一个http服务器上。  server { \tlisten 80; \tserver_name www.bbb.com; \tlocation / { \t\tproxy_pass http://t6:8300; \t} }   以上代码定义了一个反向代理服务器，请求满足条件时，会将该请求发送到另一台具有http服务功能的服务器。 注意的点有：    proxy_pass后有无”/”：如果没写斜线，会请求http://t6:8300/test/test.jsp文件；如果写了斜线，会请求http://t6:8300/test.jsp。  "
+  },
+  
+  {
+    "title": "Nginx的一些设置",
+    "url": "/posts/Nginx%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AE%BE%E7%BD%AE/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-28 00:00:00 +0800",
+    "content": "Nginx配置和使用 一：文件夹 1.1 conf文件夹 存放配置文件 1.2 html文件夹 存放默认的HTML文件 1.3 logs文件夹 存放日志文件和nginx.pid文件 1.4 sbin文件夹 存放nginx可执行文件 二：操作 2.1 启停控制 使用ps -ef | grep nginx或者cat nginx.pid可以查看nginx的pid。  使用向进程传信号的方式来控制进程：kill SIGNAL PID（可以使用的信号有TERM/INT,QUIT,HUP,USR1,USR2,WINCH）。  使用二进制文件nginx：参数-t检查服务器配置文件中是否有语法错误，可以和-c配合使输出内容更加详细，和-q配合，则如果无错误，将不输出内容。-s用来向进程发送信号。-p prefix改变安装路径，在平滑升级nginx服务器时使用。-c filename指定配置文件的路径。-g directives补充配置文件，指定全局配置。  停止：nginx -g TERM | INT | QUIT 重启：nginx -g HUP [-c filename]或者kill HUP PID 升级：nginx -p 改变安装路径（非必须）-&gt; nginx -g USR2（平滑升级） / kill USR2 PID -&gt; nginx -g WINCH / kill WINCH PID  2.2 基础配置 一个nginx.cnf的示例  worker_processes 1; events { \tworker_connections xxxx;\t } http { \tinclude mime.types; \tdefault_type application/octet-stream; \tsendfile on; \tkeepalive_timeout 65; \tserver { \t\tlisten 80; \t\tserver_name localhost; \t\tlocation / { \t\t\troot html; \t\t\tindex.html index.htm; \t\t} \t\terror_page 500 502 503 504 /50x.html; \t\tlocation = /50x.html { \t\t\troot html; \t\t} \t}  }   文件开始的部分为全局块，之后是events块和http块，http块下又有server块，server块下又有location块。     全局块包括配置运行nginx的服务器的用户（组），worker process数，nginx进程pid存放路径，日志的存放路径和类型，配置文件的引入等。   events块主要影响服务器和用户的链接，包括是否开启对多worker process下的网络链接进行序列化，是否允许同时接受多个网络链接，选取哪种事件驱动模型处理链接请求，每个process可以同时支持的最大链接数等。   http块可以引入文件，定义MIME-Type，自定义日志，是否使用sendfile传送文件，设置连接超时间，设置单链接请求上限等。   server块代表一个虚拟主机，最常见的配置是定义本虚拟主机的监听配置和本虚拟主机的名称或IP设置。   location块的作用是基于nginx接收到的请求字符串（如server_name/uri-string），对除虚拟主机名称之外的字符串（/uri-string）进行匹配，对特定的请求进行处理，实现地址定向，数据缓存，应答控制等功能。   其他配置（全局块）  配置运行nginx服务器的用户（组）：user user [group];（或者允许任何人操作：user nobody nobody） 配置允许生成的worker process数：worker_process number | auto 配置pid存放位置：pid filepath/filename 配置错误日志的存放位置：error_log file | stderr [debug|info|notice|warn|error|crit|alert|emerg]（注意：指定的文件对于运行nginx的进程的用户具有读写权限） 引入其他配置文件：include file  其他配置（events块） 设置网络连接的序列化：accept_mutex on | off 设置是否允许同时接受多个网络链接：multi_accept on | off 事件驱动模型的选择：use select | poll | kqueue | epoll | rtsig | /dev/poll | eventport（只能在event中使用）  其他配置（http块） 定义MIME-Type（type块）（默认为text/plain）：include mime.types; default_type application/octet-stream;  （可以在http，server，location中进行设置） 自定义服务日志：access_log path[format[buffer=size]]（可以在http，server，location中进行设置） 允许sendfile（可以在http，server，location中设置） 设置超时时间（keepalive_timeout）：keepalive_timeout timeout[header_timeout]（可以在http，server，location中进行设置） 单链接请求上限：keepalive_requests number;（可以出现在http，server和location中）  其他配置（server-&gt;listen） 配置网络监听     配置监听的IP：listen address[:port] [default_server] [setfib=number] [backlog=number] [rcvbuf=size] [sndbuf=size] \\ [deferred] [accept_filter=filter] [bind] [ssl];                                   配置监听端口：listen port [default_server] [setfib=number] [backlog=number] [rcvbuf=size] [sndbuf=size] [accept_filter=filter] \\ [deferred] [bind] [ ipv6only=on           off] [ssl];                           配置UNIX Domain Socket（一种在原有Socket框架上发展起来的IPC机制）   基于名称的虚拟主机配置（server-&gt;server_name）  基于IP的虚拟主机配置（server-&gt;server_name）    if config eth1:0 192.168.1.31 netmask 255.255.255.0 up配置IP别名   location块 root设置网站根目录 index设置网站默认主页 error_page设置网站的错误页面  基于IP设置访问权限 allow/deny address | CIDR | all; 基于密码配置的nginx访问权限 auth_basic string | off auth_basic_user_file file  name1:password1 name2:password2:comment name3:password3 &gt; 使用htpasswd：htpasswd -c -d /nginx/conf/pass_file username   2.3 配置实例 三：代理服务 3.2 反向代理基本设置（21条）    proxy指令：设置被代理的服务器的地址，可以是主机，IP地址加端口等   proxy_hide_header指令：用于设置Nginx服务器在发送HTTP响应时，隐藏一些头域信息   proxy_pass_header指令：默认情况下，Nginx服务器在发送响应报文时，报文头中不包含“Date”，“Server”，“X-Accel”等来自被代理服务器的头域信息，这个指令可以设置这些头域信息可以被发送。   proxy_pass_request_body指令：该指令用于配置是否将客户端请求的请求体发送给代理服务器。   proxy_pass_request_headers指令：该指令用于配置是否将客户端请求的请求头发送给代理服务器。   proxy_set_header指令：该指令可以更改Nginx服务器收到的客户端请求的请求头信息，然后将新的请求头发送给被代理服务器。   proxy_set_body指令：该指令可以更改Nginx服务器接收到的客户端请求的请求体信息，然后将新的请求体发送给被代理服务器。   proxy_bind指令：强制将与代理服务器的连接绑定到指定的IP地址。   proxy_connect_timeout指令：该指令配置Nginx服务器与后端被代理服务器尝试建立连接的超时时间。   proxy_read_timeout指令：该指令设置Nginx服务器向后端被代理服务器发出read请求后，等待响应的超时时间。            Nginx支持多种类型虚拟主机：基于IP的，基于域名的和基于端口的。 基于IP的虚拟主机是在一块网卡上设置多个IP别名。 基于域名的虚拟主机需要配置DNS服务器，将每个主机名映射到正确的IP地址，配置Nginx，让其识别不同的主机名。这使得很多虚拟主机可以共享同一个IP地址。 基于端口的虚拟主机          "
+  },
+  
+  {
+    "title": "安装bbcms到服务器",
+    "url": "/posts/%E5%AE%89%E8%A3%85BBCMS%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-27 00:00:00 +0800",
+    "content": "安装BBCMS到服务器    上一次（16-12-26）我记录了在centos下安装beego开发环境的内容。其中包括了如何添加用户，如何安装git，go和beego，如何安装ftp服务器等信息。这一次我们在前一次的基础上将BBCMS（一个基于beego的应用）安装到服务器上。   安装Supervisor supervisor有好几种安装方式，我这里使用了python的pip来安装，一次就成功了。  关键在于supervisor的配置：supervisor在/etc目录下有一个文件supervisord.conf和一个目录supervisord.conf.d。  supervisord.conf： 这个文件是supervisor的总配置文件，在它的最后一行（[include]后面）加files=/etc/supervisord.conf.d/*.conf来引入自定义项目的配置文件。  supervisord.conf.d： 这个目录可以用来存放自定义项目的配置文件，一个可能的项目示例如下：  [program:me] directory=/home/tianyu/go/src/me command=/home/tianyu/go/src/me/me（这是项目的可执行文件） autostart=true（自动启动） autorestart=true（自动重启） startretries=3（自动重启的次数） startsecs=5（开启后延迟的秒数） user=root（开启的用户） redirect_stderr=true（错误输出重定向） stdout_logfile=/file/tianyu/go/src/me/log/me.lgo（日志文件）  修改完配置文件后，执行supervisord -c /etc/supervisord.conf来启动supervisor  使用supervisorctl的status来查看当前supervisord管理的项目的运行情况，reload和update重新载入配置文件，stop，start，restart进行停止，启动操作。  另外，如果在supervisord.conf中开启了inet配置项，则可以在指定的端口（默认是9001），使用指定的账户和密码登陆浏览器进行管理：  [inet_http_server]  port=*:9001  username=user  password=123  安装nginx    在安装了supervisord之后，我们的程序就可以在服务端提供7*24小时的访问服务了。当我们需要在同一台服务器提供超过一个的web服务时，由于只有一个80端口，我们就会需要nginx来管理这些应用程序。   这里使用了从nginx官网下载的1.10.2版本的tar包，解压后执行configure脚本，看是否存在包以来问题。  我这里出现了pcre2,openssl,zlib的依赖缺失，简单一点的话，可以直接使用yum下载这些模块（一样要同时下载相应模块的devel包），也可以下载它们的rpm包来安装。  逐个安装这些依赖包，确认没有问题后可以执行make &amp;&amp; make install命令来完成安装。  我的nginx的安装路径在/usr/local/nginx下，配置文件目录为其中的conf/目录，主要修改其中的nginx.cnf文件。  配置信息如下  server {     listen        80;     server_name   yunshang.wangtianyu00.com 115.28.156.121;      charset       utf-8;     access_log    /home/yunshang.wangtainyu00.com.log;      location / {         try_files /_not_exists_ @backend;     }      location @backend {         proxy_set_header X-Forwarded-For $remote_addr;         proxy_set_header Host            $http_host;         proxy_pass http://127.0.0.1:8080;     } }   重新启动nginx后可以应用这些配置（重启要使用nginx -s reload）（检查配置文件是否生效可以使用nginx -t -c /path/to/nginx.conf  数据库编码问题 参考文章[http://blog.csdn.net/u013000638/article/details/52211874] "
+  },
+  
+  {
+    "title": "在centos上安装和配置mysql",
+    "url": "/posts/%E5%9C%A8centos%E4%B8%8A%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AEmysql/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-27 00:00:00 +0800",
+    "content": "在Centos上安装和配置mysql    由于镜像自带软件源中的mysql版本较低，我想使用rpm安装包的方式来安装mysql。   下载mysql的rpm包 找一个镜像站来下载mysql的rpm包（我使用的是搜狐的mirrors.sohu.com）。  mysql有企业版和社区版，我们选择社区版进行下载。  针对的不同的操作系统，mysql有不同的发布版本，因为我使用的是centos6.8，所以选择el6版本（适用于centos.6.x）。  我们选择对应版本的libs,common,client和server包下载。  安装 安装前先使用rpm -e xxx或者yum remove删除系统中已经有的旧版本的mysql。  安装时按照libs-&gt;common-&gt;client-&gt;server的顺序进行安装。  安装好后，要进行数据库的初始化操作，根据版本的不同，这个初始化的操作流程不一样。在我们安装的5.7.16版本中，使用mysqld –initailize来进行初始化。在初始化之前，可以先将配置文件（/user/share/mysql/mydefault.cnf）拷贝到/etc/my.cnf下。进行初始化后，在/var/log/mysqld.log中可以看到初始化后的mysql密码。  初始化过程中指定的datadir将是mysql储存数据库数据的地方。  新增一个普通级别的mysql用户  http://www.cnblogs.com/zhenmingliu/archive/2012/05/25/2518691.html  修改中文支持错误 刚刚安装好的mysql数据库可以登入后输入status查看它的编码设置，如果出现latin1的话，在插入中文的时候会出现错误，按照下面这篇文章的说法修改它的编码为utf8即可。  https://my.oschina.net/glenxu/blog/808631  http://blog.csdn.net/baiquan17/article/details/53209441?locationNum=3&amp;fps=1 "
+  },
+  
+  {
+    "title": "Centos6.8上安装docker Io",
+    "url": "/posts/centos6.8%E4%B8%8A%E5%AE%89%E8%A3%85Docker-io/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-27 00:00:00 +0800",
+    "content": "https://segmentfault.com/a/1190000000735011 "
+  },
+  
+  {
+    "title": "配置服务器",
+    "url": "/posts/%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-26 00:00:00 +0800",
+    "content": "阿里云服务器重置后的设置    背景简述：上周五把阿里云的服务器写挂了，之后在控制台进行了重置，使用centos6.8的镜像。今晚对系统进行一下维护，安装一些以后会用到的软件。   一：新增用户并添加到sudoers    新安装好的镜像只提供了root登陆的权限，需要新建一个普通用户。      新增用户使用adduser命令，之后使用passwd命令修改用户的密码。   使用visudo命令修改sudoers文件，添加新用户到sudoers。（具体方法是找到root ALL=(ALL) ALL行，在下面再添加一行以需要添加的用户的用户名开头的行，比如tianyu ALL=(ALL) ALL）   二：更新软件    linux系统下大量的软件来自开源社区，这些开源软件的更新速度极快，为了使我们从镜像安装的这些软件得到即时的更新，我们需要执行更新软件信息的命令   对于centos来说，需要执行：sudo yum update     题外话：centos和fedora都属于红帽家族的linux，使用yum作为包管理器   三：安装docker    使用docker安装软件和系统非常方便，我们使用docker来管理我们的软件。   docker要求linux内核在3.8.0以上，由于默认安装的centos6.8内核版本为2.6.32，需要先手动升级为3.8.0。这个工作参考文章[https://segmentfault.com/a/1190000000733628]。  后来考虑了一下，放弃了（因为看上面说的意思似乎是在桌面环境的，不适合在服务器环境下折腾）  后来换了一篇参考文章：[http://www.cnblogs.com/baolong/p/5743420.html]，按照这篇文章的说法，没有升级内核，安装了centos6.x下的docker-io包。不过暂时还是不折腾docker了，先在系统中配置开发环境。  四：安装mysql,git,go和beego     安装git和go   执行相应的sudo yum install xxx命令即可安装。  使用包管理器安装git的版本是1.7.1，go的版本是1.7.2。     安装Mysql   mysql的版本较老为5.1.73，考虑通过rpm包再安装一遍。  参考文章[http://blog.csdn.net/liumm0000/article/details/18841197]  参考文章[http://blog.csdn.net/kexiuyi/article/details/53292358]  参考文章[http://blog.csdn.net/bao19901210/article/details/51917641]  参考文章[http://www.cnblogs.com/azhw/p/5143232.html]  参考文章[http://blog.csdn.net/lwei_998/article/details/7258865]  参考文章[https://blog.laily.net/archives/571/]  参考文章[http://blog.csdn.net/xinxin19881112/article/details/46873811]  参考文章[http://blog.sina.com.cn/s/blog_7c35df9b010122ir.html]  sohu的镜像库：[mirrors.sohu.com]  需要安装下列rpm包：common-&gt;libs-&gt;client-server  这个过程十分艰难，直到第二天早上才弄完，会记录在另外一篇总结中。     安装beego和bee   beego的安装参考beego.me。  安装过程中可能会提示http验证错误，按照官网说的，把git的https验证关掉，下载速度奇快。  安装ftp服务器 参照网上的讲解，将ftp服务器安装好，并上传文件到GOPATH下  参考文章[http://jingyan.baidu.com/article/e52e36157bfdc640c60c511d.html]  "
+  },
+  
+  {
+    "title": "一周总结md",
+    "url": "/posts/%E4%B8%80%E5%91%A8%E6%80%BB%E7%BB%93md/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-25 00:00:00 +0800",
+    "content": "这周要做的事情         复习随机和电磁场           开发方面：除了改进bbcms之外，还可以参看gugoo和其他beego程序的源代码，考虑如何解决验证码，下载的字符乱码等问题。提升编写程序的技巧和对程序进行抽象的能力。           部署方面，了解服务器上部署nginx的方法，使用nginx和beego进行协同开发。     "
+  },
+  
+  {
+    "title": "关于错误操作服务器的记录",
+    "url": "/posts/%E5%85%B3%E4%BA%8E%E9%94%99%E8%AF%AF%E6%93%8D%E4%BD%9C%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E8%AE%B0%E5%BD%95/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-23 00:00:00 +0800",
+    "content": "关于错误修改sudoers文件权限的问题 sudoers文件记录用户是否可以使用su和sudo命令，默认权限位是440。 由于在添加用户时系统提示该文件只读，于是我修改它的权限成666，结果出现修改后无法再将其修改回去的情况。 修复思路 由于sudoers并不涉及scp和rmp2cpio的使用，我们可以上传sudo.rpm包到服务器上，通过解压覆盖的方式在覆盖掉原sudoers。 但是由于修改的权限中没有x位，所以没办法进行覆盖，对其进行的移动和删除操作也无效。 另外，最尴尬的一点：我好像忘记root密码了呢！ "
+  },
+  
+  {
+    "title": "Gugoo阅读笔记",
+    "url": "/posts/Gugoo%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/",
+    "categories": "jekyll, update",
+    "tags": "tag",
+    "date": "2016-12-23 00:00:00 +0800",
+    "content": "Controller BaseController 属性 在继承beego.Controller的同时可以自定义属性，这些属性可以被其继承者使用（但不能通过这个属性来传递参数）。 方法 关于接口的定义：go语言通过接口来实现面向对象，两个对象只要实现了相应的接口就视为同一类对象。这与java要求所有对象都必须继承自object的要求相距甚远，但更为灵活，某种意义上又类似C++中的多重继承（应该不是一样的东西，有时间再慢慢分析）  这些方法可以被继承者调用。关于方法中使用到的上下文相关参数（例如this.GetString(“app”)等） Prepare    何时执行？   对一个Controller而言，在执行诸如GET/POST等方法之前会先执行Prepare方法。 放在BaseController上，暂不明确     能做什么？   "
+  },
+  
+  {
+    "title": "Bbcms修改记录",
+    "url": "/posts/BBCMS%E4%BF%AE%E6%94%B9%E8%AE%B0%E5%BD%95/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-23 00:00:00 +0800",
+    "content": "修改记录 第一次修改 第二次修改 二级页面的菜单，链接 文章页面的下一页 当前栏目标识 教师页面的跳转异常 轮播图的点击错误 文章列表的more按钮 搜索功能 首页热点新闻链接 三级目录 第三次修改 数据库的时间问题 首页分布要求与官网完全一致 new的提示问题 热点新闻独立出来 下载页面的改进  "
+  },
+  
+  {
+    "title": "服务器",
+    "url": "/posts/%E6%9C%8D%E5%8A%A1%E5%99%A8/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-22 00:00:00 +0800",
+    "content": "配置Gugoo云的流程 ssh登陆 ssh root@xxx.xxx.xxx.xxx gugoo部署 git  go build main.go 作为服务启动 supervisorctl命令 本地部署supervisor sudo apt-get install supervisor  locate supervisor   ：目的是自动执行GGYun  cd /etc/supervisord.conf  ls conf.d supervisor  [include]包含其他配置文件  [program:GGYun]  directory=  command=  autostart = true  autorestart = true  startsecs = 5  user = root 载入配置文件 supervisorctl reload/update Nginx的反向代理 反向代理 http://nginx.org/en/download.html 编译安装 tar -zxvf  cd xxxx ./  ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre2-10.21.tar.gz     下载并解压nginx   执行./configure检查环境配置   安装依赖包之后执行make makeinstall   指定ssl的路径 –with-openssl=/usr/bin/openssl 配置nginx 运行nginx 运行过程 当访问yun.gugoo.cc时 yun.gugoo.cc:80 -&gt; localhost:8000 当访问map.gugoo.cc时 map.gugoo.cc:80 -&gt; localhost:8888 如何上传本地文件 git scp scp // root@xxx.xxx.xxx.xxx:/home 端口被占用？ lsof -i:8008 ps  参考文章：www.zybuluo.com/phper/note/89391 "
+  },
+  
+  {
+    "title": "最近要学的东西",
+    "url": "/posts/%E6%9C%80%E8%BF%91%E8%A6%81%E5%AD%A6%E7%9A%84%E4%B8%9C%E8%A5%BF/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-20 00:00:00 +0800",
+    "content": "要做的任务有    BBCMS渲染的不好的部分要继续渲染   在BBCMS基础上继续进行修改，完成一套真正可部署的CMS系统   参看学习GugooYun的代码     杂项有      学习golang/beego验证码的实现（祝昊学长）   学习如何使用富文本编辑器（卢琦学长）   有一个关于数据库日期的Bug要研究（卢琦学长）     有待改进的地方      beego.me的文档还没有阅读完毕   在使用Go-walker和github上有待进步     后端要专注的地方有      数据库（买了两本数据库的书，不过难度太大，一时半会儿可能啃不下来）   代码的逻辑（这部分有依赖框架的部分，也有自己使用设计模式等进行升华提高的部分）   代码的基本功（包括功能的实现与包装–个人要注重实现，团队还要注重包装）  "
+  },
+  
+  {
+    "title": "对最近工作反思的流水账",
+    "url": "/posts/%E5%AF%B9%E6%9C%80%E8%BF%91%E5%B7%A5%E4%BD%9C%E5%8F%8D%E6%80%9D%E7%9A%84%E6%B5%81%E6%B0%B4%E8%B4%A6/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-20 00:00:00 +0800",
+    "content": "首先上周布置给我们的工作做得确实不到位，让大家失望了。 原因的话主要对工作的重点和进度把握的不到位，这估计是我在这几周工作中体现出来的通病了吧。以前自己做事情的时候没有意识到，现在给自己造成这么大的困扰。 最近考试，大创和工作室的工作夹杂在一起，搞得自己心烦意乱的，学习和工作都没什么激情，说到底我还是靠本能在活着，意志力不够强，时间和任务管理也做的不好。  工作上，前端写的代码确实有待改进啊，有机会跟沁悦学姐说一下。  ：都进入考试月了，连考几门数学课，希望工作室考虑一下我的情况，不要安排开发任务了，压力太大我真的应付不了啊。。。 "
+  },
+  
+  {
+    "title": "关于jxdz首页的一些想法",
+    "url": "/posts/%E5%85%B3%E4%BA%8Ejxdz%E9%A6%96%E9%A1%B5%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-16 00:00:00 +0800",
+    "content": "首页的渲染流程 首页和其他模板页面都有共同的header和footer，这与我们在后台使用的模板类似。   在header和footer里面包含了一些需要渲染的部分（菜单和链接列表），而这个部分又被几个页面（Controller）共同使用，如何能够避免在这几个Controller里重复处理这个逻辑呢?   ：可以在BaseController里封装两个方法，分别用来渲染菜单和链接列表，每次在需要调用的Controller里调用这两个函数。 "
+  },
+  
+  {
+    "title": "对今天开会的几点总结",
+    "url": "/posts/%E5%AF%B9%E4%BB%8A%E5%A4%A9%E5%BC%80%E4%BC%9A%E7%9A%84%E5%87%A0%E7%82%B9%E6%80%BB%E7%BB%93/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-14 00:00:00 +0800",
+    "content": "对黄凯师兄今天说的内容的一些总结         Controller目录和View目录下内容设置合理（已解决）。Controller的重点在修改包名为上级目录名，View的重点在于不要给模板文件设置define值。           使用BaseController（在github上下载了go-cms项目作为参考）。           使用flash提示信息（已经实现flsh在登陆页面的使用）。结合Session和flash提供较为人性化的交互体验。           前期对于文章和单页的理解有误区，这几天会对它们进行调整。           使用ctx.output.dowload来提供下载。对beego文档掌握的不够深入。     "
+  },
+  
+  {
+    "title": "随便写一点",
+    "url": "/posts/%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E7%82%B9/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-13 00:00:00 +0800",
+    "content": "首页的渲染 主页的布局和其他的二级页面都不同，因此我们需要额外的Controller和View逻辑来完成对主页的渲染。  主页的渲染和其他二级页面使用了不同的模板，但是在底层的model层都是共通的，所以要求model层的编写要尽可能中立和抽象。 现在的代码还需要改进的地方(BBCMS)    人员管理在删除的时候还需要做进一步限制，防止自己将自己删除的情况发生。   几个表格的修改按钮会莫名其妙的将时间修改掉。   栏目在删除的时候需要检验该栏目是否有子栏目或者子内容   前台的逻辑还不够清楚明白，首页导航和侧边栏导航还有面包屑导航需要再做进一步的测试。  "
+  },
+  
+  {
+    "title": "Cms系统的权限管理",
+    "url": "/posts/CMS%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-09 00:00:00 +0800",
+    "content": "综述 典型的CMS系统分为前台显示部分和后台管理部分。   （这里所有的讨论，如未说明，都基于Beego MVC框架） 两种跳转    所有网站系统的基本逻辑都是提供一个首页面作为入口，通过用户点击页面上的元素实现用户在不同页面间的跳转。这样的跳转最终会形成一个树状（或网状）的结构，这是理想的情况。   除了上面所说的基本逻辑，因为浏览器的特殊性，用户可以跳过点击，直接通过URL来跳转到指定的页面（前提是用户知道URL信息），这和桌面应用的逻辑有所不同。 权限管理的中心就在于管理用户的这两种跳转。     三类应用     全开放CMS前台显示部分     前台的东西基本上都是开放的（至少在我们的系统里是这样，另外也有各类社区网站等半开放平台），这样我们对于用户的跳转就可以像传统Web Page一样。 除了正常的树形（或网状）跳转，对于预期外的跳转，我们同样予以响应（或者说不得不响应）。对于预期外的请求，需要借助404功能来实现反馈。 这是全开放CMS前台显示部分的权限管理     纯后台管理系统     纯后台管理系统与全开放CMS的重要区别是用户权限管理，需要根据管理者拥有的不同权限来限制跳转。 需要说明的是，这类网站（或者说是Web App）同样具有树形（或网状）跳转，可以输入URL跳转，具有404功能。     半开放CMS前台显示部分     所谓半开放系统，是指那些既不属于传统Web Page类网站，也不同于只有后台管理部分的后台管理应用（Web App）。 目前互联网上主流的网站都属于这一类：知乎，百度贴吧，GitHub等。 这类应用的特点是：当你没有登陆时，页面显示一些内容，比如知乎问题页面里的各种回答。但是当你试图发表自己的回答时，系统就会提醒你登陆，也就是说，页面的回答功能虽然显示出来了，但是要使用它还必须要登陆才可以。     不同的限制粒度     下面我们来详细说明一下以上三种应用环境对于权限的需求。     页面级别的限制     对于Beego来说，页面级别的限制实现起来相对容易： 只要在页面对应的Controller中加入验证代码，这样无论是树形（或网状）的跳转都能被发现并给予限制。     次页面级别的限制     这里的次页面指的是同一个页面中存在着根据权限显示的内容：比如知乎提问页面的顶栏，未登录时和登陆以后会显示不同的内容。 一种思路是，这个页面采用了模板拼接的方法，需要权限认证的部分和公共部分由不同的Controller控制（这里仅仅是猜想–）； 另一种思路是，整个页面由一个Controller控制，而Controller中要设置记录用户是否登陆的标志位，渲染页面的时候根据标志位来确定是否显示这个部分或者怎么显示这个部分。     不同限制粒度对于跳转的反应     有了前面的讨论，现在我们来思考不同的限制粒度对于跳转的反应如何。     页面级别限制对跳转的反应     当用户拥有且拥有该页面的权限时，两种跳转不会发生任何问题。 当用户登陆但没有该页面的权限时，对于树状的跳转，我们可以设置不显示权限链接，从而避免第一类跳转，但用户还是可以通过直接输入URL的方式进行跳转，所以权限认证是必须要有的，不能仅仅通过检测用户权限来掩藏跳转链接来处理权限问题。这个时候，隐藏更多只是用户体验层面的内容 当用户没有登陆时，显然无法通过直接点击链接来跳转，但是同样可以输入URL跳转。这和上一种情况类似，要求我们在有权限要求的页面添加玩赏的权限认证和错误跳转逻辑，在完成权限认证的同时，不失用户体验。     次页面级别限制对跳转的反应     上面的讨论告诉我们对特权页面加权限限制是解决权限控制问题的根本方法。 但是对于半开放的_次页面_又该如何处理呢？ 按照上文我们所说的次级页面的实现原理来区分讨论：      采用模板拼接的办法，需要区别权限的部分放在一个Controller里，不需要区别权限的部分放在另一个Controller里（这里瞎扯ing）。   采用一个Controller来控制，根据用户标志位的不同来提供不同的页面（这个可以在Controller层做，也可以放在View层来实现） 放在Controller层的好处是，数据处理的粒度更小了，后台的逻辑更加精简，缺点是需要的模板数量可能更多。 放在View层的好处是，一个模板可以同时应对有权限和无权限两种状态，缺点是在应对复杂的权限管理时，逻辑判断的成分超过了显示层原本的功能，显得十分臃肿。  "
+  },
+  
+  {
+    "title": "Cms生成页面的原理",
+    "url": "/posts/CMS%E7%94%9F%E6%88%90%E9%A1%B5%E9%9D%A2%E7%9A%84%E5%8E%9F%E7%90%86/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-08 00:00:00 +0800",
+    "content": "原理简述 CMS系统的的动态页面是由数据库数据和模板页面配合实现的。   在设计实现这样的系统时，需要考虑有那些种类的页面，而不再是在做Web Pages时考虑的有几个页面。   当需要新增一个种类的页面时，我们就建立一个新的模板文件，这是当业务需求变化时我们需要对系统进行的改动。 如何实现 对于每一个动态页面，表现在浏览器端，有一个唯一的URL。   CMS系统需要根据这个URL来确定从数据库中提取哪些资源，采用什么模板。 Beego的实现 反映到Beego的MVC框架中，当我们确定需要一类需求时（比如需要显示文章），我们需要建立文章类别的View模板文件和Controller逻辑处理文件。同时还要在Router中建立关于这类资源的动态路由。   这样我们根据访问的URL不同，采用不同的模板和不同的数据库内容来响应用户的请求，达到动态生成页面的目的。 "
+  },
+  
+  {
+    "title": "使用git",
+    "url": "/posts/%E4%BD%BF%E7%94%A8Git/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-07 00:00:00 +0800",
+    "content": "今天使用Git的时候发生了不开心的事情，差点把改好的代码丢掉，所以还是要学习一下怎么使用Git 先总结一下Git的几个功能    远程代码存储   代码回退，版本控制   代码比较（本身带的功能比较弱，必要时可以借助其他工具）   通过分支来控制代码质量（这要求我们频繁提交，防止分支与master相差太远，容易出现冲突）     阮一峰的博客地址：www.ruanyifeng.com/blog/2014/06/git_remote.html      代码提交流程：git add –&gt; git commit –&gt; git push   代码下载流程：git pull   新项目创建过程：git init   git clone：修改别人的代码   git remote：管理（远程）主机名   git fetch ：从版本库取得灯芯   git pull  :：从版本库取得更新，并与本地指定分支合并   git push  :：     一些重要的点      git rm命令的使用细节   git show命令的使用细节     来自git帮助（20170205）     库控制     init：初始化一个空库 clone：从远程仓库拉取下所有数据放入.git文件夹，然后从中读取最新版本的文件的拷贝 自定义仓库的名字：git clone https://github.com/libgit2/libgit2 mylibgit gti clone自动设置本地master分支跟踪克隆的远程仓库的master分支   remote: git remote -v git remote add pb https://github.com/paulboone/ticgit git remote show origin fetch：从另外一个仓库下载对象或者引用 push：更新远程引用和相关的对象 pull：如果你有一个分支设置为跟踪一个远程分支，可以使用git pull自动抓取然后合并远程分支到当前分支  git pull会从最初克隆的服务器上抓取数据并自动尝试合并到当前所在的分支     内容控制     status 查看简短信息：git status -s diff：显示尚未暂存的改动，而不是自上次提交以来所做的所有改动 查看尚未暂存的文件更新了哪些部分：git diff  查看已暂存的将要添加到下次提交里的内容：git diff --staged  git difftool命令使用Araxis,emerge,vimdiff来查看改动 add commit git config --global core.editor设置默认编辑工具 git commit -a -m \"xxx\"  git commit --amend  rm: rm git rm git rm -f git rm --cache mv: git mv=mv + git rm + git add log: git log -p -2 git log --since=2.weeks git log --stat：显示简短信息 git log --pretty=online git log --pertty=format:\"%h - %an, %ar : %s\" git log --pertty=format:\"%h %s\" --graph     分支     git branch git branch -v查看每一个分支的最后一次提交 git branch -d:切换到一个新的分支，删除原有分支 git branch --merged/ --no-merged: git checkout git checkout -b:创建并切换到一个新的分支 git merge:合并一个分支     分支开发工作流      长期分支   特征分支     远程分支      远程跟踪分支   跟踪分支     变基     git checkout experiment git rebase master git checkout master git merget experiment     .gitignore      所有空行或者以#开头的行都会被忽略   可以使用标准的glob模式匹配   匹配模式可以使用/开头防止递归   匹配模式可以使用/结尾指定目录   要忽略指定模式以外的文件或目录，可以在模式前加上惊叹号取反                      所谓的 glob 模式是指 shell 所使用的简化了的正则表达式。 星号（）匹配零个或多个任意字符；[abc] 匹配 任何一个列在方括号中的字符（这个例子要么匹配一个 a，要么匹配一个 b，要么匹配一个 c）；问号（?）只匹 配一个任意字符；如果在方括号中使用短划线分隔两个字符，表示所有在这两个字符范围内的都可以匹配（比如 [0-9] 表示匹配所有 0 到 9 的数字）。 使用两个星号（) 表示匹配任意中间目录，比如a/**/z 可以匹配 a/z, a/b/z 或 a/b/c/z等。https://github.com/github/gitignore                 "
+  },
+  
+  {
+    "title": "无限极分类",
+    "url": "/posts/%E6%97%A0%E9%99%90%E6%9E%81%E5%88%86%E7%B1%BB/",
+    "categories": "",
+    "tags": "",
+    "date": "2016-12-06 00:00:00 +0800",
+    "content": "无限极分类的概念 在CMS网站中需要进行信息的分类，无限极分类就可以用来实现这种分类效果。   利用无限极分类可以实现网站的网站地图和面包屑导航等重要内容。 无限极分类的应用 -WordPress：WordPress作为一个博客网站，具有和CMS网站类似的分类管理机制。 无限极分类的原理及实现 ：无限极分类有许多种类似的原理和实现方式，我这里叙述的是我在beego+MySQL环境下的实现   无限极分类作为动态CMS网站的一个特征，其内容存储在一章SQL表中。每张表包含一个自身Id和他父类的Id（FatherId），以及一些额外的项用来存放节点的特征信息。 如何在这样的数据结构下实现网站地图的绘制 网站地图绘制的本质在寻找一个节点（可以是根节点或者任意一个节点）的所有子孙节点。在我们提供的数据结构的基础上，可以通过一个递归函数来完成对所有子孙节点的搜索。   伪代码如下：  func 递归函数(节点Id, 所有项目集合slist, 一个空项目集合dlist) {     for 所有项目集合slist {         if slist[i].Id == 子节点Id {             把slist[i]加入到dlist中             func 递归函数(slist[i].Id, slist, dlist)         }     }     return dlist }  如此可以将Id节点的所有元素都加入到dlist中，完成对子孙节点的查找。 如何在这样的数据结构下实现面包屑的绘制 面包屑绘制的本质在寻找一个节点（可以是任意一个叶节点或枝节点）的父节点结合。在我们提供的数据结构的基础上，可以通过一个递归函数来完成搜索。 如何添加一个节点（文章节点或者下载节点） 整个数据结构的涉及遵循的基本原则是子孙找父亲，即子孙节点里存放了父亲节点的信息，父亲节点里则没有关于子孙的任何信息。   这样我们在创建一篇文章（或者下载链接时，它们存放在与链接不同的MySQL表中）时可以在文章里添加一个FatherId项，来表明这篇文章从属于某一个链接节点。这样设计的好处在于不会出现添加到一个错误类型的父节点的问题，比较灵活 额外的关注点    数据逻辑的部分还是尽量在后端完成，不要太过依赖js  "
+  }
+  
+]
+
