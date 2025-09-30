@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2017-01-11T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Php和cgi" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2017-01-11T00:00:00+08:00","datePublished":"2017-01-11T00:00:00+08:00","description":"PHP的运行方式 1. CGI与FastCGI 1.1 CGI HTTP服务器最基本的功能是根据请求返回静态文件（.html,.css,.js等），当其中有动态内容时（比如需要查询数据库时），服务器就无能为了了。这时候服务器可以参照CGI协议将这个请求转发给同在服务器上的其他程序，由其他程序来完成查询数据库等操作，在按照CGI要求的格式返回给服务器。这些程序可以用PHP,Perl等各种语言来实现。 当使用CGI方式工作时，需要给服务器（比如Apache）指定php-cgi.exe的位置。Apache收到动态请求后，启动一个php-cgi进程来解析请求中的php代码，解析结束后关闭进程。这种方式是最直观的，但是每次都要启动新的进程，带来的开销比较大。 1.2 FastCGI方式 FastCGI的出现是为了解决传统CGI工作方式开销较大的问题。在这个模式下工作，每次Apache收到动态请求后交给一个cgi进程管理程序来负责解析。对于每一个请求，进程管理器新建一个线程来解析请求，开销相对较小。 1.3 PHP对CGI/FastCGI的实现 CGI和FastCGI都是技术方式或者协议的名称，各个语言都有自己的实现。 windows下php有四个可执行文件:php.exe,php-cgi.exe,php-win.exe,phpdbg.exe。其中phpdbg.exe是php的调试程序，php.exe是交互式的命令行程序。php-cgi才是php在服务器上运行时所需的解释程序。php-win.exe类似于php.exe，只是在运行时不会在控制台输出内容。 [http://blog.csdn.net/daiyan_csdn/article/details/53912410] 2. PHP与WebServer 2.1 与Apache协同工作 [https://segmentfault.com/q/1010000002753412] 2.1.1 作为Apache的一个模块 PHP作为Apache的一个模块（libphp5.so）集成到apache进程运行，这时php的运行和php-cgi没有任何关系： LoadModule php5_module modules/libphp5.so AddHandler application/x-httpd-php .php 2.1.2 Apache作为一个FastCGI进程管理器来管理php-cgi 使用mod_fcgid模块： 》载入mod_fcgid模块(不能和php5_module同时使用) LoadModule fcgid_module modules/mod_fcgid.so AddHandler fcgid-script .php 》php-cgi的进程数量 FcgidMaxProcesses 5 》指定php-cgi来处理php请求 FcgidWrapper /png/php/5.4.39NTS/bin/php-cgi .php 》在需要使用php-cgi来执行PHP的Directory加上Options +ExecCGI,比如: &lt;Directory “/png/www/a.com/public_html/fcgid”&gt; Options +ExecCGI &lt;/Directory&gt; 2.2 PHP搭配Nginx使用 Nginx搭配PHP使用需要用到php-fpm模块，这里php-fpm充当了php解释器的作用，也充当了FastCGI进程管理器的作用。 2.3 PHP内置WebServer 现在的PHP已经内置了一个WebServer，可以在没有Apache的情况下工作，在命令行下敲入以下命令就可以启用：php -S 0.0.0.0:8080 -t /www ### [http://blog.163.com/wz_pk007/blog/static/17062705020122611470999/] [http://www.mike.org.cn/articles/what-is-cgi-fastcgi-php-fpm-spawn-fcgi/] [http://www.cnblogs.com/zl0372/articles/php_4.html]","headline":"Php和cgi","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/PHP%E5%92%8CCGI/"},"url":"http://localhost:4000/posts/PHP%E5%92%8CCGI/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

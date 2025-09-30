@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2017-02-15T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Emmet插件使用方法" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2017-02-15T00:00:00+08:00","datePublished":"2017-02-15T00:00:00+08:00","description":"emmet使用方法 emmet的前身是大名鼎鼎的zen coding，它使用仿css选择器的语法来生成代码。 快速编写HTML代码 初始化 1 2 3 html:5或者!：用于HTML5文档类型 html:xt：用于XHTML过渡文档类型 html:4s：用于HTML4严格文档类型 轻松添加类，id文本和属性 添加类和id 1 p.bar#foo 定义元素的内容和属性 1 2 h1{foo} a[href=#] 嵌套 1 2 3 &gt;：子元素符号 +：同级元素符号 ^：可以使该符号前的标签提升一行 分组 通过嵌套和括号快速生成代码块： 1 (.foo&gt;h1)+(.bar&gt;h2) 隐式声明 1 2 3 4 5 6 7 输入.item，emmet会根据父标签来进行判定。 比如，在&lt;ul&gt;中输入.item，就会生成&lt;li class=&quot;item&quot;&gt;&lt;/li&gt; 下面是所有隐形标签的名称 - li - tr - td - option 定义多个元素 使用*来定义多个元素 1 ul&gt;li*3 定义多个带属性的元素 1 ul&gt;li.item$*3 CSS缩写 值 宽度：w100 宽度：h10p+m5e 1 2 height: 10p; margin: 5em; p表示百分比 e表示em x表示ex 附加属性 @f可以生成 1 2 3 4 @font-face { font-family; src:url(); } 模糊匹配 供应商前缀 输入trs 1 2 3 4 5 -webkit-transform:; -moz-transform:; -ms-transform:; -o-transform:; transform:; 渐变 附加功能 lorem或者lipsum即可生成文字，还可以加数字指定个数。","headline":"Emmet插件使用方法","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/emmet%E6%8F%92%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"},"url":"http://localhost:4000/posts/emmet%E6%8F%92%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

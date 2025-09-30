@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2017-01-10T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Php5.6和laravel在centos6.8上的部署" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2017-01-10T00:00:00+08:00","datePublished":"2017-01-10T00:00:00+08:00","description":"lavarel在centos6.8上的部署 lavarel作为一个php框架，需要PHP版本在5.6.4以上（其他的需求也列在下面）。由于我使用的centos6.8默认安装的php版本比较低，所以在部署lavarel之前还需要先升级系统的php版本。 其他需求： PHP &gt;= 5.6.4 OpenSSL PHP Extension（SSL链接） PDO PHP Extension（数据库操作） Mbstring PHP Extension Tokenizer PHP Extension XML PHP Extension（使用XML文件） 升级PHP 给系统安装epel包[http://www.tecmint.com/how-to-enable-epel-repository-for-rhel-centos-6-5/] 安装epmi包[http://blog.csdn.net/shelly1072/article/details/53128495] 安装最新版本的php 出现的问题： 系统好像默认安装了PHP5.3.3（或者是我之前用yum安装过）但是使用rpm -qa命令查找不到任何信息。这种情况可能是安装了但没有rpm记录，所以还是尝试用rpm删除以后在安装更高版本的php。–可能是因为在卸载原先的php之后没有重启httpd，所以httpd还是显示php5.3.3的信息。 安装Lavarel Lavarel的安装资料 主要参考：[https://laravel-china.org/docs/5.3/homestead] [http://www.golaravel.com/] [https://laravel-china.org/] [http://laravelacademy.org/] [http://lavarel.com] PHPComposer[http://www.phpcomposer.com/]","headline":"Php5.6和laravel在centos6.8上的部署","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/PHP5.6%E5%92%8CLaravel%E5%9C%A8centos6.8%E4%B8%8A%E7%9A%84%E9%83%A8%E7%BD%B2/"},"url":"http://localhost:4000/posts/PHP5.6%E5%92%8CLaravel%E5%9C%A8centos6.8%E4%B8%8A%E7%9A%84%E9%83%A8%E7%BD%B2/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

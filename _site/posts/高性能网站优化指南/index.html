@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2016-12-30T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="高性能网站优化指南" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2016-12-30T00:00:00+08:00","datePublished":"2016-12-30T00:00:00+08:00","description":"##高性能网站建设指南 我们自己建站的时候，由于没有优化的意识，即使网站的内容不多，也会花费很长的时间来加载。反观那些大公司做出来的网站，即使是在加入了视频和许多炫酷的JS效果的基础上依然可以做到秒开。这一慢一快，差就差在我们没有给我们的网站做性能优化。这本书的作者列举了14项用来优化网站响应速度的技巧，了解并熟练使用它们对优化网站的访问速度大有脾益。 一：减少请求 图片地图 图片地图允许你在一个图片上关联多喝URL，减少了下载请求的数量。 服务器端图片地图将所有点击提交到一个URL，由后端来判断xy坐标。客户端图片地图通过http的map来实现。 缺点形状单一，无法实现鼠标滑过提示等状态。 CSS Sprites CSS Sprites将所有图片整合到一张图片上，再通过指定位置来获得其中的小块图片。[CSS Sprites: Image Slicing’s Kiss of Death] 内联图片和脚本 通过data:url可以在web页面中包含图片但无需任何额外的http请求。（data:url是和http:url同等级别的标准，其他的还有：ftp:, file:, mailto:, smtp:, pop:, dns:, whois:, finger:, daytime:, news:, urn:等） 缺点：跨越不同页面时不会被缓存，编码过的logo会导致页面变大。 技巧：可以通过css内联作为背景！（为什么是背景？） 其他：PHP中的file_get_contents可以很容易的通过从磁盘中读取图片并将其插入到页面中来创建内联图片。 样式表的合并（合并脚本和样式表） 理想情况下，一个页面应该使用不多于一个的脚本和样式表。 二：使用内容分发网络（CDN） 将组件服务器分散到不同的地点而不是建立分布式的应用程序服务器。 CDN用户发布静态的内容，如图片，脚本，样式表和Flash。动态的内容往往依赖于数据库连接，状态管理，验证，硬件和OS优化，这不是CDN能做的。同时静态文件更容易存储，具有较少的依赖性。 三：添加Expires头 web服务器使用Expires头来告诉web客户端它可以使用一个组件的当前副本，直到指定的时间为止。 （HTTP 1.0） Cache-Control使用max-age指令指定组件被缓存多久。它以秒为单位定义了一个更新窗。如果从组件被请求开始过去的秒数少于max-age，浏览器就是用缓存的版本。 （HTTP 1.1） mod_expires Apache模块使你在使用Expires头时能够像max-age那样以相对的方式设置日期。这通过Expires-Default指令完成。 空缓存和完整缓存 图片，样式表和脚本都应该使用缓存 合并脚本和样式表可以增加缓存的完整度：完整度是我们要考虑的问题吗？ ？？：万一在缓存的这段时间内我们的内容发生了改变，怎么办（只对那些不会经常变更的内容进行缓存）-&gt;通过添加版本号，当新版本的内容发布之后，由于名称不同，会再次下载。 四：压缩组件 web客户端可以通过请求中的Accept-Encoding头来标识对于压缩的支持：Accept-Encoding:gzip, deflate。web服务器通过响应中的Content-Encoding头来通知客户端。 压缩可以用在样式表和脚本上。通常对于大于1KB或2KB的文件进行压缩，mod_gzip_minimun_file_size指令控制着希望压缩的文件的最小值，默认是500B。 代理缓存：通过在Web服务器的响应中添加Vary头，Web服务器可以告诉代理根据一个或多个请求头来改变缓存的响应。Vary: Accept-Encoding。 浏览器白名单：只为支持压缩的浏览器提供压缩的内容。将User-Agent作为代理的另外一种评判标准添加到Vary头中。Vary:Accept-Encoding, User-Agent [太乱了，略过] 五：将样式表放在顶部 总结：规则一和规则三通过限制不必要的HTTP请求解决了响应时间的问题。规则二通过将HTTP响应拉近用户来减少响应时间。规则四通过减少HTTP响应的大小来减少响应时间。","headline":"高性能网站优化指南","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%AB%99%E4%BC%98%E5%8C%96%E6%8C%87%E5%8D%97/"},"url":"http://localhost:4000/posts/%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%AB%99%E4%BC%98%E5%8C%96%E6%8C%87%E5%8D%97/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2017-02-16T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Centos安装nmp" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2017-02-16T00:00:00+08:00","datePublished":"2017-02-16T00:00:00+08:00","description":"源的问题 CentOS的源似乎与Ubuntu不同。 CentOS的默认源如下所示(其实已经做过修改了，应该是手动添加了epel源)： 1 2 3 4 5 6 7 8 9 10 11 12 CentOS-Base.repo CentOS-Base.rpmnew CentOS-Debuging.repo CentOS-fasttrack.repo CentOS-Media.repo CentOS-Vault.repo webstatic-archive.repo webstatic.repo webstatic-testing.repo epel.repo epel.rpmnew epel-test.repo 使用命令yum repolist可以查看系统中的所有源。 一些被禁用了的源可以使用yum repolist --enablerepo来查看。 CentOS基本源 这个是CentOS默认安装应用的源，内容可能会比较老。 webstatic源 这个是对网站服务器功能的一个扩展。 epel源 这个是对基本源的一个扩展，内容比较少。 remi源 这个源以来epel建立，资源相对丰富 IUS源和rpmforge源 暂时还没有用到 使用remi源安装PHP 编译安装Nginx http://nginx.org/ 使用MySQL的源来安装MySQL https://dev.mysql.com/downloads/file/?id=459918","headline":"Centos安装nmp","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/Centos%E5%AE%89%E8%A3%85NMP/"},"url":"http://localhost:4000/posts/Centos%E5%AE%89%E8%A3%85NMP/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

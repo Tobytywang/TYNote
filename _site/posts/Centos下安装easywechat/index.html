@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2017-01-20T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Centos下安装easywechat" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2017-01-20T00:00:00+08:00","datePublished":"2017-01-20T00:00:00+08:00","description":"在Centos下安装easywechat（php）环境 使用的操作系统为centos6.8。 涉及的主要内容有： php的安装（5.6.x版本） MySQL的安装(5.7版本) php-fpm模块的安装 nginx的安装（1.10.2） composer的安装 easywechat的安装 一：PHP和MySQL的安装 由于操作系统默认的镜像比较老，通过yum无法安装新版本的php和MySQL。 有以下几种方式来安装新版本的PHP和MySQL： 1.1 EPEL方法安装 1.2 rpm包安装 1.3 编译安装 二：Nginx的安装 我们通过编译安装的方式来安装Nginx。 三：php-fpm的安装 四：compser的安装 安装： http://blog.csdn.net/gb4215287/article/details/53942845 http://docs.phpcomposer.com/01-basic-usage.html http://docs.phpcomposer.com/00-intro.html#Globally http://semaphoreci.com/community/tutorials/getting-started-with-composer-for-php-dependency-management 使用： 卸载： https://segmentfault.com/a/1190000006835510 错误： ssl链接错误：http://stackoverflow.com/questions/36787413/curl-35-ssl-connect-error Failed to decode zlib stream：https://github.com/composer/composer/issues/4619 sudo: composer: command not found 安装easywechat easywechat是一个标准的composer包，直接使用composer即可创建。","headline":"Centos下安装easywechat","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/Centos%E4%B8%8B%E5%AE%89%E8%A3%85easywechat/"},"url":"http://localhost:4000/posts/Centos%E4%B8%8B%E5%AE%89%E8%A3%85easywechat/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

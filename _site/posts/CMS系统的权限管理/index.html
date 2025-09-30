@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2016-12-09T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Cms系统的权限管理" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2016-12-09T00:00:00+08:00","datePublished":"2016-12-09T00:00:00+08:00","description":"综述 典型的CMS系统分为前台显示部分和后台管理部分。 （这里所有的讨论，如未说明，都基于Beego MVC框架） 两种跳转 所有网站系统的基本逻辑都是提供一个首页面作为入口，通过用户点击页面上的元素实现用户在不同页面间的跳转。这样的跳转最终会形成一个树状（或网状）的结构，这是理想的情况。 除了上面所说的基本逻辑，因为浏览器的特殊性，用户可以跳过点击，直接通过URL来跳转到指定的页面（前提是用户知道URL信息），这和桌面应用的逻辑有所不同。 权限管理的中心就在于管理用户的这两种跳转。 三类应用 全开放CMS前台显示部分 前台的东西基本上都是开放的（至少在我们的系统里是这样，另外也有各类社区网站等半开放平台），这样我们对于用户的跳转就可以像传统Web Page一样。 除了正常的树形（或网状）跳转，对于预期外的跳转，我们同样予以响应（或者说不得不响应）。对于预期外的请求，需要借助404功能来实现反馈。 这是全开放CMS前台显示部分的权限管理 纯后台管理系统 纯后台管理系统与全开放CMS的重要区别是用户权限管理，需要根据管理者拥有的不同权限来限制跳转。 需要说明的是，这类网站（或者说是Web App）同样具有树形（或网状）跳转，可以输入URL跳转，具有404功能。 半开放CMS前台显示部分 所谓半开放系统，是指那些既不属于传统Web Page类网站，也不同于只有后台管理部分的后台管理应用（Web App）。 目前互联网上主流的网站都属于这一类：知乎，百度贴吧，GitHub等。 这类应用的特点是：当你没有登陆时，页面显示一些内容，比如知乎问题页面里的各种回答。但是当你试图发表自己的回答时，系统就会提醒你登陆，也就是说，页面的回答功能虽然显示出来了，但是要使用它还必须要登陆才可以。 不同的限制粒度 下面我们来详细说明一下以上三种应用环境对于权限的需求。 页面级别的限制 对于Beego来说，页面级别的限制实现起来相对容易： 只要在页面对应的Controller中加入验证代码，这样无论是树形（或网状）的跳转都能被发现并给予限制。 次页面级别的限制 这里的次页面指的是同一个页面中存在着根据权限显示的内容：比如知乎提问页面的顶栏，未登录时和登陆以后会显示不同的内容。 一种思路是，这个页面采用了模板拼接的方法，需要权限认证的部分和公共部分由不同的Controller控制（这里仅仅是猜想–）； 另一种思路是，整个页面由一个Controller控制，而Controller中要设置记录用户是否登陆的标志位，渲染页面的时候根据标志位来确定是否显示这个部分或者怎么显示这个部分。 不同限制粒度对于跳转的反应 有了前面的讨论，现在我们来思考不同的限制粒度对于跳转的反应如何。 页面级别限制对跳转的反应 当用户拥有且拥有该页面的权限时，两种跳转不会发生任何问题。 当用户登陆但没有该页面的权限时，对于树状的跳转，我们可以设置不显示权限链接，从而避免第一类跳转，但用户还是可以通过直接输入URL的方式进行跳转，所以权限认证是必须要有的，不能仅仅通过检测用户权限来掩藏跳转链接来处理权限问题。这个时候，隐藏更多只是用户体验层面的内容 当用户没有登陆时，显然无法通过直接点击链接来跳转，但是同样可以输入URL跳转。这和上一种情况类似，要求我们在有权限要求的页面添加玩赏的权限认证和错误跳转逻辑，在完成权限认证的同时，不失用户体验。 次页面级别限制对跳转的反应 上面的讨论告诉我们对特权页面加权限限制是解决权限控制问题的根本方法。 但是对于半开放的_次页面_又该如何处理呢？ 按照上文我们所说的次级页面的实现原理来区分讨论： 采用模板拼接的办法，需要区别权限的部分放在一个Controller里，不需要区别权限的部分放在另一个Controller里（这里瞎扯ing）。 采用一个Controller来控制，根据用户标志位的不同来提供不同的页面（这个可以在Controller层做，也可以放在View层来实现） 放在Controller层的好处是，数据处理的粒度更小了，后台的逻辑更加精简，缺点是需要的模板数量可能更多。 放在View层的好处是，一个模板可以同时应对有权限和无权限两种状态，缺点是在应对复杂的权限管理时，逻辑判断的成分超过了显示层原本的功能，显得十分臃肿。","headline":"Cms系统的权限管理","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/CMS%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/"},"url":"http://localhost:4000/posts/CMS%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     
