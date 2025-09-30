@@ -1,0 +1,137 @@
+
+
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>https://blog.tobyty.wang/</id>
+  <title>吴弓小站</title>
+  <subtitle>吴弓小站，分享生活。</subtitle>
+  <updated>2025-09-30T17:03:06+08:00</updated>
+  <author>
+    <name>Tobytywang</name>
+    <uri>https://blog.tobyty.wang/</uri>
+  </author>
+  <link rel="self" type="application/atom+xml" href="https://blog.tobyty.wang/feed.xml"/>
+  <link rel="alternate" type="text/html" hreflang="zh-CN"
+    href="https://blog.tobyty.wang/"/>
+  <generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator>
+  <rights> © 2025 Tobytywang </rights>
+  <icon>/assets/img/favicons/favicon.ico</icon>
+  <logo>/assets/img/favicons/favicon-96x96.png</logo>
+
+
+  
+  <entry>
+    <title>Welcome to Jekyll!</title>
+    <link href="https://blog.tobyty.wang/posts/welcome-to-jekyll/" rel="alternate" type="text/html" title="Welcome to Jekyll!" />
+    <published>2025-09-18T16:39:47+08:00</published>
+  
+    <updated>2025-09-18T16:39:47+08:00</updated>
+  
+    <id>https://blog.tobyty.wang/posts/welcome-to-jekyll/</id>
+    <content type="text/html" src="https://blog.tobyty.wang/posts/welcome-to-jekyll/" />
+    <author>
+      <name>Tobytywang</name>
+    </author>
+
+  
+    
+    <category term="jekyll" />
+    
+    <category term="update" />
+    
+  
+
+  <summary>You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.  Jekyll requires blog post files to be named according to the following format:  YEAR-MONTH-DAY-title.MAR...</summary>
+
+  </entry>
+
+  
+  <entry>
+    <title>Javascript的高级特性</title>
+    <link href="https://blog.tobyty.wang/posts/JavaScript%E7%9A%84%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/" rel="alternate" type="text/html" title="Javascript的高级特性" />
+    <published>2017-03-20T00:00:00+08:00</published>
+  
+    <updated>2017-03-20T00:00:00+08:00</updated>
+  
+    <id>https://blog.tobyty.wang/posts/JavaScript%E7%9A%84%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/</id>
+    <content type="text/html" src="https://blog.tobyty.wang/posts/JavaScript%E7%9A%84%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/" />
+    <author>
+      <name>Tobytywang</name>
+    </author>
+
+  
+    
+  
+
+  <summary>JavaScript的高级特性 1 作用域 与C、C++、Java等语言不同，JavaScript的作用域不是以花括号包围块级作用域，而是由函数来决定的，if、for语句中的花括号不是独立的作用域。 1.1 函数作用域 JavaScript中，一个函数内定义的变量只对这个函数内部可见，称之为函数作用域。 在函数中引用一个变量时，JavaScript首先会搜索当前作用域，或者称为“局部作用域”，如果没有找到则会搜索上层作用域，一直到全局作用域。 示例一： var v1 = 'v1';  var f1 = function() {   console.log(v1);    // 输出v1 }; f1();  var f2 = function() {   var v1 = 'local';   console.log(v1);    // 输出local } f2();  示例二： v...</summary>
+
+  </entry>
+
+  
+  <entry>
+    <title>Js制作万年历</title>
+    <link href="https://blog.tobyty.wang/posts/js%E5%88%B6%E4%BD%9C%E4%B8%87%E5%B9%B4%E5%8E%86/" rel="alternate" type="text/html" title="Js制作万年历" />
+    <published>2017-03-06T00:00:00+08:00</published>
+  
+    <updated>2017-03-06T00:00:00+08:00</updated>
+  
+    <id>https://blog.tobyty.wang/posts/js%E5%88%B6%E4%BD%9C%E4%B8%87%E5%B9%B4%E5%8E%86/</id>
+    <content type="text/html" src="https://blog.tobyty.wang/posts/js%E5%88%B6%E4%BD%9C%E4%B8%87%E5%B9%B4%E5%8E%86/" />
+    <author>
+      <name>Tobytywang</name>
+    </author>
+
+  
+    
+  
+
+  <summary>JS基础 Date函数获取时间 http://www.cnblogs.com/LiuJL/p/5417685.html 获取最大天数 http://www.jb51.net/article/76016.htm JQuery操作表格 http://www.cnblogs.com/lxblog/archive/2013/01/11/2856582.html https://zhidao.baidu.com/question/581126031.html  $(“table tr”).eq(1).find(“td”).eq(1).addClass(‘red’).html(‘0’); #</summary>
+
+  </entry>
+
+  
+  <entry>
+    <title>Docker命令</title>
+    <link href="https://blog.tobyty.wang/posts/Docker%E5%91%BD%E4%BB%A4/" rel="alternate" type="text/html" title="Docker命令" />
+    <published>2017-03-03T00:00:00+08:00</published>
+  
+    <updated>2017-03-03T00:00:00+08:00</updated>
+  
+    <id>https://blog.tobyty.wang/posts/Docker%E5%91%BD%E4%BB%A4/</id>
+    <content type="text/html" src="https://blog.tobyty.wang/posts/Docker%E5%91%BD%E4%BB%A4/" />
+    <author>
+      <name>Tobytywang</name>
+    </author>
+
+  
+    
+  
+
+  <summary>Docker命令 attach    Attach to a running container, 链接到一个正在运行的容器 build     Build an image from a Dockerfile，从一个docker容器构建镜像 commit    Create a new image from a container's changes，快照！ cp        Copy files/folders between a container and the local filesystem，在容器之间拷贝文件 create    Create a new container，创建一个新的镜像 diff      Inspect changes on a container's filesystem，比较两个容器系统的不同 events    Get real time...</summary>
+
+  </entry>
+
+  
+  <entry>
+    <title>软件源汇总</title>
+    <link href="https://blog.tobyty.wang/posts/%E8%BD%AF%E4%BB%B6%E6%BA%90%E6%B1%87%E6%80%BB/" rel="alternate" type="text/html" title="软件源汇总" />
+    <published>2017-02-26T00:00:00+08:00</published>
+  
+    <updated>2017-02-26T00:00:00+08:00</updated>
+  
+    <id>https://blog.tobyty.wang/posts/%E8%BD%AF%E4%BB%B6%E6%BA%90%E6%B1%87%E6%80%BB/</id>
+    <content type="text/html" src="https://blog.tobyty.wang/posts/%E8%BD%AF%E4%BB%B6%E6%BA%90%E6%B1%87%E6%80%BB/" />
+    <author>
+      <name>Tobytywang</name>
+    </author>
+
+  
+    
+  
+
+  <summary>软件源 网易：mirrors.163.com 阿里：mirrors.aliyun.com 东软信息学院：mirrors.neusoft.edu.cn  操作系统 Ubuntu    wiki.ubuntu.org.cn/源列表</summary>
+
+  </entry>
+
+</feed>
+
+
