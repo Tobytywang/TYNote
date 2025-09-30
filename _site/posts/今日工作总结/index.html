@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2017-01-26T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="今日工作总结" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2017-01-26T00:00:00+08:00","datePublished":"2017-01-26T00:00:00+08:00","description":"在windows上使用Nginx+php-cgi安装Typecho的经历 这次是本地安装，所以遇到的问题比较多。 首先是Typecho的坑，安装Typecho必须自己先建立一个空的数据库。 然后是Nginx配置的坑，填写root路径的时候，需要用双斜线。 第三是静态文件，两个问题，一个是它原来用的一些东西有的是通过cdn获得的，在没有网络的情况下无法获取，另一个可能是由于Nginx配置的原因，导致部分静态文件（比如CSS文件）获取不了。 在创建Typecho的时候需要指定一个网站的网址，我是通过127.0.0.1:8009端口访问的这个文件夹，安装完以后默认的所有链接都是127.0.0.1:8009:8009，根本无法正常的使用。 一个思路是通过设置Nginx来指定一个类似于正常网络环境的域名，另一个思路是在填写的时候手动填写（这个好像不太靠谱）。 总结 今天计划的事情都没有做好，以后计划调整一下。 需要在线学习的内容只能延后（HTML/CSS）。 我有JS/PHP/GO的电子书，有空可以看一下。 （Go）在此基础上还需要对原先的me代码进行反省，由此可能会涉及到对于Beego/Go框架的一些学习，以及一些编程经验的总结学习。 （PHP）Laravel的内容因为没有网络，学习起来可能困难一点，就先打一下PHP的基础好了。 Nginx是很重要的东西，需要着力搞一下。 前端的内容主要是HTML/CSS的分离（禅意花园），响应式设计（媒体查询等），JS的学习。","headline":"今日工作总结","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/%E4%BB%8A%E6%97%A5%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/"},"url":"http://localhost:4000/posts/%E4%BB%8A%E6%97%A5%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

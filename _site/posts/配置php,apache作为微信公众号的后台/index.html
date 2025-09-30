@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2017-01-04T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="配置php,apache作为微信公众号的后台" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2017-01-04T00:00:00+08:00","datePublished":"2017-01-04T00:00:00+08:00","description":"Apache安装与配置 一：安装 操作系统：centos6.8 使用yum install php来安装php,默认会设定httpd为依赖，自动安装apache2。 * 安装的php版本为5.3，包括php,php-common,php-cli和php-devel等包。 * 安装的httpd版本为2.2.15，包括httpd和httpd-tools等包。 二：配置 修改监听端口为8081[http://www.centoscn.com/apache/2015/0324/4989.html] 设置nginx的反向代理，将weixin.wangtianyu00.com:80端口定向到8081端口 在apache的www目录下放置php文件，从浏览器能正常访问，说明配置正确。 三：上传方倍工作室默认php文件到服务器 四：配置公众号的开发者模式 五：实现正常访问 下一步的计划 使用方备工作室提供的简单代码可以实现基本的回复功能，但要作为一个可以接入任意公众号的产品，还需要将整个过程可视化，这方面可能需要参照一些php的后台应用。","headline":"配置php,apache作为微信公众号的后台","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/%E9%85%8D%E7%BD%AEphp,apache%E4%BD%9C%E4%B8%BA%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E7%9A%84%E5%90%8E%E5%8F%B0/"},"url":"http://localhost:4000/posts/%E9%85%8D%E7%BD%AEphp,apache%E4%BD%9C%E4%B8%BA%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E7%9A%84%E5%90%8E%E5%8F%B0/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

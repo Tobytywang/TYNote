@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2016-12-23T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Gugoo阅读笔记" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2016-12-23T00:00:00+08:00","datePublished":"2016-12-23T00:00:00+08:00","description":"Controller BaseController 属性 在继承beego.Controller的同时可以自定义属性，这些属性可以被其继承者使用（但不能通过这个属性来传递参数）。 方法 关于接口的定义：go语言通过接口来实现面向对象，两个对象只要实现了相应的接口就视为同一类对象。这与java要求所有对象都必须继承自object的要求相距甚远，但更为灵活，某种意义上又类似C++中的多重继承（应该不是一样的东西，有时间再慢慢分析） 这些方法可以被继承者调用。关于方法中使用到的上下文相关参数（例如this.GetString(“app”)等） Prepare 何时执行？ 对一个Controller而言，在执行诸如GET/POST等方法之前会先执行Prepare方法。 放在BaseController上，暂不明确 能做什么？","headline":"Gugoo阅读笔记","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/Gugoo%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"},"url":"http://localhost:4000/posts/Gugoo%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

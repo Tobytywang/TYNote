@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2017-01-11T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Lavarel学习资源整理" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2017-01-11T00:00:00+08:00","datePublished":"2017-01-11T00:00:00+08:00","description":"Lavarel学习资源整理 网站 Laravel学院[http://laravelacademy.org/]：有基础教程，博客系列等免费内容 Laravist[https://www.laravist.com/series/laravel-5-basic]：有Lavarel5.1的视频教程 blog.qiji.tech[http://blog.qiji.tech/archives/category/laravel/laravel-5-fundamentals]：有英文视频教程的翻译，对应的英文教程在这儿[https://laracasts.com/series/laravel-5-fundamentals] golavarel和lavarel-china: Never land的博客[http://blog.csdn.net/Jackdowson123/article/details/54177727]：不错的Lavarel博客 配置Lavarel的开发和运行环境 环境 Lavarel基于PHP环境，PHP的应用环境也分好几种，最时髦的应该是LNMP(Linux+Nginx+MySQL+PHP)，这里PHP和Nginx使用php-fpm交互。由于php-fpm在windows上还没有对应的实现，我在学习的时候用的是php-cgi.exe（应该属于fastcgi的一种）。 这里的关键在于配置Nginx的fastcgi支持。 Lavarel的版本 Lavarel最新的版本时5.3，但是LTS版本是5.1，由于资料相对缺乏，所以我选择了较为稳定的5.1作为学习的对象。 其他环境 Lavarel作为一个php应用，采用composer作为包管理器，必然会涉及composer的使用，另外前端可能会用到诸如gulp,bower等工具，所以也会用到nodejs的包管理工具npm。 如何进行Lavarel的开发 [http://laravelacademy.org/post/2207.html] 创建应用骨架： 使用lavarel new test或者composer create-project laravel/laravel test –prefer-dist 配置Web服务器： 设置Nginx 创建数据库： 设置MySQL","headline":"Lavarel学习资源整理","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/Lavarel%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90%E6%95%B4%E7%90%86/"},"url":"http://localhost:4000/posts/Lavarel%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90%E6%95%B4%E7%90%86/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

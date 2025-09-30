@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2017-02-04T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Laravel项目的目录" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2017-02-04T00:00:00+08:00","datePublished":"2017-02-04T00:00:00+08:00","description":"Laravel目录 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 app(应用核心代码) Console() Kernel.php Exceptions() Handler.php Http() Controllers(控制器) Auth() ForgotPasswordController.php Controller.php Middleware(中间件) EncryptCookies.php RedirectlfAuthenticated.php VerifyCsrToken.php Kernel.php Providers() User.php bootstrap(少许文件用于框架的启动和自动载入设置，cache文件夹用于包含框架生成的启动文件以提高性能) cache() .gitignore services.php app.php autoload.php config(应用所有的配置文件) app.php auth.php broadcasting.php cache.php compile.php database.php filesystems.php mail.php queue.php services.php session.php view.php database(包含了数据迁移及填充文件) factories() ModelFactory.php migrations(生成的迁移文件) seeds() DatabaseSeeder.php .gitignore public(静态文件，View层|前端控制器和资源文件) css() js() .htaccess favicon.ico index.php robots.txt web.config resources(资源文件，View层|视图文件以及原生资源文件，以及本地化文件) assets() js() components() Example.vue app.js bootstrap.js sass() _variables.scss app.scss lang() en() auth.php pagination.php passwords.php validation.php views(View层，模板文件) errors() 503.blade.php shared() navbar.blade.php vendor() .gitkeep welcome.blade.php routes(路由器) api.php console.php web.php storage(编译过的Blade模板，基于文件的session，文件缓存，其他由框架生成的文件|app用于存放应用要使用的文件，framework目录用于存放框架生成的文件和缓存，logs文件包含应用的日志文件) app() public() .gitignore .gitignore framework() cache() sessions() views() .gitignore logs() .gitignore laravel.log tests(自动化测试，一个开箱即用的PHPUnit示例) ExampleTest.php TestCase.php vendor(Composer依赖) .env-----------配置文件 .env.example---配置文件 .gitattributes-git文件 .gitignore-----git文件 artisan--------命令行工具 composer.json--Composer配置文件 composer.lock--Composer文件 gulpfile.js----gulp文件？ package.json---包依赖文件 phpunit.xml----？ readme.md server.php yarn.lock Laravel 5.1 官方文档中文版 第五章 架构 5.1 一次请求的生命周期 1 2 3 4 5 6 +public/index.php: | +bootstrap/app.php:载入Composer自动加载设置，创建服务容器实例 | +HTTP/Console内核:根据请求的类型不同，分别交给HTTP内核和Console内核 | HTTP内核 继承自Illuminate\\Foundation\\Http\\Kernel类，定义了一个bootstrappers数组，数组中的类在请求前被执行，这些bootstarppers配置了错误处理，日志，检测应用环境以及其他在请求被处理前需要执行的任务。 该内核还定义了一系列在请求前需要经过的HTTP中间件，这些中间件处理HTTP会话的读写、判断应用是否处于维护模式、验证CSRF令牌等。 内核的标志性方法handle处理的逻辑相当简单：获取一个Request，返回一个Response。 服务提供者 内核启动最重要的动作之一就是为应用载入服务提供者，应用的所有服务提供者被配置在config/app.php配置文件的providers数组中。 首先，所有提供者的register方法被调用，然后，所有提供者被注册之后，boot方法被调用。 服务提供者负责启动框架的所有各种各样的组件，比如数据库，队列，验证器，以及路由器组件等。 分发请求 一旦应用被启动并且所有的服务提供者被注册，Request将会被交给路由器进行分发，路由器将分发请求到路由或者控制器，同时运行所有路由指定的中间件。 服务提供者 服务提供者是启动Laravel应用中最关键的部分，应用实例被创建后，服务提供者被注册，请求被交给启动后的应用进行处理。 对Laravel应用如何通过服务提供者构建和启动有一个牢固的掌握非常有价值。 应用默认的服务提供者存放在app/Providers目录下，该目录在默认情况下是空的，这里是添加自定义启动和服务容器绑定的最佳位置。 对大型应用，你可能希望创建多个服务提供者，每一个都有更加细粒度的启动。 5.2 目录 app目录 应用的核心代码位于app目录下，该目录位于命名空间App下，并且被Composer通过PSR-4自动载入标准自动加载。 可以通过Artisan命令app:name来修改该命名空间。 包含Console、Http、Providers等目录。 Console和Http目录提供了进入应用核心的API，HTTP协议和CLI是和应用进行交互的两种机制，但实际上并不包含应用逻辑。换句话说，它们只是两个向应用发布命令的方式。Console目录包含了所有的Artisan命令，Http包含了控制器、过滤器和请求等。 Jobs目录是放置队列任务的地方，应用中的任务可以被队列化，也可以在当前请求生命周期内同步执行。 Events目录是放置事件类的地方，事件可以用于通知应用其他部分给定的动作已经发生，并提供灵活的解耦处理。 Listeners目录包含事件的处理器类，处理器接收一个事件并提供对该事件发生后的响应逻辑，比如UserRegistered事件可以被SendWelcomeEmail监听器处理。 Exceptions目录包含应用的异常处理器，同时还是处理应用抛出的异常的好地方。 命名空间 应用默认的命名空间是App；可以使用’php artisan app:name xxxx’修改应用名称。 服务提供者 服务提供者是所有Laravel应用启动的中心，你自己的应用以及所有Laravel的核心服务都是通过服务提供者启动。 “启动”意味着注册事物，包括注册服务容器绑定、时间监听器、中间件甚至路由。 config/app.php中的providers数组存储着要加载的所有服务提供者类。 服务提供者的实现 所有的服务继承者继承自“Illuminate\\Support\\ServiceProvider”类，继承该抽象类要求至少在服务提供者中定义一个方法：register，在register方法内，你唯一要做的事情就是绑事物到服务容器，不要尝试在其中注册任何时间监听器，路由或者任何其他功能。通过’php artisan make:provider RiakServiceProvider’生成一个新的提供者 boot方法","headline":"Laravel项目的目录","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/Laravel%E9%A1%B9%E7%9B%AE%E7%9A%84%E7%9B%AE%E5%BD%95/"},"url":"http://localhost:4000/posts/Laravel%E9%A1%B9%E7%9B%AE%E7%9A%84%E7%9B%AE%E5%BD%95/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

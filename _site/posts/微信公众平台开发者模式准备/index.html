@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2017-01-03T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="微信公众平台开发者模式准备" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2017-01-03T00:00:00+08:00","datePublished":"2017-01-03T00:00:00+08:00","description":"#微信公众号 一：微信公众号的种类 现在登录微信公众平台[http://mp.weixin.qq.com]，可以看到我们能申请的账号种类有服务号，订阅号，小程序和企业号。点击详情可以看到这些类别之间的差异。 1.1 按使用情景分 订阅号：主要偏于为用户传达资讯（类似报纸杂志），认证前后都是每天只可以群发一条消息； 服务号：主要偏于服务交互（类似银行，114，提供服务查询），认证前后都是每个月可群发4条消息； 企业号：主要用于公司内部通讯使用，需要先有成员的通讯信息验证才可以关注成功企业号； 1.2 按账号主体分 除了公众号类型之外，还会要求选择一个账号的主体类型，这个类型包括：个体户（企业），企业（企业），媒体，政府，其他组织和个人（共有五类六种）。选择类型后提交资质验证申请之后可以由未认证状态转为认证状态。需要注意的是，以个人为主体的公众号是无法认证的。 验证方式有两种：有对公账户的可以使用支付验证注册，没有对公账户的，需要使用微信认证（每次300） 1.3 接口权限的问题 微信公众号可以使用不同的接口来自定义公众号的功能，这些接口根据公众号种类的不同而有所不同（指未认证的订阅号，认证的订阅号，未认证的服务号，认证的服务号等四种）。 这些类型中，认证的服务号拥有最多的权限，未认证的订阅号和服务号拥有类似的权限（除了未认证的服务号拥有自定义菜单的接口权限）。 二：微信号功能详解（个人主体、未认证） 2.1 功能 群发功能 自动回复 自定义菜单 投票管理 其他 卡券功能 摇一摇周边 客服功能 微信连Wi-fi 微信小店 2.2 管理 消息管理 用户管理 素材管理 2.3 推广 广告主 流量主 2.3 统计 用户分析 图文分析 菜单分析 消息分析 接口分析 网页分析 2.4 设置 公众号设置 微信认证 安全中心 管理员微信号 风险操作保护 登陆 群发消息 修改服务期配置 修改AppSecret 查看AppSecret 风险操作提醒 风险操作记录 修改密码 违规记录 2.5 开发 基本配置 开发者ID AppID（应用ID） AppSecret（应用密钥） 服务器配置 URL Token EncodingAESKey（消息加解密密钥） 消息加密模式 微信开放平台账号绑定 开发者工具 开发者工具 开发者文档 在线接口调试工具 web开发者工具 公众平台测试账号 公众号第三方平台 腾讯云 腾讯云CDN加速 腾讯云安全防护 运维中心 接口权限 2.6 接口权限（个人主体、未认证） 对话服务-基础支持-获取access_token 对话服务-基础支持-获取微信服务器IP地址 对话服务-接收消息-验证消息真实性 对话服务-接收消息-验证普通消息 对话服务-接收消息-验证事件推送 对话服务-接收消息-接受语音识别结果 对话服务-发送消息-被动回复消息 网页服务-基础接口-判断当前客户端版本是否支持指定JS接口 网页服务-图像接口-获取jsapi_ticket 网页服务-音频接口 网页服务-智能接口（网页语音识别） 网页服务-设备信息 网页服务-地理位置 网页服务-界面操作 网页服务-微信扫一扫 三：开发文档 3.1 开始前必读 3.1.1 首页（微信公众平台开发概述） 微信公众平台-&gt;公众平台开发接口-&gt;公众号-&gt;用户 每个用户对每个公众号有一个OpenID，需要在多公众号，移动应用之间做用户共通，则需要前往微信开放平台，将这些公众号和应用绑定到一个开发平台之下，绑定之后，用户对这些应用有一个共同的UnionID 公众平台针对微信公众号进行开发，需要对移动应用，PC端网站，公众号第三方平台进行开发，需要前往微信开放平台进行接入。 开发须知：在申请到认证公众号之前，可以申请测试公众号；可以使用接口调试工具来在线调试某些接口；开发出现问题时，可以通过接口调用的返回码。 公众平台以access_token为接口调用凭据，所有接口的调用需要先获取access_token， access_token在2小时内有效，过期需要重新获取，但1天内获取次数有限，开发者需自行存储。 重点难点：公众号用户管理，access_token的原理 3.1.2 开发者规范 3.1.5 接口调用频次限制说明 {“errcode”:45009,”errmsg”:”api freq out of limit”} 3.1.6 接口返回码说明 3.1.7 入门指引 xxxxx 3.2 开始开发 3.2.1 接入指南 填写服务器配置 验证服务器地址的有效性 依据接口文档实现业务逻辑 验证成功后，用户每次向公众号发送消息、或者产生自定义菜单、或产生微信支付订单等情况时，开发者填写的服务器配置URL都将得到微信服务期推送过来的消息和事件，开发者可以根据自身业务逻辑进行响应，如回复消息等。 用户向微信公众号发送消息时，公众号方收到的是一个OpenID，是用户微信号加密后的结果，每个用户对每个公众号都有一个唯一的OpenID。 微信公众接口必须以 http:// 或者 https:// 开头，对应80端口和443端口 3.2.2 接口域名说明 ？？？？ 3.2.3 获取access_token access_token是公众号的全局唯一接口调用凭据，公众号调用各接口时都需要使用access_token，开发者需要进行妥善保存。access_token的存储空间至少要保留512个字符空间。access_token的有效期为2个小时，需定时刷新，重复获取将导致上次获取的access_token失效？？？？ 为了保密AppSecret，第三方需要一个access_token获取和刷新的中控服务器。而其他业务逻辑服务器所使用的access_token均来自该中控服务器，不应该各自去刷新，否则会造成access_token覆盖而影响业务； 3.2.4 获取微信服务器IP地址 3.3 自定义菜单 3.3.1 自定义菜单创建接口 3.3.2 自定义菜单查询接口 3.3.3 自定义菜单删除接口 3.3.4 自定义菜单事件推送 3.3.5 个性化菜单接口 3.3.6 获取公众号的菜单配置 3.4 消息管理 3.4.1 接收消息-接受普通消息 3.4.2 接收消息-接收事件推送 3.4.3 发送消息-被动回复消息 3.4.4 发送消息-被动回复时的加解密 3.4.5 发送消息-客服接口 3.4.6 发送消息-群发接口 3.4.7 发送消息-模板消息接口 3.4.8 发送消息-模板消息运营规范 3.4.9 获取公众号自动回复配置 3.5 微信网页开发 3.5.1 微信网页授权 3.5.2 微信网页开发样式库 3.5.3 微信JS-SDK 3.5.4 微信Web开发者工具 3.6 素材管理 3.6.1 新增临时素材 3.6.2 获取临时素材 3.7 用户管理 3.7.1 用户分组管理 3.7.2 设置用户备注名 3.8 账号管理 3.8.1 生成带参数的二维码 3.9 数据统计 3.10 微信卡券 3.11 微信门店 3.12 微信小店 3.13 微信设备功能 3.14 新版客服功能 3.15 微信摇一摇周边 3.16 微信连Wi-fi 3.17 微信扫一扫 3.18 其他文档 微信公众平台·小程序 微信开放平台文档","headline":"微信公众平台开发者模式准备","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E8%80%85%E6%A8%A1%E5%BC%8F%E5%87%86%E5%A4%87/"},"url":"http://localhost:4000/posts/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E8%80%85%E6%A8%A1%E5%BC%8F%E5%87%86%E5%A4%87/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

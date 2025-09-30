@@ -41,7 +41,7 @@
 <meta property="article:published_time" content="2016-12-26T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="配置服务器" />
-<meta name="twitter:site" content="@tobytywang" />
+<meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2016-12-26T00:00:00+08:00","datePublished":"2016-12-26T00:00:00+08:00","description":"阿里云服务器重置后的设置 背景简述：上周五把阿里云的服务器写挂了，之后在控制台进行了重置，使用centos6.8的镜像。今晚对系统进行一下维护，安装一些以后会用到的软件。 一：新增用户并添加到sudoers 新安装好的镜像只提供了root登陆的权限，需要新建一个普通用户。 新增用户使用adduser命令，之后使用passwd命令修改用户的密码。 使用visudo命令修改sudoers文件，添加新用户到sudoers。（具体方法是找到root ALL=(ALL) ALL行，在下面再添加一行以需要添加的用户的用户名开头的行，比如tianyu ALL=(ALL) ALL） 二：更新软件 linux系统下大量的软件来自开源社区，这些开源软件的更新速度极快，为了使我们从镜像安装的这些软件得到即时的更新，我们需要执行更新软件信息的命令 对于centos来说，需要执行：sudo yum update 题外话：centos和fedora都属于红帽家族的linux，使用yum作为包管理器 三：安装docker 使用docker安装软件和系统非常方便，我们使用docker来管理我们的软件。 docker要求linux内核在3.8.0以上，由于默认安装的centos6.8内核版本为2.6.32，需要先手动升级为3.8.0。这个工作参考文章[https://segmentfault.com/a/1190000000733628]。 后来考虑了一下，放弃了（因为看上面说的意思似乎是在桌面环境的，不适合在服务器环境下折腾） 后来换了一篇参考文章：[http://www.cnblogs.com/baolong/p/5743420.html]，按照这篇文章的说法，没有升级内核，安装了centos6.x下的docker-io包。不过暂时还是不折腾docker了，先在系统中配置开发环境。 四：安装mysql,git,go和beego 安装git和go 执行相应的sudo yum install xxx命令即可安装。 使用包管理器安装git的版本是1.7.1，go的版本是1.7.2。 安装Mysql mysql的版本较老为5.1.73，考虑通过rpm包再安装一遍。 参考文章[http://blog.csdn.net/liumm0000/article/details/18841197] 参考文章[http://blog.csdn.net/kexiuyi/article/details/53292358] 参考文章[http://blog.csdn.net/bao19901210/article/details/51917641] 参考文章[http://www.cnblogs.com/azhw/p/5143232.html] 参考文章[http://blog.csdn.net/lwei_998/article/details/7258865] 参考文章[https://blog.laily.net/archives/571/] 参考文章[http://blog.csdn.net/xinxin19881112/article/details/46873811] 参考文章[http://blog.sina.com.cn/s/blog_7c35df9b010122ir.html] sohu的镜像库：[mirrors.sohu.com] 需要安装下列rpm包：common-&gt;libs-&gt;client-server 这个过程十分艰难，直到第二天早上才弄完，会记录在另外一篇总结中。 安装beego和bee beego的安装参考beego.me。 安装过程中可能会提示http验证错误，按照官网说的，把git的https验证关掉，下载速度奇快。 安装ftp服务器 参照网上的讲解，将ftp服务器安装好，并上传文件到GOPATH下 参考文章[http://jingyan.baidu.com/article/e52e36157bfdc640c60c511d.html]","headline":"配置服务器","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8/"},"url":"http://localhost:4000/posts/%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8/"}</script>
 <!-- End Jekyll SEO tag -->
@@ -102,8 +102,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-mammut.css">
 
-  <!-- Web Font -->
+  <!-- Web Font!!!!!! -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="/assets/lib/iconfont/main.css">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
@@ -258,7 +259,7 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
     <a class="site-title d-block" href="/">吴弓小站</a>
     <p class="site-subtitle fst-italic mb-0">读万卷书，行万里路</p>
@@ -323,10 +324,11 @@
     
 
     
+      
 
       
         <a
-          href="https://github.com/Tobytywang"
+          href="https://github.com/github_username"
           aria-label="github"
           
 
@@ -345,11 +347,12 @@
         </a>
       
     
+      
 
       
         <a
-          href="https://twitter.com/tobytywang"
-          aria-label="twitter"
+          href="https://cnblogs.com/"
+          aria-label="cnblogs"
           
 
           
@@ -363,10 +366,11 @@
             rel="noopener noreferrer"
           
         >
-          <i class="fa-brands fa-x-twitter"></i>
+          <i class="iconfont icon-cnblogs"></i>
         </a>
       
     
+      
 
       
         <a
@@ -381,25 +385,6 @@
           
         >
           <i class="fas fa-envelope"></i>
-        </a>
-      
-    
-          
-        
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
         </a>
       
     

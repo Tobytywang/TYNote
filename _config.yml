@@ -19,8 +19,11 @@ url: "https://blog.tobyty.wang"
 github:
   username: Tobytywang
 
-twitter:
-  username: tobytywang
+cnblog:
+  username: happylich
+
+# twitter:
+#   username: 
 
 social:
   name: Tobytywang
@@ -38,6 +41,8 @@ pageviews:
   provider: goatcounter
 
 theme_mode: dark
+
+avatar: assets/img/avatar/avatar.jpg
 
 social_preview_image: 
 
