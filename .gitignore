@@ -1,4 +1,32 @@
+# Jekyll
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
+_site/
 vendor
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Backup files
+*.bak
+*.backup
+
+# Logs
+*.log
+
+# Node (if future use)
+node_modules/
+
+# Temporary files
+*.tmp
+*.temp
