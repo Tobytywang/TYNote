@@ -24,11 +24,94 @@ TYNote/
 └── index.html       # 首页
 ```
 
+## 主题适配目录说明
+
+本项目使用 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut) 主题，以下目录用于主题定制：
+
+### `_tabs/` - 导航标签页
+
+定义网站顶部导航栏的页面，每个文件对应一个标签页：
+
+| 文件 | 说明 | Front Matter |
+|------|------|--------------|
+| `about.md` | 关于页面 | `icon: fas fa-info-circle`, `order: 4` |
+| `archives.md` | 归档页面 | `order: 1` |
+| `categories.md` | 分类页面 | `order: 2` |
+| `tags.md` | 标签页面 | `order: 3` |
+
+- `icon` - Font Awesome 图标类名
+- `order` - 导航栏显示顺序（数字越小越靠前）
+
+### `_data/` - 数据文件
+
+存放 YAML 格式的数据文件，供模板调用：
+
+```
+_data/
+├── contact.yml      # 社交联系方式配置
+└── origin/
+    └── basic.yml    # 静态资源路径配置
+```
+
+**contact.yml** - 配置侧边栏显示的社交链接：
+- `type` - 平台类型（github、email、cnblogs 等）
+- `icon` - 图标类名（Font Awesome 或自定义 iconfont）
+- `noblank` - 是否在当前标签页打开链接
+
+**origin/basic.yml** - 配置前端库的 CSS/JS 路径：
+- 字体：webfonts、iconfont
+- 功能库：tocbot（目录）、mermaid（图表）、MathJax（数学公式）等
+
+### `_includes/` - 模板片段
+
+存放可复用的 HTML 模板片段，用于覆盖或扩展主题默认模板：
+
+| 文件 | 说明 |
+|------|------|
+| `head.html` | HTML `<head>` 部分，包含 SEO 标签、资源引用、分析代码等 |
+| `sidebar.html` | 侧边栏模板，包含头像、站点标题、导航菜单、社交链接 |
+
+这些文件会覆盖主题中的同名模板，实现自定义布局。
+
 ## 技术栈
 
 - **Jekyll** 4.4.1
 - **Ruby** 3.4.4
 - **主题** jekyll-theme-mammut（自定义 fork）
+
+## 主题管理
+
+本项目使用自定义主题 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut)，引用 `release` 分支。
+
+### 主题与博客的关系
+
+```
+jekyll-theme-mammut (主题仓库)     TYNote (博客仓库)
+        │                              │
+        │ 修改主题样式/布局             │ 撰写文章/配置
+        │                              │
+        ▼                              ▼
+   推送到 release 分支  ──────────▶  bundle install 拉取最新主题
+        │                              │
+        │                              ▼
+        │                        本地预览 / CI 构建
+        │                              │
+        └──────────────────────────────▶ 部署到 blog.tobyty.wang
+```
+
+### 更新主题
+
+当主题仓库有更新时，在博客项目执行：
+
+```bash
+bundle update jekyll-theme-mammut
+```
+
+### 主题修改
+
+- **样式/布局修改** → 在 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut) 仓库进行
+- **文章/配置修改** → 在本仓库进行
+- 主题修改推送到 `release` 分支后，博客项目需更新依赖
 
 ## 本地开发
 
@@ -41,6 +124,14 @@ rbenv install 3.4.4
 
 # 安装依赖
 bundle install
+```
+
+### 更新主题
+
+当主题仓库 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut) 有更新时：
+
+```bash
+bundle update jekyll-theme-mammut
 ```
 
 ### 本地预览
