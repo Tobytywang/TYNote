@@ -31,3 +31,6 @@ node_modules/
 # Temporary files
 *.tmp
 *.temp
+
+# NanoAgent
+.nano_agent/
