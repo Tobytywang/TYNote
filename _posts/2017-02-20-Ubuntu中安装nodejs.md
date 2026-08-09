@@ -1,3 +1,9 @@
+---
+layout: post
+title: "Ubuntu中安装nodejs"
+date: 2017-02-20 00:00:00 +0800
+---
+
 # Ubunt中安装nodejs
 在考虑安装nodejs之前，我们有几种方法作为备选项。
 

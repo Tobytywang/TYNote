@@ -1,3 +1,9 @@
+---
+layout: post
+title: "Centos安装NMP"
+date: 2017-02-16 00:00:00 +0800
+---
+
 ## 源的问题
 CentOS的源似乎与Ubuntu不同。  
 CentOS的默认源如下所示(其实已经做过修改了，应该是手动添加了epel源)：  

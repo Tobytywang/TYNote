@@ -1,3 +1,9 @@
+---
+layout: post
+title: "在centos上安装和配置mysql"
+date: 2016-12-27 00:00:00 +0800
+---
+
 ## 在Centos上安装和配置mysql
 > 由于镜像自带软件源中的mysql版本较低，我想使用rpm安装包的方式来安装mysql。
 

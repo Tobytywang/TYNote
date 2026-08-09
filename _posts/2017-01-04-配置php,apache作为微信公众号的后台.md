@@ -1,3 +1,9 @@
+---
+layout: post
+title: "配置php,apache作为微信公众号的后台"
+date: 2017-01-04 00:00:00 +0800
+---
+
 ## Apache安装与配置
 ### 一：安装
 操作系统：centos6.8  

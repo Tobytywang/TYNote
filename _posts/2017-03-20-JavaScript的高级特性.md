@@ -1,3 +1,9 @@
+---
+layout: post
+title: "JavaScript的高级特性"
+date: 2017-03-20 00:00:00 +0800
+---
+
 # JavaScript的高级特性
 ## 1 作用域
 与C、C++、Java等语言不同，JavaScript的作用域不是以花括号包围*块级作用域*，而是由函数来决定的，if、for语句中的花括号不是独立的作用域。

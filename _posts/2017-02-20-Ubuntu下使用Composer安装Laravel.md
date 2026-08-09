@@ -1,3 +1,9 @@
+---
+layout: post
+title: "Ubuntu下使用Composer安装Laravel"
+date: 2017-02-20 00:00:00 +0800
+---
+
 # Ubuntu下使用Composer安装Laravel
 Composer是处理PHP包依赖关系的一个工具。
 

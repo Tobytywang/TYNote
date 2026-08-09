@@ -1,3 +1,9 @@
+---
+layout: post
+title: "NginxRewrite"
+date: 2017-01-25 00:00:00 +0800
+---
+
 ## Nginx配置
 ### 一：Rewrite功能
 #### 1.1 Nginx后端服务器组的5个指令

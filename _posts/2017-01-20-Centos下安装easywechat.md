@@ -1,3 +1,9 @@
+---
+layout: post
+title: "Centos下安装easywechat"
+date: 2017-01-20 00:00:00 +0800
+---
+
 ## 在Centos下安装easywechat（php）环境
 使用的操作系统为centos6.8。
 涉及的主要内容有：
