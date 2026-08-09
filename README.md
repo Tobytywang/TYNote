@@ -181,3 +181,65 @@ tags: [标签]
 - `_site/` 目录由 CI 自动生成，不要提交到 Git
 - `assets/lib/` 是第三方库，不要修改
 - 修改 `.ruby-version` 时需同步更新 GitHub Actions 配置
+
+## 工作流与分支保护
+
+### 整体流程
+
+```
+master(源码) --push/PR--> GitHub Actions 构建 --> gh-pages(产物) --> pages-build-deployment --> Pages 站点
+```
+
+1. 修改源码 → 合并到 `master`
+2. 触发 Action「Build and Deploy Jekyll Site」自动构建
+3. 构建产物写入 `gh-pages` 分支
+4. 平台自动执行 `pages-build-deployment` 发布到 GitHub Pages
+
+### 分支角色
+
+| 分支 | 作用 | 生命周期 |
+|------|------|----------|
+| `master` | 唯一源码分支，存放稳定可发布的代码 | **长期**（主干分支，永久存在） |
+| `develop` | 开发分支，可存放脏提交/半成品，作为日常开发的临时工作区 | **长期**（持续存在，但内容可随时重写） |
+| `gh-pages` | 构建产物分支，仅存放 `_site/` 静态站点文件 | **短期**（每次部署都强制重建：CI 用 `force_orphan: true` 创建孤儿提交，旧历史被覆盖，分支只保留最近一次构建结果） |
+
+> **gh-pages 生命周期说明**：由于 `force_orphan: true`，每次自动部署都会丢弃该分支全部历史、以全新孤儿提交重建。因此它**不是一个累积历史的分支**，本质上是"当前站点快照"，短生命周期、随时可弃。**禁止手动推送**——手动内容会被下次构建覆盖，且会被保护规则拦截。
+
+### 分支保护规则（已配置）
+
+- **`master`**：要求 PR 审查，禁止直接 push
+- **`gh-pages`**：要求 PR 审查；force push 例外仅授予 `github-actions[bot]`，保证自动部署不被拦截
+
+### 正确操作方式
+
+1. **改代码**：新建分支 → 修改 → push → 创建 PR → 合并到 `master`（自动触发部署）
+2. **发布站点**：无需任何手动操作，合并 PR 即自动完成
+3. **禁止**：`git push origin gh-pages`（会被保护规则拒绝，且下次构建会覆盖手动内容）
+
+### 推荐流程（日常开发）
+
+```
+develop(开发) --push--> 创建 PR --> 合并到 master --> 自动构建 --> gh-pages --> 自动发布
+```
+
+1. 在 `develop` 分支上开发、提交、推送
+2. 在 GitHub 上创建 `develop → master` 的 Pull Request
+3. 通过审查后合并（走 master 的 PR 保护规则）
+4. 合并即触发「Build and Deploy Jekyll Site」→ 自动部署到 gh-pages → 站点更新
+
+> 日常只需操作 `develop`，`master` 与 `gh-pages` 均无需手动干预。
+
+### 推荐流程（日常开发）
+
+```
+develop(开发) --push--> 创建 PR --> 合并到 master --> 自动构建 --> gh-pages --> Pages 站点
+```
+
+1. 在 `develop` 分支上进行日常开发并推送
+2. 在 GitHub 上创建 `develop → master` 的 Pull Request
+3. 审查通过后合并到 `master`
+4. 合并动作自动触发 Action「Build and Deploy Jekyll Site」，构建并部署到 `gh-pages` → 站点自动更新
+
+> 说明：`deploy.yml` 监听 `master` 分支的 push，因此无论直接推 `master` 还是通过 PR 合并，都会触发相同的自动构建流程。
+
+> **develop 生命周期补充**：`develop` 可随时 force reset 或删除重建，不影响部署与 `master`（CI 只监听 master，develop 的任何操作都不触发构建）。
