@@ -1,0 +1,183 @@
+[ok] # TYNote
+
+Tobyty's Personal Blog - 基于 Jekyll 的个人博客
+
+## 项目结构
+
+```
+TYNote/
+├── _posts/          # 已发布的博客文章（Markdown 格式）
+├── _drafts/         # 草稿目录（按年份分目录管理）
+├── _config.yml      # Jekyll 配置文件
+├── _data/           # 数据文件（联系方式等）
+├── _includes/       # 模板片段
+├── _tabs/           # 导航标签页
+├── assets/          # 静态资源
+│   ├── img/         # 图片
+│   │   ├── avatar/  # 头像
+│   │   ├── favicons/# 网站图标
+│   │   └── posts/   # 文章图片
+│   └── lib/         # 第三方库（不要修改）
+├── .github/         # GitHub 配置
+│   └── workflows/   # CI/CD 工作流
+├── Gemfile          # Ruby 依赖
+└── index.html       # 首页
+```
+
+## 主题适配目录说明
+
+本项目使用 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut) 主题，以下目录用于主题定制：
+
+### `_tabs/` - 导航标签页
+
+定义网站顶部导航栏的页面，每个文件对应一个标签页：
+
+| 文件 | 说明 | Front Matter |
+|------|------|--------------|
+| `about.md` | 关于页面 | `icon: fas fa-info-circle`, `order: 4` |
+| `archives.md` | 归档页面 | `order: 1` |
+| `categories.md` | 分类页面 | `order: 2` |
+| `tags.md` | 标签页面 | `order: 3` |
+
+- `icon` - Font Awesome 图标类名
+- `order` - 导航栏显示顺序（数字越小越靠前）
+
+### `_data/` - 数据文件
+
+存放 YAML 格式的数据文件，供模板调用：
+
+```
+_data/
+├── contact.yml      # 社交联系方式配置
+└── origin/
+    └── basic.yml    # 静态资源路径配置
+```
+
+**contact.yml** - 配置侧边栏显示的社交链接：
+- `type` - 平台类型（github、email、cnblogs 等）
+- `icon` - 图标类名（Font Awesome 或自定义 iconfont）
+- `noblank` - 是否在当前标签页打开链接
+
+**origin/basic.yml** - 配置前端库的 CSS/JS 路径：
+- 字体：webfonts、iconfont
+- 功能库：tocbot（目录）、mermaid（图表）、MathJax（数学公式）等
+
+### `_includes/` - 模板片段
+
+存放可复用的 HTML 模板片段，用于覆盖或扩展主题默认模板：
+
+| 文件 | 说明 |
+|------|------|
+| `head.html` | HTML `<head>` 部分，包含 SEO 标签、资源引用、分析代码等 |
+| `sidebar.html` | 侧边栏模板，包含头像、站点标题、导航菜单、社交链接 |
+
+这些文件会覆盖主题中的同名模板，实现自定义布局。
+
+## 技术栈
+
+- **Jekyll** 4.4.1
+- **Ruby** 3.4.4
+- **主题** jekyll-theme-mammut（自定义 fork）
+
+## 主题管理
+
+本项目使用自定义主题 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut)，引用 `release` 分支。
+
+### 主题与博客的关系
+
+```
+jekyll-theme-mammut (主题仓库)     TYNote (博客仓库)
+        │                              │
+        │ 修改主题样式/布局             │ 撰写文章/配置
+        │                              │
+        ▼                              ▼
+   推送到 release 分支  ──────────▶  bundle install 拉取最新主题
+        │                              │
+        │                              ▼
+        │                        本地预览 / CI 构建
+        │                              │
+        └──────────────────────────────▶ 部署到 blog.tobyty.wang
+```
+
+### 更新主题
+
+当主题仓库有更新时，在博客项目执行：
+
+```bash
+bundle update jekyll-theme-mammut
+```
+
+### 主题修改
+
+- **样式/布局修改** → 在 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut) 仓库进行
+- **文章/配置修改** → 在本仓库进行
+- 主题修改推送到 `release` 分支后，博客项目需更新依赖
+
+## 本地开发
+
+### 环境准备
+
+```bash
+# 安装 Ruby（使用 rbenv）
+brew install rbenv
+rbenv install 3.4.4
+
+# 安装依赖
+bundle install
+```
+
+### 更新主题
+
+当主题仓库 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut) 有更新时：
+
+```bash
+bundle update jekyll-theme-mammut
+```
+
+### 本地预览
+
+```bash
+bundle exec jekyll serve
+# 访问 http://127.0.0.1:4000
+```
+
+### 构建网站
+
+```bash
+bundle exec jekyll build
+# 输出到 _site/ 目录
+```
+
+## 部署流程
+
+1. 推送到 master 分支
+2. GitHub Actions 自动触发构建
+3. 构建结果部署到 gh-pages 分支
+4. 访问 https://blog.tobyty.wang
+
+## 写作指南
+
+### 发布新文章
+
+在 `_posts/` 目录创建文件，命名格式：`YYYY-MM-DD-标题.md`
+
+文件开头需要 Front Matter：
+
+```yaml
+---
+title: 文章标题
+date: YYYY-MM-DD
+categories: [分类]
+tags: [标签]
+---
+```
+
+### 管理草稿
+
+草稿存放在 `_drafts/` 目录，按年份分子目录管理。
+
+## 注意事项
+
+- `_site/` 目录由 CI 自动生成，不要提交到 Git
+- `assets/lib/` 是第三方库，不要修改
+- 修改 `.ruby-version` 时需同步更新 GitHub Actions 配置
