@@ -1,0 +1,71 @@
+agent:
+  agent_name: 贾维斯
+  max_iterations: 10
+  system_prompt: You are a helpful AI assistant.
+  user_name: 天宇
+  verbose: false
+cache:
+  cacheable_tools:
+  - file_read
+  - file_search
+  - shell_execute
+  enabled: true
+  excluded_tools:
+  - file_write
+  - memorize
+  - forget
+  max_cache_size: 100
+  ttl_seconds: 300
+compressor:
+  enabled: true
+  keep_recent: 3
+  summary_max_tokens: 300
+  threshold_tokens: 32000
+offload:
+  enabled: true
+  size_threshold_tokens: 200
+  offload_dir: .nano_agent/offload
+  auto_cleanup: false
+llm:
+  # api_key: 945b6649c08e21268c702a831fd2f7f1:MDI1ZTEwMzg2MTM5M2VlMDQwZjJhY2Nl
+  # base_url: https://maas-coding-api.cn-huabei-1.xf-yun.com/v2
+  # model: astron-code-latest
+  api_key: sk-d0eaebf7ab6f4df9b34cee110a1b81b3
+  # api_key_env: OPENAI_API_KEY
+  base_url: https://api.deepseek.com/
+  model: deepseek-v4-flash
+  provider: openai_compatible
+  temperature: 0.7
+  timeout: 120
+streaming:
+  mode: async
+memory:
+  auto_extract: true
+  clean_threshold: 20
+  long_term_storage_path: .nano_agent/long_term_memory
+  max_messages: 50
+  session_id: null
+  storage_path: .nano_agent/memory
+  storage_type: file
+  type: hybrid
+output_style:
+  extract_errors: true
+  extract_imports: true
+  extract_signatures: true
+  file_search_count_only: false
+  smart_summarization: true
+  style: concise
+  tool_output_max_tokens: 300
+project_file:
+  mode: reference
+tool_merge:
+  concise_only: false
+  enabled: true
+  max_batch_size: 3
+  merge_tools:
+  - file_search
+  - shell_execute
+tools:
+  disabled: []
+  enabled:
+  - all

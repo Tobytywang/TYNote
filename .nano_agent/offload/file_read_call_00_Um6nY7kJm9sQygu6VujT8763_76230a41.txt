@@ -1,0 +1,42 @@
+[/Users/tobytywang/Repositories/TYNote/.nano_agent/offload/file_read_call_00_pMx3jNo02pH0hx33gTcH3407_cf839890.txt:41L]
+     1 | [/Users/tobytywang/Repositories/TYNote/.github/workflows/deploy.yml:40L]
+     2 |      1 | name: Build and Deploy Jekyll Site
+     3 |      2 |
+     4 |      3 | on:
+     5 |      4 |   push:
+     6 |      5 |     branches:
+     7 |      6 |       - master
+     8 |      7 |
+     9 |      8 | jobs:
+    10 |      9 |   build-and-deploy:
+    11 |     10 |     runs-on: ubuntu-latest
+    12 |     11 |
+    13 |     12 |     steps:
+    14 |     13 |       - name: Checkout repository
+    15 |     14 |         uses: actions/checkout@v3
+    16 |     15 |
+    17 |     16 |       - name: Set up Ruby
+    18 |     17 |         uses: ruby/setup-ruby@v1
+    19 |     18 |         with:
+    20 |     19 |           ruby-version: '3.4.6'
+    21 |     20 |           bundler-cache: true
+    22 |     21 |
+    23 |     22 |       - name: Install dependencies
+    24 |     23 |         run: |
+    25 |     24 |           gem install jekyll
+    26 |     25 |           gem install bundler
+    27 |     26 |           bundle install
+    28 |     27 |
+    29 |     28 |       - name: Build site
+    30 |     29 |         run: bundle exec jekyll build
+    31 |     30 |
+    32 |     31 |       - name: Deploy to gh-pages
+    33 |     32 |         uses: peaceiris/actions-gh-pages@v4
+    34 |     33 |         with:
+    35 |     34 |           github_token: ${{ secrets.GITHUB_TOKEN }}
+    36 |     35 |           publish_dir: ./_site
+    37 |     36 |           publish_branch: gh-pages
+    38 |     37 |           force_orphan: true
+    39 |     38 |           user_name: github-actions
+    40 |     39 |           user_email: github-actions@github.com
+    41 |     40 |

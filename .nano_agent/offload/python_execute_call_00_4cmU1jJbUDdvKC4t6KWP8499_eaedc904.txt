@@ -1,0 +1,28 @@
+[ok] ### 分支角色
+
+| 分支 | 角色 | 维护方式 |
+|------|------|----------|
+| `master` | 唯一源码分支 | 人工维护，仅通过 PR 合并 |
+| `gh-pages` | 构建产物分支 | 自动维护，CI 强制重建，禁止手动推送 |
+
+### 分支保护规则（已配置）
+
+- **`master`**：要求 PR 审查，禁止直接 push
+- **`gh-pages`**：要求 PR 审查；force push 例外仅授予 `github-actions[bot]`，保证自动部署不被拦截
+
+### 正确操作方式
+
+1. **改代码**：新建分支 → 修改 → push → 创建 PR → 合并到 `master`（自动触发部署）
+2. **发布站点**：无需任何手动操作，合并 PR 即自动完成
+3. **禁止**：`git push origin gh-pages`（会被保护规则拒绝，且下次构建会覆盖手动内容）
+
+### 推荐流程（日常开发）
+
+```
+develop(开发) --push--> 创建 PR --> 合并到 master --> 自动构建 --> gh-pages --> 自动发布
+```
+
+1. 在 `develop` 分支上开发、提交、推送
+2. 在 GitHub 上创建 `develop → master` 的 Pull Request
+3. 通过审查后合并（走 master 的 PR 保护规则）
+4. 合并即触发「Build and Deploy Jekyll Site」→ 自动部署到 gh-pages → 站

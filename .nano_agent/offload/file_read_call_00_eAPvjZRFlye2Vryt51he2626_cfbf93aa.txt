@@ -1,0 +1,41 @@
+[/Users/tobytywang/Repositories/TYNote/README.md:240L]
+   168 | title: 文章标题
+   169 | date: YYYY-MM-DD
+   170 | categories: [分类]
+   171 | tags: [标签]
+   172 | ---
+   173 | ```
+   174 | 
+   175 | ### 管理草稿
+   176 | 
+   177 | 草稿存放在 `_drafts/` 目录，按年份分子目录管理。
+   178 | 
+   179 | ## 注意事项
+   180 | 
+   181 | - `_site/` 目录由 CI 自动生成，不要提交到 Git
+   182 | - `assets/lib/` 是第三方库，不要修改
+   183 | - 修改 `.ruby-version` 时需同步更新 GitHub Actions 配置
+   184 | 
+   185 | ## 工作流与分支保护
+   186 | 
+   187 | ### 整体流程
+   188 | 
+   189 | ```
+   190 | master(源码) --push/PR--> GitHub Actions 构建 --> gh-pages(产物) --> pages-build-deployment --> Pages 站点
+   191 | ```
+   192 | 
+   193 | 1. 修改源码 → 合并到 `master`
+   194 | 2. 触发 Action「Build and Deploy Jekyll Site」自动构建
+   195 | 3. 构建产物写入 `gh-pages` 分支
+   196 | 4. 平台自动执行 `pages-build-deployment` 发布到 GitHub Pages
+   197 | 
+   198 | ### 分支角色
+   199 | 
+   200 | | 分支 | 角色 | 维护方式 |
+   201 | |------|------|----------|
+   202 | | `master` | 唯一源码分支 | 人工维护，仅通过 PR 合并 |
+   203 | | `gh-pages` | 构建产物分支 | 自动维护，CI 强制重建，禁止手动推送 |
+   204 | 
+   205 | ### 分支保护规则（已配置）
+   206 | 
+   207 | - **`master`**：要求 PR 审查，禁止直接 push

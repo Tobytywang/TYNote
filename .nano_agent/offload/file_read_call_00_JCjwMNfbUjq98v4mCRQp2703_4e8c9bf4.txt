@@ -1,0 +1,40 @@
+[/Users/tobytywang/Repositories/TYNote/README.md:183L]
+   145 | 
+   146 | ```bash
+   147 | bundle exec jekyll build
+   148 | # 输出到 _site/ 目录
+   149 | ```
+   150 | 
+   151 | ## 部署流程
+   152 | 
+   153 | 1. 推送到 master 分支
+   154 | 2. GitHub Actions 自动触发构建
+   155 | 3. 构建结果部署到 gh-pages 分支
+   156 | 4. 访问 https://blog.tobyty.wang
+   157 | 
+   158 | ## 写作指南
+   159 | 
+   160 | ### 发布新文章
+   161 | 
+   162 | 在 `_posts/` 目录创建文件，命名格式：`YYYY-MM-DD-标题.md`
+   163 | 
+   164 | 文件开头需要 Front Matter：
+   165 | 
+   166 | ```yaml
+   167 | ---
+   168 | title: 文章标题
+   169 | date: YYYY-MM-DD
+   170 | categories: [分类]
+   171 | tags: [标签]
+   172 | ---
+   173 | ```
+   174 | 
+   175 | ### 管理草稿
+   176 | 
+   177 | 草稿存放在 `_drafts/` 目录，按年份分子目录管理。
+   178 | 
+   179 | ## 注意事项
+   180 | 
+   181 | - `_site/` 目录由 CI 自动生成，不要提交到 Git
+   182 | - `assets/lib/` 是第三方库，不要修改
+   183 | - 修改 `.ruby-version` 时需同步更新 GitHub Actions 配置

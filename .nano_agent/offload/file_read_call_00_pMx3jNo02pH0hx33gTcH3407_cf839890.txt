@@ -1,0 +1,41 @@
+[/Users/tobytywang/Repositories/TYNote/.github/workflows/deploy.yml:40L]
+     1 | name: Build and Deploy Jekyll Site
+     2 | 
+     3 | on:
+     4 |   push:
+     5 |     branches:
+     6 |       - master
+     7 | 
+     8 | jobs:
+     9 |   build-and-deploy:
+    10 |     runs-on: ubuntu-latest
+    11 | 
+    12 |     steps:
+    13 |       - name: Checkout repository
+    14 |         uses: actions/checkout@v3
+    15 | 
+    16 |       - name: Set up Ruby
+    17 |         uses: ruby/setup-ruby@v1
+    18 |         with:
+    19 |           ruby-version: '3.4.6'
+    20 |           bundler-cache: true
+    21 | 
+    22 |       - name: Install dependencies
+    23 |         run: |
+    24 |           gem install jekyll
+    25 |           gem install bundler
+    26 |           bundle install
+    27 | 
+    28 |       - name: Build site
+    29 |         run: bundle exec jekyll build
+    30 | 
+    31 |       - name: Deploy to gh-pages
+    32 |         uses: peaceiris/actions-gh-pages@v4
+    33 |         with:
+    34 |           github_token: ${{ secrets.GITHUB_TOKEN }}
+    35 |           publish_dir: ./_site
+    36 |           publish_branch: gh-pages
+    37 |           force_orphan: true
+    38 |           user_name: github-actions
+    39 |           user_email: github-actions@github.com
+    40 | 
