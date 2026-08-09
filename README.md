@@ -1,8 +1,14 @@
 # TYNote
 
-Tobyty's Personal Blog - 基于 Jekyll 的个人博客
+Tobyty's Personal Blog —— 一个基于 Jekyll 的个人博客
 
-## 1. 项目结构
+## 1. 技术栈
+
+- **Ruby** 3.4.4
+- **Jekyll** 4.4.1
+- **主题** jekyll-theme-mammut（自定义 fork）
+
+## 2. 项目结构
 
 ```
 TYNote/
@@ -24,11 +30,130 @@ TYNote/
 └── index.html       # 首页
 ```
 
-## 2. 主题适配目录说明
+## 3. 本地开发
 
-本项目使用 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut) 主题，以下目录用于主题定制：
+### 3.1 环境准备
 
-### 2.1 `_tabs/` - 导航标签页
+```bash
+# 安装 Ruby（使用 rbenv）
+brew install rbenv
+rbenv install 3.4.4
+
+# 安装依赖
+bundle install
+```
+
+### 3.2 更新主题
+
+当主题仓库 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut) 有更新时：
+
+```bash
+bundle update jekyll-theme-mammut
+```
+
+### 3.3 本地预览
+
+```bash
+bundle exec jekyll serve
+# 访问 http://127.0.0.1:4000
+```
+
+### 3.4 构建网站
+
+```bash
+bundle exec jekyll build
+# 输出到 _site/ 目录
+```
+
+## 4. 写作指南
+
+### 4.1 发布新文章
+
+在 `_posts/` 目录创建文件，命名格式：`YYYY-MM-DD-标题.md`
+
+文件开头需要 Front Matter：
+
+```yaml
+---
+title: 文章标题
+date: YYYY-MM-DD
+categories: [分类]
+tags: [标签]
+---
+```
+
+### 4.2 管理草稿
+
+草稿存放在 `_drafts/` 目录，按年份分子目录管理。
+
+## 5. 工作流与分支保护
+
+### 5.1 整体流程
+
+```
+master(源码) --push/PR--> GitHub Actions 构建 --> gh-pages(产物) --> pages-build-deployment --> Pages 站点
+```
+
+1. 修改源码 → 合并到 `master`
+2. 触发 Action「Build and Deploy Jekyll Site」自动构建
+3. 构建产物写入 `gh-pages` 分支
+4. 平台自动执行 `pages-build-deployment` 发布到 GitHub Pages
+
+### 5.2 分支角色
+
+| 分支 | 作用 | 生命周期 |
+|------|------|----------|
+| `master` | 唯一源码分支，存放稳定可发布的代码 | **长期**（主干分支，永久存在） |
+| `develop` | 开发分支，可存放脏提交/半成品，作为日常开发的临时工作区 | **长期**（持续存在，但内容可随时重写） |
+| `gh-pages` | 构建产物分支，仅存放 `_site/` 静态站点文件 | **短期**（每次部署都强制重建：CI 用 `force_orphan: true` 创建孤儿提交，旧历史被覆盖，分支只保留最近一次构建结果） |
+
+> **gh-pages 生命周期说明**：由于 `force_orphan: true`，每次自动部署都会丢弃该分支全部历史、以全新孤儿提交重建。因此它**不是一个累积历史的分支**，本质上是"当前站点快照"，短生命周期、随时可弃。**禁止手动推送**——手动内容会被下次构建覆盖，且会被保护规则拦截。
+
+### 5.3 分支保护规则（已配置）
+
+- **`master`**：要求 PR 审查，禁止直接 push
+- **`gh-pages`**：要求 PR 审查；force push 例外仅授予 `github-actions[bot]`，保证自动部署不被拦截
+
+### 5.4 正确操作方式
+
+1. **改代码**：新建分支 → 修改 → push → 创建 PR → 合并到 `master`（自动触发部署）
+2. **发布站点**：无需任何手动操作，合并 PR 即自动完成
+3. **禁止**：`git push origin gh-pages`（会被保护规则拒绝，且下次构建会覆盖手动内容）
+
+### 5.5 推荐流程（日常开发）
+
+```
+develop(开发) --push--> 创建 PR --> 合并到 master --> 自动构建 --> gh-pages --> 自动发布
+```
+
+1. 在 `develop` 分支上开发、提交、推送
+2. 在 GitHub 上创建 `develop → master` 的 Pull Request
+3. 通过审查后合并（走 master 的 PR 保护规则）
+4. 合并即触发「Build and Deploy Jekyll Site」→ 自动部署到 gh-pages → 站点更新
+
+## 6. 主题适配目录说明
+
+本项目使用自定义主题 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut)，引用 `release` 分支。
+
+### 6.1 主题与博客的关系
+
+```
+jekyll-theme-mammut (主题仓库)     TYNote (博客仓库)
+        │                              │
+        │ 修改主题样式/布局             │ 撰写文章/配置
+        │                              │
+        ▼                              ▼
+   推送到 release 分支  ──────────▶  bundle install 拉取最新主题
+        │                              │
+        │                              ▼
+        │                        本地预览 / CI 构建
+        │                              │
+        └──────────────────────────────▶ 部署到 blog.tobyty.wang
+```
+
+### 6.2 以下目录用于主题定制
+
+#### 6.2.1 `_tabs/` - 导航标签页
 
 定义网站顶部导航栏的页面，每个文件对应一个标签页：
 
@@ -42,7 +167,7 @@ TYNote/
 - `icon` - Font Awesome 图标类名
 - `order` - 导航栏显示顺序（数字越小越靠前）
 
-### 2.2 `_data/` - 数据文件
+#### 6.2.2 `_data/` - 数据文件
 
 存放 YAML 格式的数据文件，供模板调用：
 
@@ -62,7 +187,7 @@ _data/
 - 字体：webfonts、iconfont
 - 功能库：tocbot（目录）、mermaid（图表）、MathJax（数学公式）等
 
-### 2.3 `_includes/` - 模板片段
+### 6.2.3 `_includes/` - 模板片段
 
 存放可复用的 HTML 模板片段，用于覆盖或扩展主题默认模板：
 
@@ -73,33 +198,7 @@ _data/
 
 这些文件会覆盖主题中的同名模板，实现自定义布局。
 
-## 3. 技术栈
-
-- **Jekyll** 4.4.1
-- **Ruby** 3.4.4
-- **主题** jekyll-theme-mammut（自定义 fork）
-
-## 4. 主题管理
-
-本项目使用自定义主题 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut)，引用 `release` 分支。
-
-### 主题与博客的关系
-
-```
-jekyll-theme-mammut (主题仓库)     TYNote (博客仓库)
-        │                              │
-        │ 修改主题样式/布局             │ 撰写文章/配置
-        │                              │
-        ▼                              ▼
-   推送到 release 分支  ──────────▶  bundle install 拉取最新主题
-        │                              │
-        │                              ▼
-        │                        本地预览 / CI 构建
-        │                              │
-        └──────────────────────────────▶ 部署到 blog.tobyty.wang
-```
-
-### 4.1 更新主题
+### 6.3 更新主题
 
 当主题仓库有更新时，在博客项目执行：
 
@@ -107,126 +206,17 @@ jekyll-theme-mammut (主题仓库)     TYNote (博客仓库)
 bundle update jekyll-theme-mammut
 ```
 
-### 4.2 主题修改
+### 6.4 主题修改
 
 - **样式/布局修改** → 在 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut) 仓库进行
 - **文章/配置修改** → 在本仓库进行
 - 主题修改推送到 `release` 分支后，博客项目需更新依赖
 
-## 5. 本地开发
-
-### 5.1 环境准备
-
-```bash
-# 安装 Ruby（使用 rbenv）
-brew install rbenv
-rbenv install 3.4.4
-
-# 安装依赖
-bundle install
-```
-
-### 5.2 更新主题
-
-当主题仓库 [jekyll-theme-mammut](https://github.com/Tobytywang/jekyll-theme-mammut) 有更新时：
-
-```bash
-bundle update jekyll-theme-mammut
-```
-
-### 5.3 本地预览
-
-```bash
-bundle exec jekyll serve
-# 访问 http://127.0.0.1:4000
-```
-
-### 5.4 构建网站
-
-```bash
-bundle exec jekyll build
-# 输出到 _site/ 目录
-```
-
-## 6. 部署流程
-
-1. 推送到 master 分支
-2. GitHub Actions 自动触发构建
-3. 构建结果部署到 gh-pages 分支
-4. 访问 https://blog.tobyty.wang
-
-## 7. 写作指南
-
-### 7.1 发布新文章
-
-在 `_posts/` 目录创建文件，命名格式：`YYYY-MM-DD-标题.md`
-
-文件开头需要 Front Matter：
-
-```yaml
----
-title: 文章标题
-date: YYYY-MM-DD
-categories: [分类]
-tags: [标签]
----
-```
-
-### 7.2 管理草稿
-
-草稿存放在 `_drafts/` 目录，按年份分子目录管理。
-
-## 8. 注意事项
+## 7. 注意事项
 
 - `_site/` 目录由 CI 自动生成，不要提交到 Git
 - `assets/lib/` 是第三方库，不要修改
 - 修改 `.ruby-version` 时需同步更新 GitHub Actions 配置
-
-## 9. 工作流与分支保护
-
-### 9.1 整体流程
-
-```
-master(源码) --push/PR--> GitHub Actions 构建 --> gh-pages(产物) --> pages-build-deployment --> Pages 站点
-```
-
-1. 修改源码 → 合并到 `master`
-2. 触发 Action「Build and Deploy Jekyll Site」自动构建
-3. 构建产物写入 `gh-pages` 分支
-4. 平台自动执行 `pages-build-deployment` 发布到 GitHub Pages
-
-### 9.2 分支角色
-
-| 分支 | 作用 | 生命周期 |
-|------|------|----------|
-| `master` | 唯一源码分支，存放稳定可发布的代码 | **长期**（主干分支，永久存在） |
-| `develop` | 开发分支，可存放脏提交/半成品，作为日常开发的临时工作区 | **长期**（持续存在，但内容可随时重写） |
-| `gh-pages` | 构建产物分支，仅存放 `_site/` 静态站点文件 | **短期**（每次部署都强制重建：CI 用 `force_orphan: true` 创建孤儿提交，旧历史被覆盖，分支只保留最近一次构建结果） |
-
-> **gh-pages 生命周期说明**：由于 `force_orphan: true`，每次自动部署都会丢弃该分支全部历史、以全新孤儿提交重建。因此它**不是一个累积历史的分支**，本质上是"当前站点快照"，短生命周期、随时可弃。**禁止手动推送**——手动内容会被下次构建覆盖，且会被保护规则拦截。
-
-### 9.3 分支保护规则（已配置）
-
-- **`master`**：要求 PR 审查，禁止直接 push
-- **`gh-pages`**：要求 PR 审查；force push 例外仅授予 `github-actions[bot]`，保证自动部署不被拦截
-
-### 9.4 正确操作方式
-
-1. **改代码**：新建分支 → 修改 → push → 创建 PR → 合并到 `master`（自动触发部署）
-2. **发布站点**：无需任何手动操作，合并 PR 即自动完成
-3. **禁止**：`git push origin gh-pages`（会被保护规则拒绝，且下次构建会覆盖手动内容）
-
-### 9.5 推荐流程（日常开发）
-
-```
-develop(开发) --push--> 创建 PR --> 合并到 master --> 自动构建 --> gh-pages --> 自动发布
-```
-
-1. 在 `develop` 分支上开发、提交、推送
-2. 在 GitHub 上创建 `develop → master` 的 Pull Request
-3. 通过审查后合并（走 master 的 PR 保护规则）
-4. 合并即触发「Build and Deploy Jekyll Site」→ 自动部署到 gh-pages → 站点更新
-
-> 日常只需操作 `develop`，`master` 与 `gh-pages` 均无需手动干预。
-> 说明：`deploy.yml` 监听 `master` 分支的 push，因此无论直接推 `master` 还是通过 PR 合并，都会触发相同的自动构建流程。
-> **develop 生命周期补充**：`develop` 可随时 force reset 或删除重建，不影响部署与 `master`（CI 只监听 master，develop 的任何操作都不触发构建）。
+- 日常只需操作 `develop`，`master` 与 `gh-pages` 均无需手动干预。
+- 说明：`deploy.yml` 监听 `master` 分支的 push，因此无论直接推 `master` 还是通过 PR 合并，都会触发相同的自动构建流程。
+- **develop 生命周期补充**：`develop` 可随时 force reset 或删除重建，不影响部署与 `master`（CI 只监听 master，develop 的任何操作都不触发构建）。
